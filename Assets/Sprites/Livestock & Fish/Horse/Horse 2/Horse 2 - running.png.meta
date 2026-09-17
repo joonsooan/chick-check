@@ -1,0 +1,754 @@
+fileFormatVersion: 2
+guid: 1d950b9f6fcf8594c976a7d889ad7255
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6565915873498419173
+    second: Horse 2 - running_0
+  - first:
+      213: 1956253115969552147
+    second: Horse 2 - running_1
+  - first:
+      213: -6613218275435147317
+    second: Horse 2 - running_2
+  - first:
+      213: -7707172674170853345
+    second: Horse 2 - running_3
+  - first:
+      213: 1897367053964804199
+    second: Horse 2 - running_4
+  - first:
+      213: -4282455262340165366
+    second: Horse 2 - running_5
+  - first:
+      213: 8707423165822307396
+    second: Horse 2 - running_6
+  - first:
+      213: 7026537009358767688
+    second: Horse 2 - running_7
+  - first:
+      213: 2853141651410151005
+    second: Horse 2 - running_8
+  - first:
+      213: 8638828098894643800
+    second: Horse 2 - running_9
+  - first:
+      213: 2954298371817322720
+    second: Horse 2 - running_10
+  - first:
+      213: -8189497253090885863
+    second: Horse 2 - running_11
+  - first:
+      213: 6664511485409118887
+    second: Horse 2 - running_12
+  - first:
+      213: -300554264786562179
+    second: Horse 2 - running_13
+  - first:
+      213: 9133119328728431837
+    second: Horse 2 - running_14
+  - first:
+      213: -5246051323721031369
+    second: Horse 2 - running_15
+  - first:
+      213: -8981136229029248637
+    second: Horse 2 - running_16
+  - first:
+      213: 3601307825830652723
+    second: Horse 2 - running_17
+  - first:
+      213: 1651043188624826208
+    second: Horse 2 - running_18
+  - first:
+      213: -2647968876371585835
+    second: Horse 2 - running_19
+  - first:
+      213: -2969909133653574867
+    second: Horse 2 - running_20
+  - first:
+      213: 1874932269741788072
+    second: Horse 2 - running_21
+  - first:
+      213: 4869422428159189850
+    second: Horse 2 - running_22
+  - first:
+      213: 411062280444207474
+    second: Horse 2 - running_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Horse 2 - running_0
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 74
+        width: 24
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b10370ffc4e21e4a0800000000000000
+      internalID: -6565915873498419173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_1
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 72
+        width: 24
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31fbd1428d1062b10800000000000000
+      internalID: 1956253115969552147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_2
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 72
+        width: 24
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcf019e44012934a0800000000000000
+      internalID: -6613218275435147317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_3
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 72
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f18e275894f9a0590800000000000000
+      internalID: -7707172674170853345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_4
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 74
+        width: 24
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7600a1c684dc45a10800000000000000
+      internalID: 1897367053964804199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_5
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 72
+        width: 24
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0156b9d0a9a194c0800000000000000
+      internalID: -4282455262340165366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_6
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 72
+        width: 24
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44c88d34c3bf6d870800000000000000
+      internalID: 8707423165822307396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_7
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 72
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84607fb8e26438160800000000000000
+      internalID: 7026537009358767688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_8
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 41
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d566c222735689720800000000000000
+      internalID: 2853141651410151005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_9
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 38
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 852474ea26843e770800000000000000
+      internalID: 8638828098894643800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_10
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 37
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e8bfa477b6cff820800000000000000
+      internalID: 2954298371817322720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_11
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 38
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91ffa7c53af095e80800000000000000
+      internalID: -8189497253090885863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_12
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 41
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aa4259c2e91d7c50800000000000000
+      internalID: 6664511485409118887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_13
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 38
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d731ba31d7734dbf0800000000000000
+      internalID: -300554264786562179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_14
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 37
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddcbc10e3ab5fbe70800000000000000
+      internalID: 9133119328728431837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_15
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 38
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 731e328ad184237b0800000000000000
+      internalID: -5246051323721031369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_16
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 9
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 381025d0f289c5380800000000000000
+      internalID: -8981136229029248637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_17
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 7
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33b6875136a6af130800000000000000
+      internalID: 3601307825830652723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_18
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 6
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06f9fce480fa9e610800000000000000
+      internalID: 1651043188624826208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_19
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 6
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d4d4932656804bd0800000000000000
+      internalID: -2647968876371585835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_20
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 9
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2bf361d063c8c6d0800000000000000
+      internalID: -2969909133653574867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_21
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 7
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ab40eb27f8150a10800000000000000
+      internalID: 1874932269741788072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_22
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 6
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a53afbb26e9a39340800000000000000
+      internalID: 4869422428159189850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Horse 2 - running_23
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 6
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 271607657f264b500800000000000000
+      internalID: 411062280444207474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Horse 2 - running_0: -6565915873498419173
+      Horse 2 - running_1: 1956253115969552147
+      Horse 2 - running_10: 2954298371817322720
+      Horse 2 - running_11: -8189497253090885863
+      Horse 2 - running_12: 6664511485409118887
+      Horse 2 - running_13: -300554264786562179
+      Horse 2 - running_14: 9133119328728431837
+      Horse 2 - running_15: -5246051323721031369
+      Horse 2 - running_16: -8981136229029248637
+      Horse 2 - running_17: 3601307825830652723
+      Horse 2 - running_18: 1651043188624826208
+      Horse 2 - running_19: -2647968876371585835
+      Horse 2 - running_2: -6613218275435147317
+      Horse 2 - running_20: -2969909133653574867
+      Horse 2 - running_21: 1874932269741788072
+      Horse 2 - running_22: 4869422428159189850
+      Horse 2 - running_23: 411062280444207474
+      Horse 2 - running_3: -7707172674170853345
+      Horse 2 - running_4: 1897367053964804199
+      Horse 2 - running_5: -4282455262340165366
+      Horse 2 - running_6: 8707423165822307396
+      Horse 2 - running_7: 7026537009358767688
+      Horse 2 - running_8: 2853141651410151005
+      Horse 2 - running_9: 8638828098894643800
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

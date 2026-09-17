@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f72af002f1b8344b979d8c23034126, type: 3}
+  m_Name: Water - fall - deep 1
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 2040463206, guid: c8bc1b154e91c8b4e8c746bd72427a0c, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules:
+  - m_Id: 1
+    m_Sprites:
+    - {fileID: 2040463206, guid: c8bc1b154e91c8b4e8c746bd72427a0c, type: 3}
+    - {fileID: -697322295, guid: f5cff1881cf00e247a94b325845d63c9, type: 3}
+    - {fileID: -1129623251, guid: b805adbe2369ee74586cc5b02af859d0, type: 3}
+    - {fileID: 571642348, guid: 2ccefbdf66b10604cb2f2168d2a5dcb6, type: 3}
+    - {fileID: 610884112, guid: 433f81cd07fe3c941bd2cf8412ab8f28, type: 3}
+    - {fileID: -1930199876, guid: 3e4a4a7197134014991727ed62639f98, type: 3}
+    - {fileID: 1809626456, guid: 2b2aa7502017ff944bedd1fd1e8fcffd, type: 3}
+    - {fileID: 157837090, guid: b2d59f30a9080a645aa7fc2fce139bcf, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 2
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions: []
+    m_RuleTransform: 0
+  type: water

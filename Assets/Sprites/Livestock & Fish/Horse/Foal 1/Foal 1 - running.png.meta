@@ -1,0 +1,754 @@
+fileFormatVersion: 2
+guid: fc1fdcf2b68dd9647b3149abef30e411
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1462614099301731990
+    second: Foal 1 - running_0
+  - first:
+      213: 3502312556521790269
+    second: Foal 1 - running_1
+  - first:
+      213: 29852254685765745
+    second: Foal 1 - running_2
+  - first:
+      213: -6065118507031103831
+    second: Foal 1 - running_3
+  - first:
+      213: 1593018578968995022
+    second: Foal 1 - running_4
+  - first:
+      213: -6052301208717386336
+    second: Foal 1 - running_5
+  - first:
+      213: -5619831962679165894
+    second: Foal 1 - running_6
+  - first:
+      213: -746700370695912098
+    second: Foal 1 - running_7
+  - first:
+      213: -1145864600198487105
+    second: Foal 1 - running_8
+  - first:
+      213: 127233317130607821
+    second: Foal 1 - running_9
+  - first:
+      213: 5564508263562709766
+    second: Foal 1 - running_10
+  - first:
+      213: -6883261193646960355
+    second: Foal 1 - running_11
+  - first:
+      213: 7530217144973596787
+    second: Foal 1 - running_12
+  - first:
+      213: 828797651059969627
+    second: Foal 1 - running_13
+  - first:
+      213: -3776553320198428247
+    second: Foal 1 - running_14
+  - first:
+      213: -2236821190973005876
+    second: Foal 1 - running_15
+  - first:
+      213: -7371566800966568628
+    second: Foal 1 - running_16
+  - first:
+      213: 8845146274582558866
+    second: Foal 1 - running_17
+  - first:
+      213: -8915928500521846301
+    second: Foal 1 - running_18
+  - first:
+      213: -340574626823136557
+    second: Foal 1 - running_19
+  - first:
+      213: -4198204550294705148
+    second: Foal 1 - running_20
+  - first:
+      213: 5135155262067454535
+    second: Foal 1 - running_21
+  - first:
+      213: 3032068323350161664
+    second: Foal 1 - running_22
+  - first:
+      213: -5741976590119945974
+    second: Foal 1 - running_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Foal 1 - running_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 73
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6174a7d930c3bbe0800000000000000
+      internalID: -1462614099301731990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_1
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 72
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3b1fdfc6b6ba9030800000000000000
+      internalID: 3502312556521790269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_2
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 72
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1702a4ca77e0a6000800000000000000
+      internalID: 29852254685765745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_3
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 72
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a673cb2ade54dba0800000000000000
+      internalID: -6065118507031103831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_4
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 73
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec46b0815f98b1610800000000000000
+      internalID: 1593018578968995022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_5
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 72
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ad9bbcfd18e10ca0800000000000000
+      internalID: -6052301208717386336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_6
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 72
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3c3f17ea985202b0800000000000000
+      internalID: -5619831962679165894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_7
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 72
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e55840318ff23a5f0800000000000000
+      internalID: -746700370695912098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_8
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 41
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb3697897321910f0800000000000000
+      internalID: -1145864600198487105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_9
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 41
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcc1a2f170604c100800000000000000
+      internalID: 127233317130607821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_10
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 40
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60b816f98ca193d40800000000000000
+      internalID: 5564508263562709766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_11
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 40
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d111178d96eb970a0800000000000000
+      internalID: -6883261193646960355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_12
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 41
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37815b7b894b08860800000000000000
+      internalID: 7530217144973596787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_13
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 41
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5e8b1e821b708b00800000000000000
+      internalID: 828797651059969627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_14
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 40
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a9204aa3ccf69bc0800000000000000
+      internalID: -3776553320198428247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_15
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 40
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccfdcfd5af635f0e0800000000000000
+      internalID: -2236821190973005876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_16
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 10
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c45335efc0fe2b990800000000000000
+      internalID: -7371566800966568628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_17
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 9
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 298fcd25ca540ca70800000000000000
+      internalID: 8845146274582558866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_18
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 8
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e93d937442444480800000000000000
+      internalID: -8915928500521846301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_19
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 9
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3da12bc6e29064bf0800000000000000
+      internalID: -340574626823136557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_20
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 10
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40c614d543bfcb5c0800000000000000
+      internalID: -4198204550294705148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_21
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 9
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 742320ee08cb34740800000000000000
+      internalID: 5135155262067454535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_22
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 8
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00920045312141a20800000000000000
+      internalID: 3032068323350161664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Foal 1 - running_23
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 9
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a09ba4da6b66050b0800000000000000
+      internalID: -5741976590119945974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Foal 1 - running_0: -1462614099301731990
+      Foal 1 - running_1: 3502312556521790269
+      Foal 1 - running_10: 5564508263562709766
+      Foal 1 - running_11: -6883261193646960355
+      Foal 1 - running_12: 7530217144973596787
+      Foal 1 - running_13: 828797651059969627
+      Foal 1 - running_14: -3776553320198428247
+      Foal 1 - running_15: -2236821190973005876
+      Foal 1 - running_16: -7371566800966568628
+      Foal 1 - running_17: 8845146274582558866
+      Foal 1 - running_18: -8915928500521846301
+      Foal 1 - running_19: -340574626823136557
+      Foal 1 - running_2: 29852254685765745
+      Foal 1 - running_20: -4198204550294705148
+      Foal 1 - running_21: 5135155262067454535
+      Foal 1 - running_22: 3032068323350161664
+      Foal 1 - running_23: -5741976590119945974
+      Foal 1 - running_3: -6065118507031103831
+      Foal 1 - running_4: 1593018578968995022
+      Foal 1 - running_5: -6052301208717386336
+      Foal 1 - running_6: -5619831962679165894
+      Foal 1 - running_7: -746700370695912098
+      Foal 1 - running_8: -1145864600198487105
+      Foal 1 - running_9: 127233317130607821
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

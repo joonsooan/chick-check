@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f72af002f1b8344b979d8c23034126, type: 3}
+  m_Name: Water - summer - shallow 11
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 1541784588, guid: f517a69565fb6c146b4862ce730c5e83, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules:
+  - m_Id: 22
+    m_Sprites:
+    - {fileID: 1541784588, guid: f517a69565fb6c146b4862ce730c5e83, type: 3}
+    - {fileID: -1962654119, guid: 74490c9008de3b64c8d527ebbb6b58ea, type: 3}
+    - {fileID: -308352349, guid: a5d05e740fc6536429e94024e949fa3a, type: 3}
+    - {fileID: -955288753, guid: 55c4b17115be41e44abddb613ebe48ce, type: 3}
+    - {fileID: 1966526008, guid: df2d342ebac8df143af03e3f9011835e, type: 3}
+    - {fileID: -41802325, guid: 6a1692c493d2c5d44981e57ea2915cf5, type: 3}
+    - {fileID: 1257734908, guid: 9fdbb777e7d5cea47bfa9dd03e20c5d1, type: 3}
+    - {fileID: -1454003158, guid: a896c78661cbca64fa3323c8d3f22174, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 2
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions: []
+    m_RuleTransform: 0
+  type: water
