@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance { get; private set; }
 
-    [SerializeField] private ShopItemData[] shopCatalog;
+    [SerializeField] private string shopItemsResourcePath = "Shop Items";
+    [SerializeField] private int shopItemsPerRound = 3;
+    [SerializeField] private bool enterKeyLoadsShopForTest = true;
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
-    public event Action<ShopItemData> OnItemPurchased;
-    public event Action<ShopItemData, string> OnPurchaseFailed;
 
+    private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
     private readonly Dictionary<ShopStatType, float> additiveBonus = new Dictionary<ShopStatType, float>();
     private readonly Dictionary<ShopStatType, float> multiplier = new Dictionary<ShopStatType, float>();
 
@@ -23,6 +25,8 @@ public class UpgradeManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        allShopItems.AddRange(Resources.LoadAll<ShopItemData>(shopItemsResourcePath));
     }
 
     private void OnDestroy()
@@ -49,19 +53,47 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (!enterKeyLoadsShopForTest || Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (Keyboard.current.enterKey.wasPressedThisFrame)
+        {
+            OnShopCatalogReady?.Invoke(PickRandomItems());
+        }
+    }
+
     private void HandlePhaseChanged(GamePhase phase)
     {
         if (phase == GamePhase.Shop)
         {
-            OnShopCatalogReady?.Invoke(shopCatalog);
+            OnShopCatalogReady?.Invoke(PickRandomItems());
         }
+    }
+
+    private List<ShopItemData> PickRandomItems()
+    {
+        List<ShopItemData> pool = new List<ShopItemData>(allShopItems);
+        int pickCount = Mathf.Min(shopItemsPerRound, pool.Count);
+        List<ShopItemData> result = new List<ShopItemData>(pickCount);
+
+        for (int i = 0; i < pickCount; i++)
+        {
+            int index = UnityEngine.Random.Range(0, pool.Count);
+            result.Add(pool[index]);
+            pool.RemoveAt(index);
+        }
+
+        return result;
     }
 
     public bool TryPurchase(ShopItemData item)
     {
         if (!EconomyManager.Instance.TrySpendGold(item.Cost))
         {
-            OnPurchaseFailed?.Invoke(item, "gold");
             return false;
         }
 
@@ -76,7 +108,6 @@ public class UpgradeManager : MonoBehaviour
             multiplier[item.TargetStat] = (current == 0f ? 1f : current) * item.Value;
         }
 
-        OnItemPurchased?.Invoke(item);
         return true;
     }
 
