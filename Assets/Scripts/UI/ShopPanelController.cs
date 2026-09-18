@@ -19,7 +19,7 @@ public class ShopPanelController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
         if (GameManager.Instance != null)
         {
@@ -32,7 +32,7 @@ public class ShopPanelController : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (GameManager.Instance != null)
         {
@@ -52,6 +52,11 @@ public class ShopPanelController : MonoBehaviour
 
     private void HandleShopCatalogReady(IReadOnlyList<ShopItemData> catalog)
     {
+        if (panelRoot != null)
+        {
+            panelRoot.SetActive(true);
+        }
+
         foreach (ShopItemWidget widget in spawnedWidgets)
         {
             Destroy(widget.gameObject);
@@ -64,6 +69,8 @@ public class ShopPanelController : MonoBehaviour
             widget.Setup(catalog[i]);
             spawnedWidgets.Add(widget);
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)itemContainer);
     }
 
     private void HandleNextRoundClicked()
