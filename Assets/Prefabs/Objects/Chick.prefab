@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2200347837185764765}
   - component: {fileID: -1021781055754956737}
   - component: {fileID: 2220129118985389323}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Chick
   m_TagString: Chick
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

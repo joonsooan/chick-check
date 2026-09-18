@@ -18,7 +18,10 @@ public class PlayerMovement : MonoBehaviour
     private bool isMovementLocked;
     private Coroutine movementLockRoutine;
 
-    public float SprintSpeed => moveSpeed * sprintMultiplier;
+    public float BaseMoveSpeed => UpgradeManager.Instance != null
+        ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed)
+        : moveSpeed;
+    public float SprintSpeed => BaseMoveSpeed * sprintMultiplier;
     public Vector2 MoveInput => moveInput;
     public bool IsMoving => moveInput.sqrMagnitude > 0f;
     public bool IsSprinting => sprintAction.IsPressed();
@@ -61,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        float speed = sprintAction.IsPressed() ? SprintSpeed : moveSpeed;
+        float speed = sprintAction.IsPressed() ? SprintSpeed : BaseMoveSpeed;
         rb.MovePosition(rb.position + moveInput * (speed * Time.fixedDeltaTime));
     }
 

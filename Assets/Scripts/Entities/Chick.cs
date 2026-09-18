@@ -5,11 +5,17 @@ public class Chick : PlaceableEntity
 {
     [SerializeField] private ChickData data;
 
+    private Collider2D col;
+    private bool colliderWasTrigger;
+
+    public override EconomyEntityData EconomyData => data;
+
     protected override void Awake()
     {
         base.Awake();
 
         spriteRenderer.sprite = data.Sprite;
+        col = GetComponent<Collider2D>();
     }
 
     protected override void OnEnable()
@@ -57,6 +63,15 @@ public class Chick : PlaceableEntity
         IsExiting = false;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
+        RestoreCollider();
+    }
+
+    private void RestoreCollider()
+    {
+        if (col != null)
+        {
+            col.isTrigger = colliderWasTrigger;
+        }
     }
 
     protected override void NotifySpawnCount()
@@ -87,14 +102,26 @@ public class Chick : PlaceableEntity
             spriteRenderer.sortingLayerName = "Reflection";
         }
 
+        if (col != null)
+        {
+            colliderWasTrigger = col.isTrigger;
+            col.isTrigger = true;
+        }
+
         Vector3 target = transform.position + (Vector3)(dir * distance);
         spriteRenderer.flipX = dir.x > 0f;
         animator.SetBool(IsWalkingHash, true);
 
+        float moveSpeed = data.MoveSpeed;
+        if (UpgradeManager.Instance != null)
+        {
+            moveSpeed = UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed);
+        }
+
         while ((target - transform.position).sqrMagnitude > 0.0001f)
         {
             transform.position = Vector3.MoveTowards(
-                transform.position, target, data.MoveSpeed * Time.deltaTime);
+                transform.position, target, moveSpeed * Time.deltaTime);
             yield return null;
         }
 
@@ -103,6 +130,7 @@ public class Chick : PlaceableEntity
         {
             spriteRenderer.sortingLayerName = "Objects";
         }
+        RestoreCollider();
         IsExiting = false;
         StartCoroutine(WalkRoutine(data));
     }

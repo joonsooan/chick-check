@@ -6,6 +6,8 @@ public abstract class PlaceableEntity : MonoBehaviour
 {
     protected static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
+    private const int CarriedSortingOrder = 100;
+
     private static readonly List<PlaceableEntity> activeEntities = new List<PlaceableEntity>();
 
     public static IReadOnlyList<PlaceableEntity> ActiveEntities => activeEntities;
@@ -13,13 +15,17 @@ public abstract class PlaceableEntity : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
 
+    private int defaultSortingOrder;
+
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsCarried { get; private set; }
+    public abstract EconomyEntityData EconomyData { get; }
 
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        defaultSortingOrder = spriteRenderer.sortingOrder;
     }
 
     protected virtual void OnEnable()
@@ -35,6 +41,7 @@ public abstract class PlaceableEntity : MonoBehaviour
     public virtual void SetCarried(bool carried)
     {
         IsCarried = carried;
+        spriteRenderer.sortingOrder = carried ? CarriedSortingOrder : defaultSortingOrder;
     }
 
     protected IEnumerator GrowthRoutine(EconomyEntityData data)
@@ -46,9 +53,17 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         while (true)
         {
-            yield return new WaitForSeconds(data.GrowthInterval);
+            float growthInterval = data.GrowthInterval;
+            float growthChance = data.GrowthChance;
+            if (UpgradeManager.Instance != null)
+            {
+                growthInterval = UpgradeManager.Instance.ApplyModifiers(ShopStatType.GrowthInterval, growthInterval);
+                growthChance = UpgradeManager.Instance.ApplyModifiers(ShopStatType.GrowthChance, growthChance);
+            }
 
-            if (Random.value <= data.GrowthChance)
+            yield return new WaitForSeconds(growthInterval);
+
+            if (Random.value <= growthChance)
             {
                 GrowToNextStage(data.NextStagePrefab);
                 yield break;
@@ -70,6 +85,12 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     protected virtual void NotifyDespawnCount()
     {
+    }
+
+    public void HandleSold()
+    {
+        NotifyDespawnCount();
+        PoolManager.Despawn(gameObject);
     }
 
     protected IEnumerator WalkRoutine(EconomyEntityData data)
@@ -95,10 +116,16 @@ public abstract class PlaceableEntity : MonoBehaviour
                 animator.SetBool(IsWalkingHash, true);
             }
 
+            float moveSpeed = data.MoveSpeed;
+            if (UpgradeManager.Instance != null)
+            {
+                moveSpeed = UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed);
+            }
+
             while ((target - transform.position).sqrMagnitude > 0.0001f)
             {
                 Vector3 next = Vector3.MoveTowards(
-                    transform.position, target, data.MoveSpeed * Time.deltaTime);
+                    transform.position, target, moveSpeed * Time.deltaTime);
 
                 if (GridManager.Instance != null && !GridManager.Instance.IsWalkable(next))
                 {

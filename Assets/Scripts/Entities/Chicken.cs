@@ -4,6 +4,8 @@ public class Chicken : PlaceableEntity
 {
     [SerializeField] private ChickenData data;
 
+    public override EconomyEntityData EconomyData => data;
+
     protected override void Awake()
     {
         base.Awake();
