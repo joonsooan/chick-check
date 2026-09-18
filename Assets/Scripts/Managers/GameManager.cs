@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private RoundConfigData roundConfig;
     [SerializeField] private Vector3[] chickSpawnPoints;
+    [SerializeField] private bool enterKeyEndsRoundForTest = true;
 
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
@@ -49,6 +51,13 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentPhase == GamePhase.GameOver)
         {
+            return;
+        }
+
+        if (enterKeyEndsRoundForTest && CurrentPhase == GamePhase.Playing
+            && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
+        {
+            EndRound();
             return;
         }
 

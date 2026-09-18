@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private string shopItemsResourcePath = "Shop Items";
     [SerializeField] private int shopItemsPerRound = 3;
-    [SerializeField] private bool enterKeyLoadsShopForTest = true;
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
 
@@ -50,19 +48,6 @@ public class UpgradeManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnPhaseChanged -= HandlePhaseChanged;
-        }
-    }
-
-    private void Update()
-    {
-        if (!enterKeyLoadsShopForTest || Keyboard.current == null)
-        {
-            return;
-        }
-
-        if (Keyboard.current.enterKey.wasPressedThisFrame)
-        {
-            OnShopCatalogReady?.Invoke(PickRandomItems());
         }
     }
 
