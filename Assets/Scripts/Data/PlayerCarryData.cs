@@ -11,14 +11,18 @@ public class PlayerCarryData : ScriptableObject
 
     [Header("Pickup Animation")]
     [SerializeField] private float pickUpLockDuration = 0.4f;
+    [SerializeField] private int pickUpGraspFrameIndex = 4;
 
     [Header("Drop Position")]
     [SerializeField] private float dropOffsetX = 0.5f;
     [SerializeField] private float dropOffsetY = 0.5f;
+    [SerializeField] private int dropMoveFrameIndex = 4;
 
     public float CarryRadius => carryRadius;
     public Vector2 CarryOffset => carryOffset;
     public float PickUpLockDuration => pickUpLockDuration;
+    public int PickUpGraspFrameIndex => pickUpGraspFrameIndex;
     public float DropOffsetX => dropOffsetX;
     public float DropOffsetY => dropOffsetY;
+    public int DropMoveFrameIndex => dropMoveFrameIndex;
 }

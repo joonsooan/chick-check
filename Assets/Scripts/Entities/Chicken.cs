@@ -15,6 +15,7 @@ public class Chicken : PlaceableEntity
     {
         base.OnEnable();
 
+        StartCoroutine(WalkRoutine(data));
         StartCoroutine(GrowthRoutine(data));
     }
 
@@ -23,6 +24,23 @@ public class Chicken : PlaceableEntity
         base.OnDisable();
 
         StopAllCoroutines();
+    }
+
+    public override void SetCarried(bool carried)
+    {
+        base.SetCarried(carried);
+
+        StopAllCoroutines();
+
+        if (carried)
+        {
+            animator.SetBool(IsWalkingHash, false);
+        }
+        else
+        {
+            StartCoroutine(WalkRoutine(data));
+            StartCoroutine(GrowthRoutine(data));
+        }
     }
 
     protected override void NotifySpawnCount()

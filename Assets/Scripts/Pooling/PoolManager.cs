@@ -17,7 +17,6 @@ public class PoolManager : MonoBehaviour
     [SerializeField] private PrewarmConfig[] prewarm;
 
     private readonly Dictionary<GameObject, ObjectPool> pools = new Dictionary<GameObject, ObjectPool>();
-    private readonly Dictionary<GameObject, Transform> configuredParents = new Dictionary<GameObject, Transform>();
 
     private void Awake()
     {
@@ -34,11 +33,8 @@ public class PoolManager : MonoBehaviour
             {
                 if (config.prefab != null)
                 {
-                    if (config.parent != null)
-                    {
-                        configuredParents[config.prefab] = config.parent;
-                    }
-                    GetOrCreatePool(config.prefab, config.count);
+                    Transform root = config.parent;
+                    pools[config.prefab] = new ObjectPool(config.prefab, root, config.count);
                 }
             }
         }
@@ -52,37 +48,24 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    private ObjectPool GetOrCreatePool(GameObject prefab, int prewarmCount = 0)
+    private ObjectPool GetPool(GameObject prefab)
     {
         if (!pools.TryGetValue(prefab, out ObjectPool pool))
         {
-            Transform root;
-            if (configuredParents.TryGetValue(prefab, out Transform assigned) && assigned != null)
-            {
-                root = assigned;
-            }
-            else
-            {
-                root = new GameObject("Pool_" + prefab.name).transform;
-                root.SetParent(transform, false);
-            }
-            pool = new ObjectPool(prefab, root, prewarmCount);
-            pools.Add(prefab, pool);
+            return null;
         }
         return pool;
     }
 
     public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        return GetOrCreatePool(prefab).Get(position, rotation, parent);
+        return GetPool(prefab)?.Get(position, rotation, parent);
     }
 
     public T Spawn<T>(T prefabComponent, Vector3 position, Quaternion rotation, Transform parent = null)
         where T : Component
     {
-        return GetOrCreatePool(prefabComponent.gameObject)
-            .Get(position, rotation, parent)
-            .GetComponent<T>();
+        return Spawn(prefabComponent.gameObject, position, rotation, parent)?.GetComponent<T>();
     }
 
     public static void Despawn(GameObject instance)

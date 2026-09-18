@@ -8,6 +8,7 @@ public class PlayerCarry : MonoBehaviour
     private PlayerAnimator playerAnimator;
 
     private PlaceableEntity carriedEntity;
+    private bool isPickingUp;
 
     private void Awake()
     {
@@ -33,6 +34,11 @@ public class PlayerCarry : MonoBehaviour
         }
 
         carriedEntity.transform.position = (Vector2)transform.position + data.CarryOffset;
+
+        if (playerAnimator.IsFacingHorizontal)
+        {
+            carriedEntity.SpriteRenderer.flipX = playerAnimator.FacingSignX > 0f;
+        }
     }
 
     private void HandleInteractPressed()
@@ -40,6 +46,11 @@ public class PlayerCarry : MonoBehaviour
         if (carriedEntity != null)
         {
             Drop();
+            return;
+        }
+
+        if (isPickingUp)
+        {
             return;
         }
 
@@ -54,18 +65,27 @@ public class PlayerCarry : MonoBehaviour
             return;
         }
 
-        carriedEntity = target;
-        carriedEntity.SetCarried(true);
+        target.SetCarried(true);
+        isPickingUp = true;
+        playerAnimator.PlayPickUp(data.PickUpGraspFrameIndex, () =>
+        {
+            carriedEntity = target;
+            isPickingUp = false;
+        });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }
 
     private void Drop()
     {
+        PlaceableEntity target = carriedEntity;
         Vector3 dropPosition = transform.position + (Vector3)GetFacingDropOffset();
-        carriedEntity.transform.position = dropPosition;
 
-        carriedEntity.SetCarried(false);
-        carriedEntity = null;
+        playerAnimator.PlayDropReversed(data.PickUpLockDuration, data.DropMoveFrameIndex, () =>
+        {
+            target.transform.position = dropPosition;
+            target.SetCarried(false);
+            carriedEntity = null;
+        });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }
 

@@ -15,5 +15,7 @@ MonoBehaviour:
   carryRadius: 1.5
   carryOffset: {x: 0, y: 0.8}
   pickUpLockDuration: 0.6
+  pickUpGraspFrameIndex: 2
   dropOffsetX: 0.5
   dropOffsetY: -0.1
+  dropMoveFrameIndex: 3
