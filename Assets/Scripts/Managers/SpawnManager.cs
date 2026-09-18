@@ -1,16 +1,45 @@
+using System;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    public static SpawnManager Instance { get; private set; }
 
+    [SerializeField] private Chick chickPrefab;
+
+    public int ChickCount { get; private set; }
+    public event Action<int> OnChickCountChanged;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDestroy()
     {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 
+    public Chick SpawnChick(Vector3 position)
+    {
+        Chick chick = PoolManager.Instance.Spawn(chickPrefab, position, Quaternion.identity);
+        ChickCount++;
+        OnChickCountChanged?.Invoke(ChickCount);
+        return chick;
+    }
+
+    public void DespawnChick(Chick chick)
+    {
+        PoolManager.Despawn(chick.gameObject);
+        ChickCount--;
+        OnChickCountChanged?.Invoke(ChickCount);
     }
 }
