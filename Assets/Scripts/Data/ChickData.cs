@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ChickData", menuName = "Chick Data")]
-public class ChickData : ScriptableObject
+public class ChickData : EconomyEntityData
 {
     [SerializeField] private Sprite sprite;
 

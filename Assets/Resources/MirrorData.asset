@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MirrorData
   m_EditorClassIdentifier: Assembly-CSharp::MirrorData
   dwellTime: 2
-  exitDistance: 1.5
+  exitDistance: 5

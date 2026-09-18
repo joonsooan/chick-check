@@ -23,11 +23,22 @@ public class Chick : PlaceableEntity
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
         StartCoroutine(WalkRoutine());
+        StartCoroutine(GrowthRoutine(data));
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
+    }
+
+    protected override void NotifySpawnCount()
+    {
+        SpawnManager.Instance?.RegisterChickSpawned();
+    }
+
+    protected override void NotifyDespawnCount()
+    {
+        SpawnManager.Instance?.RegisterChickDespawned();
     }
 
     public bool IsExiting { get; private set; }

@@ -257,8 +257,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b57f2042bbfb574da55bd3a749770773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridObstacle
-  footprintOffset: {x: 0, y: 0.25}
-  footprintSize: {x: 1.5, y: 1.5}
+  footprintOffset: {x: 0, y: 0}
+  footprintSize: {x: 1, y: 1}
 --- !u!1 &5161976205760679014
 GameObject:
   m_ObjectHideFlags: 0

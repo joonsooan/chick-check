@@ -9,7 +9,7 @@ public class GridObstacle : MonoBehaviour
 
     private readonly List<Vector3Int> registered = new List<Vector3Int>();
 
-    private void OnEnable()
+    private void Start()
     {
         Register();
     }
