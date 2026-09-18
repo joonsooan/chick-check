@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 54214d0dae9aadd49a6c31b28cc135de
+AssetOrigin:
+  serializedVersion: 1
+  productId: 325693
+  packageName: Pixel Vault UI Series | Wood UI V1 + Vault Font
+  packageVersion: 1.0
+  assetPath: Assets/Wood UI/Sprites/Borders/Original/Titlebox.png
+  uploadId: 780105
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -51,8 +58,8 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 6, y: 7, z: 6, w: 7}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -134,7 +141,7 @@ TextureImporter:
         width: 24
         height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -152,7 +159,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -167,10 +174,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 325693
-  packageName: Pixel Vault UI Series | Wood UI V1 + Vault Font
-  packageVersion: 1.0
-  assetPath: Assets/Wood UI/Sprites/Borders/Original/Titlebox.png
-  uploadId: 780105

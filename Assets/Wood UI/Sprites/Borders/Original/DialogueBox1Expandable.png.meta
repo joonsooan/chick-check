@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 08106e8b4feaa31458f422d68a2c14b7
+AssetOrigin:
+  serializedVersion: 1
+  productId: 325693
+  packageName: Pixel Vault UI Series | Wood UI V1 + Vault Font
+  packageVersion: 1.0
+  assetPath: Assets/Wood UI/Sprites/Borders/Original/DialogueBox1Expandable.png
+  uploadId: 780105
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -51,7 +58,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 8
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -167,10 +174,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 325693
-  packageName: Pixel Vault UI Series | Wood UI V1 + Vault Font
-  packageVersion: 1.0
-  assetPath: Assets/Wood UI/Sprites/Borders/Original/DialogueBox1Expandable.png
-  uploadId: 780105
