@@ -21,6 +21,7 @@ public class Chick : PlaceableEntity
     {
         IsExiting = false;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
+        spriteRenderer.sortingLayerName = "Objects";
         StartCoroutine(WalkRoutine());
     }
 
@@ -42,6 +43,10 @@ public class Chick : PlaceableEntity
         IsExiting = true;
         spriteRenderer.maskInteraction =
             masked ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
+        if (masked)
+        {
+            spriteRenderer.sortingLayerName = "Reflection";
+        }
 
         Vector3 target = transform.position + (Vector3)(dir * distance);
         spriteRenderer.flipX = dir.x > 0f;
@@ -55,6 +60,10 @@ public class Chick : PlaceableEntity
         }
 
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
+        if (masked)
+        {
+            spriteRenderer.sortingLayerName = "Objects";
+        }
         IsExiting = false;
         StartCoroutine(WalkRoutine());
     }

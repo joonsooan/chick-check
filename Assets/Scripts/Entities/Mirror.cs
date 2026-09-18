@@ -5,6 +5,7 @@ public class Mirror : MonoBehaviour
 {
     [SerializeField] private MirrorData data;
     [SerializeField] private bool duplicationEnabled = true;
+    [SerializeField] private Transform chickSpawnParent;
 
     private readonly List<Chick> chicksInZone = new List<Chick>();
     private readonly Dictionary<Chick, float> dwell = new Dictionary<Chick, float>();
@@ -75,7 +76,7 @@ public class Mirror : MonoBehaviour
         revealingSource = source;
 
         Vector3 spawnPos = reflection.GetReflectionPosition(source);
-        Chick copy = SpawnManager.Instance.SpawnChick(spawnPos);
+        Chick copy = SpawnManager.Instance.SpawnChick(spawnPos, chickSpawnParent);
 
         Vector2 exitDir = transform.right;
         source.ForceExit(exitDir, data.ExitDistance, masked: false);

@@ -28,9 +28,9 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public Chick SpawnChick(Vector3 position)
+    public Chick SpawnChick(Vector3 position, Transform parent = null)
     {
-        Chick chick = PoolManager.Instance.Spawn(chickPrefab, position, Quaternion.identity);
+        Chick chick = PoolManager.Instance.Spawn(chickPrefab, position, Quaternion.identity, parent);
         ChickCount++;
         OnChickCountChanged?.Invoke(ChickCount);
         return chick;
