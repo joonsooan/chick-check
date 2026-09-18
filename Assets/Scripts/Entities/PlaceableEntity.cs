@@ -1,15 +1,36 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class PlaceableEntity : MonoBehaviour
 {
+    private static readonly List<PlaceableEntity> activeEntities = new List<PlaceableEntity>();
+
+    public static IReadOnlyList<PlaceableEntity> ActiveEntities => activeEntities;
+
     protected SpriteRenderer spriteRenderer;
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
+    public bool IsCarried { get; private set; }
 
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    protected virtual void OnEnable()
+    {
+        activeEntities.Add(this);
+    }
+
+    protected virtual void OnDisable()
+    {
+        activeEntities.Remove(this);
+    }
+
+    public virtual void SetCarried(bool carried)
+    {
+        IsCarried = carried;
     }
 
     protected IEnumerator GrowthRoutine(EconomyEntityData data)

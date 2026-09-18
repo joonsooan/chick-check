@@ -52,7 +52,7 @@ public class Mirror : MonoBehaviour
                 continue;
             }
 
-            if (chick.IsExiting)
+            if (chick.IsExiting || chick.IsCarried)
             {
                 continue;
             }

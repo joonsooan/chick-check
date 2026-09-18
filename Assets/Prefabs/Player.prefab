@@ -202,6 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19321d9264e78c94cb854b9386482a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCarry
+  data: {fileID: 11400000, guid: 87e690b36fdc5cb4e87a2974b1af78f9, type: 2}
 --- !u!114 &6974893593343212560
 MonoBehaviour:
   m_ObjectHideFlags: 0

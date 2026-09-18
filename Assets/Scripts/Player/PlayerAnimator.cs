@@ -17,6 +17,10 @@ public class PlayerAnimator : MonoBehaviour
     private float facingMoveX = 1f;
     private float facingMoveY;
 
+    public bool IsFacingHorizontal => facingMoveY == 0f;
+    public float FacingSignX => Mathf.Sign(facingMoveX);
+    public float FacingSignY => facingMoveY;
+
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();

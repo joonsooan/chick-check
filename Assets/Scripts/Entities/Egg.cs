@@ -11,13 +11,17 @@ public class Egg : PlaceableEntity
         spriteRenderer.sprite = data.Sprite;
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         StartCoroutine(GrowthRoutine(data));
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         StopAllCoroutines();
     }
 

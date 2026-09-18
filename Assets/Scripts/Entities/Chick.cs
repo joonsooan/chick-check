@@ -17,8 +17,10 @@ public class Chick : PlaceableEntity
         spriteRenderer.sprite = data.Sprite;
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         IsExiting = false;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
@@ -26,9 +28,40 @@ public class Chick : PlaceableEntity
         StartCoroutine(GrowthRoutine(data));
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         StopAllCoroutines();
+    }
+
+    public override void SetCarried(bool carried)
+    {
+        base.SetCarried(carried);
+
+        StopAllCoroutines();
+
+        if (carried)
+        {
+            if (IsExiting)
+            {
+                CancelForceExit();
+            }
+
+            animator.SetBool(IsWalkingHash, false);
+        }
+        else
+        {
+            StartCoroutine(WalkRoutine());
+            StartCoroutine(GrowthRoutine(data));
+        }
+    }
+
+    private void CancelForceExit()
+    {
+        IsExiting = false;
+        spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
+        spriteRenderer.sortingLayerName = "Objects";
     }
 
     protected override void NotifySpawnCount()

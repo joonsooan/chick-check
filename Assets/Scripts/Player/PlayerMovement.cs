@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private InputAction interactAction;
 
     private Vector2 moveInput;
+    private bool isMovementLocked;
+    private Coroutine movementLockRoutine;
 
     public float SprintSpeed => moveSpeed * sprintMultiplier;
     public Vector2 MoveInput => moveInput;
@@ -48,11 +51,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
+        moveInput = isMovementLocked ? Vector2.zero : moveAction.ReadValue<Vector2>();
     }
 
     private void FixedUpdate()
     {
+        if (isMovementLocked)
+        {
+            return;
+        }
+
         float speed = sprintAction.IsPressed() ? SprintSpeed : moveSpeed;
         rb.MovePosition(rb.position + moveInput * (speed * Time.fixedDeltaTime));
     }
@@ -60,6 +68,27 @@ public class PlayerMovement : MonoBehaviour
     private void HandleInteractPerformed(InputAction.CallbackContext context)
     {
         OnInteractPressed?.Invoke();
+    }
+
+    public void LockMovement(float duration)
+    {
+        if (movementLockRoutine != null)
+        {
+            StopCoroutine(movementLockRoutine);
+        }
+
+        movementLockRoutine = StartCoroutine(LockMovementRoutine(duration));
+    }
+
+    private IEnumerator LockMovementRoutine(float duration)
+    {
+        isMovementLocked = true;
+        moveInput = Vector2.zero;
+
+        yield return new WaitForSeconds(duration);
+
+        isMovementLocked = false;
+        movementLockRoutine = null;
     }
 
     public event Action OnInteractPressed;
