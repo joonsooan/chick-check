@@ -7,45 +7,79 @@ public class Mirror : MonoBehaviour
     [SerializeField] private bool duplicationEnabled = true;
 
     private readonly List<Chick> chicksInZone = new List<Chick>();
-    private float timer;
+    private readonly Dictionary<Chick, float> dwell = new Dictionary<Chick, float>();
+    private MirrorReflection reflection;
+
+    private Chick revealingSource;
 
     public IReadOnlyList<Chick> ChicksInZone => chicksInZone;
-    public Chick PeekSource() => GetSourceChick();
+
+    public Chick PeekSource()
+    {
+        if (revealingSource != null && revealingSource.gameObject.activeInHierarchy)
+        {
+            return revealingSource;
+        }
+        return GetSourceChick();
+    }
+
+    private void Awake()
+    {
+        reflection = GetComponent<MirrorReflection>();
+    }
 
     private void OnDisable()
     {
         chicksInZone.Clear();
-        timer = 0f;
+        dwell.Clear();
+        revealingSource = null;
     }
 
     private void Update()
     {
-        if (!duplicationEnabled || chicksInZone.Count == 0)
+        if (!duplicationEnabled)
         {
             return;
         }
 
-        timer += Time.deltaTime;
-        if (timer < data.DuplicateInterval)
+        for (int i = chicksInZone.Count - 1; i >= 0; i--)
         {
-            return;
-        }
-        timer -= data.DuplicateInterval;
+            Chick chick = chicksInZone[i];
+            if (chick == null || !chick.gameObject.activeInHierarchy)
+            {
+                RemoveChick(chick, i);
+                continue;
+            }
 
-        Duplicate();
+            if (chick.IsExiting)
+            {
+                continue;
+            }
+
+            dwell.TryGetValue(chick, out float t);
+            t += Time.deltaTime;
+
+            if (t >= data.DwellTime)
+            {
+                Duplicate(chick);
+            }
+            else
+            {
+                dwell[chick] = t;
+            }
+        }
     }
 
-    private void Duplicate()
+    private void Duplicate(Chick source)
     {
-        Chick source = GetSourceChick();
-        if (source == null)
-        {
-            return;
-        }
+        revealingSource = source;
 
-        Vector2 offset = Random.insideUnitCircle * data.SpawnScatterRadius;
-        Vector3 spawnPos = source.transform.position + (Vector3)offset;
-        SpawnManager.Instance.SpawnChick(spawnPos);
+        Vector3 spawnPos = reflection.GetReflectionPosition(source);
+        Chick copy = SpawnManager.Instance.SpawnChick(spawnPos);
+
+        Vector2 exitDir = transform.right;
+        source.ForceExit(exitDir, data.ExitDistance, masked: false);
+        copy.ForceExit(exitDir, data.ExitDistance, masked: true);
     }
 
     private Chick GetSourceChick()
@@ -55,12 +89,21 @@ public class Mirror : MonoBehaviour
             Chick chick = chicksInZone[i];
             if (chick == null || !chick.gameObject.activeInHierarchy)
             {
-                chicksInZone.RemoveAt(i);
+                RemoveChick(chick, i);
                 continue;
             }
             return chick;
         }
         return null;
+    }
+
+    private void RemoveChick(Chick chick, int index)
+    {
+        chicksInZone.RemoveAt(index);
+        if (chick != null)
+        {
+            dwell.Remove(chick);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -74,6 +117,7 @@ public class Mirror : MonoBehaviour
         if (chick != null && !chicksInZone.Contains(chick))
         {
             chicksInZone.Add(chick);
+            dwell[chick] = 0f;
         }
     }
 
@@ -88,6 +132,11 @@ public class Mirror : MonoBehaviour
         if (chick != null)
         {
             chicksInZone.Remove(chick);
+            dwell.Remove(chick);
+            if (chick == revealingSource)
+            {
+                revealingSource = null;
+            }
         }
     }
 }

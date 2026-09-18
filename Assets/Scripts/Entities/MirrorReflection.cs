@@ -23,7 +23,7 @@ public class MirrorReflection : MonoBehaviour
     [Header("Reflection Axis")]
     [SerializeField] private float axisOffset;
 
-    [Header("Glass Area (mask 정렬용 기즈모)")]
+    [Header("Glass Area")]
     [SerializeField] private Vector2 glassCenter;
     [SerializeField] private Vector2 glassSize = Vector2.one;
 
@@ -133,6 +133,20 @@ public class MirrorReflection : MonoBehaviour
     {
         float axisY = transform.TransformPoint(new Vector2(0f, axisOffset)).y;
         return new Vector3(chickWorldPos.x, 2f * axisY - chickWorldPos.y, chickWorldPos.z);
+    }
+
+    public Vector3 GetReflectionPosition(Chick chick) => Reflect(chick.transform.position);
+
+    public void ReleaseReflection(Chick chick)
+    {
+        if (active.TryGetValue(chick, out SpriteRenderer sr))
+        {
+            if (sr != null)
+            {
+                PoolManager.Despawn(sr.gameObject);
+            }
+            active.Remove(chick);
+        }
     }
 
     private void OnDrawGizmosSelected()

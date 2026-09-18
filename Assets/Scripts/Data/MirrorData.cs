@@ -4,9 +4,9 @@ using UnityEngine;
 public class MirrorData : ScriptableObject
 {
     [Header("Duplication")]
-    [SerializeField] private float duplicateInterval = 3f;
-    [SerializeField] private float spawnScatterRadius = 0.3f;
+    [SerializeField] private float dwellTime = 2f;
+    [SerializeField] private float exitDistance = 1.5f;
 
-    public float DuplicateInterval => duplicateInterval;
-    public float SpawnScatterRadius => spawnScatterRadius;
+    public float DwellTime => dwellTime;
+    public float ExitDistance => exitDistance;
 }

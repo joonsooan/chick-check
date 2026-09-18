@@ -45,11 +45,11 @@ TagManager:
   - name: Ground
     uniqueID: 1964516435
     locked: 0
-  - name: Reflection
-    uniqueID: 3744940531
-    locked: 0
   - name: Objects
     uniqueID: 3914456647
+    locked: 0
+  - name: Reflection
+    uniqueID: 3744940531
     locked: 0
   - name: UI
     uniqueID: 3785482963

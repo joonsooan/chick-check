@@ -19,12 +19,44 @@ public class Chick : PlaceableEntity
 
     private void OnEnable()
     {
+        IsExiting = false;
+        spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         StartCoroutine(WalkRoutine());
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
+    }
+
+    public bool IsExiting { get; private set; }
+
+    public void ForceExit(Vector2 dir, float distance, bool masked)
+    {
+        StopAllCoroutines();
+        StartCoroutine(ForceExitRoutine(dir.normalized, distance, masked));
+    }
+
+    private IEnumerator ForceExitRoutine(Vector2 dir, float distance, bool masked)
+    {
+        IsExiting = true;
+        spriteRenderer.maskInteraction =
+            masked ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
+
+        Vector3 target = transform.position + (Vector3)(dir * distance);
+        spriteRenderer.flipX = dir.x > 0f;
+        animator.SetBool(IsWalkingHash, true);
+
+        while ((target - transform.position).sqrMagnitude > 0.0001f)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position, target, data.MoveSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
+        IsExiting = false;
+        StartCoroutine(WalkRoutine());
     }
 
     private IEnumerator WalkRoutine()
@@ -36,23 +68,46 @@ public class Chick : PlaceableEntity
             Vector2 interval = data.WalkIntervalRange;
             yield return new WaitForSeconds(Random.Range(interval.x, interval.y));
 
-            Vector2 dir = Random.insideUnitCircle.normalized;
-            Vector2 distance = data.WalkDistanceRange;
-            Vector3 target = transform.position + (Vector3)(dir * Random.Range(distance.x, distance.y));
-
-            if (dir.x != 0f)
+            if (!TryPickTarget(out Vector3 target))
             {
-                spriteRenderer.flipX = dir.x > 0f;
+                continue;
             }
 
+            spriteRenderer.flipX = target.x > transform.position.x;
             animator.SetBool(IsWalkingHash, true);
 
             while ((target - transform.position).sqrMagnitude > 0.0001f)
             {
-                transform.position = Vector3.MoveTowards(
+                Vector3 next = Vector3.MoveTowards(
                     transform.position, target, data.MoveSpeed * Time.deltaTime);
+
+                if (GridManager.Instance != null && !GridManager.Instance.IsWalkable(next))
+                {
+                    break;
+                }
+
+                transform.position = next;
                 yield return null;
             }
         }
+    }
+
+    private bool TryPickTarget(out Vector3 target)
+    {
+        Vector2 distance = data.WalkDistanceRange;
+        for (int attempt = 0; attempt < 10; attempt++)
+        {
+            Vector2 dir = Random.insideUnitCircle.normalized;
+            Vector3 candidate = transform.position + (Vector3)(dir * Random.Range(distance.x, distance.y));
+
+            if (GridManager.Instance == null || GridManager.Instance.IsWalkable(candidate))
+            {
+                target = candidate;
+                return true;
+            }
+        }
+
+        target = transform.position;
+        return false;
     }
 }
