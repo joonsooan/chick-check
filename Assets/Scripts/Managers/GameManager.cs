@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private RoundConfigData roundConfig;
-    [SerializeField] private Vector3[] chickSpawnPoints;
+    [SerializeField] private Vector3 chickSpawnCenter;
     [SerializeField] private bool enterKeyEndsRoundForTest = true;
 
     public int CurrentRound { get; private set; }
@@ -182,7 +182,16 @@ public class GameManager : MonoBehaviour
 
     private Vector3 GetRandomSpawnPoint()
     {
-        return chickSpawnPoints[UnityEngine.Random.Range(0, chickSpawnPoints.Length)];
+        float outerRadius = roundConfig.ChickSpawnOuterRadius;
+        float innerRadius = roundConfig.ChickSpawnInnerRadius;
+        if (outerRadius <= 0f || innerRadius >= outerRadius)
+        {
+            return chickSpawnCenter;
+        }
+
+        float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+        float radius = Mathf.Sqrt(UnityEngine.Random.Range(innerRadius * innerRadius, outerRadius * outerRadius));
+        return chickSpawnCenter + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f);
     }
 }
 

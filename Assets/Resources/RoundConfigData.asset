@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a930fa8ec8bd2145a4e2e1d4ad5bb61, type: 3}
   m_Name: RoundConfigData
   m_EditorClassIdentifier: Assembly-CSharp::RoundConfigData
-  roundDuration: 60
-  chickSpawnCountPerRound: 3
+  roundDuration: 20
+  chickSpawnCountPerRound: 12
   shopPhaseDuration: 20
+  debtCheckpointInterval: 3
+  debtAmount: 30
+  chickSpawnOuterRadius: 4
+  chickSpawnInnerRadius: 2

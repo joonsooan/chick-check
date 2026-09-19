@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: EggData
   m_EditorClassIdentifier: Assembly-CSharp::EggData
   sellPrice: 5
-  growthInterval: 5
-  growthChance: 0.1
+  growthInterval: 2
+  growthChance: 0.5
   nextStagePrefab: {fileID: 3660991588947072175, guid: 763194d141ed13741acd54fa57f43dbf, type: 3}
+  moveSpeed: 1
+  walkIntervalRange: {x: 1.5, y: 4}
+  walkDistanceRange: {x: 0.3, y: 1}
   sprite: {fileID: 1161201145128540330, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}

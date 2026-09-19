@@ -276,6 +276,8 @@ MonoBehaviour:
   descriptionText: {fileID: 5205160550624125465}
   costText: {fileID: 7400003833098829488}
   buyButton: {fileID: 6522976137914056665}
+  normalCostColor: {r: 1, g: 1, b: 1, a: 1}
+  insufficientCostColor: {r: 0.8117648, g: 0.34117648, b: 0.23137257, a: 1}
 --- !u!1 &4987837666243660813
 GameObject:
   m_ObjectHideFlags: 0
