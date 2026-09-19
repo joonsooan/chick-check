@@ -15,7 +15,8 @@ public class PlayerCarryData : ScriptableObject
 
     [Header("Drop Position")]
     [SerializeField] private float dropOffsetX = 0.5f;
-    [SerializeField] private float dropOffsetY = 0.5f;
+    [SerializeField] private float dropOffsetYUp = 0.5f;
+    [SerializeField] private float dropOffsetYDown = 0.5f;
     [SerializeField] private int dropMoveFrameIndex = 4;
 
     public float CarryRadius => carryRadius;
@@ -23,6 +24,7 @@ public class PlayerCarryData : ScriptableObject
     public float PickUpLockDuration => pickUpLockDuration;
     public int PickUpGraspFrameIndex => pickUpGraspFrameIndex;
     public float DropOffsetX => dropOffsetX;
-    public float DropOffsetY => dropOffsetY;
+    public float DropOffsetYUp => dropOffsetYUp;
+    public float DropOffsetYDown => dropOffsetYDown;
     public int DropMoveFrameIndex => dropMoveFrameIndex;
 }

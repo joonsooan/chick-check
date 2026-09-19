@@ -96,7 +96,7 @@ public class PlayerCarry : MonoBehaviour
             return new Vector2(playerAnimator.FacingSignX * data.DropOffsetX, 0f);
         }
 
-        return new Vector2(0f, data.DropOffsetY);
+        return new Vector2(0f, playerAnimator.FacingSignY > 0f ? data.DropOffsetYUp : -data.DropOffsetYDown);
     }
 
     private PlaceableEntity FindNearestEntity()
