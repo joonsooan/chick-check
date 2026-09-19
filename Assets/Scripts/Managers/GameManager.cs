@@ -11,12 +11,15 @@ public class GameManager : Singleton<GameManager>
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
     public float PhaseTimeRemaining { get; private set; }
+    public int RemainingDebt { get; private set; }
+    public int NextDebtDueRound { get; private set; }
 
     public event Action<int> OnRoundStarted;
     public event Action<float, float> OnPhaseTimerTick;
     public event Action<int> OnRoundEnded;
     public event Action<GamePhase> OnPhaseChanged;
     public event Action<int> OnDebtDue;
+    public event Action<int, int> OnDebtStatusChanged;
     public event Action<GameOverReason> OnGameOver;
 
     private float phaseTotalTime;
@@ -24,6 +27,9 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        NextDebtDueRound = roundConfig.DebtCheckpointInterval;
+        RemainingDebt = roundConfig.DebtAmount;
+
         StartRound(1);
     }
 
@@ -78,6 +84,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         SetPhaseTimer(roundDuration);
+        NotifyDebtStatus();
     }
 
     private void EndRound()
@@ -99,7 +106,7 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        if (CurrentRound % roundConfig.DebtCheckpointInterval == 0)
+        if (CurrentRound >= NextDebtDueRound)
         {
             EnterDebtCheckpoint();
             return;
@@ -112,24 +119,37 @@ public class GameManager : Singleton<GameManager>
     {
         SetPhase(GamePhase.DebtCheckpoint);
         phaseHasTimer = false;
-        OnDebtDue?.Invoke(roundConfig.DebtAmount);
+        OnDebtDue?.Invoke(RemainingDebt);
+        EnterGameOver(GameOverReason.NotEnoughGold);
     }
 
-    public void PayDebt()
+    public void PayDebt(int amount)
     {
-        if (CurrentPhase != GamePhase.DebtCheckpoint)
+        if (CurrentPhase != GamePhase.Shop || EconomyManager.Instance == null)
         {
             return;
         }
 
-        if (EconomyManager.Instance.TrySpendGold(roundConfig.DebtAmount))
+        int payable = Mathf.Clamp(amount, 0, Mathf.Min(RemainingDebt, EconomyManager.Instance.Gold));
+        if (payable <= 0 || !EconomyManager.Instance.TrySpendGold(payable))
         {
-            StartRound(CurrentRound + 1);
+            return;
         }
-        else
+
+        RemainingDebt -= payable;
+        if (RemainingDebt <= 0)
         {
-            EnterGameOver(GameOverReason.NotEnoughGold);
+            RemainingDebt = roundConfig.DebtAmount;
+            NextDebtDueRound += roundConfig.DebtCheckpointInterval;
         }
+
+        NotifyDebtStatus();
+    }
+
+    private void NotifyDebtStatus()
+    {
+        int roundsUntilDue = Mathf.Max(NextDebtDueRound - CurrentRound, 0);
+        OnDebtStatusChanged?.Invoke(RemainingDebt, roundsUntilDue);
     }
 
     private void EnterGameOver(GameOverReason reason)

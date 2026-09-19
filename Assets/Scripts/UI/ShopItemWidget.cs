@@ -12,17 +12,26 @@ public class ShopItemWidget : MonoBehaviour
     [SerializeField] private Color normalCostColor = Color.white;
     [SerializeField] private Color insufficientCostColor = Color.red;
 
+    private RectTransform rectTransform;
     private ShopItemData boundItem;
 
-    private void Start()
+    private void Awake()
+    {
+        rectTransform = (RectTransform)transform;
+    }
+
+    private void OnEnable()
     {
         if (EconomyManager.Instance != null)
         {
             EconomyManager.Instance.OnGoldChanged += HandleGoldChanged;
+            UpdateCostColor(EconomyManager.Instance.Gold);
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (EconomyManager.Instance != null)
         {
@@ -32,6 +41,11 @@ public class ShopItemWidget : MonoBehaviour
 
     public void Setup(ShopItemData item)
     {
+        if (rectTransform == null)
+        {
+            rectTransform = (RectTransform)transform;
+        }
+
         boundItem = item;
 
         if (icon != null)
@@ -46,12 +60,12 @@ public class ShopItemWidget : MonoBehaviour
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(HandleBuyClicked);
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)buyButton.transform);
-
         if (EconomyManager.Instance != null)
         {
             UpdateCostColor(EconomyManager.Instance.Gold);
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 
     private void HandleGoldChanged(int gold)
