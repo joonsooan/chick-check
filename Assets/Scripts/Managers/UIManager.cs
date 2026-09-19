@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject checkPanel;
     [SerializeField] private GameObject tabButtonGroup;
     [SerializeField] private GameObject hudPanelRoot;
+
+    // shop/check 탭이 보이는 동안에만 true — result 화면 위에서는 gold 표시 등을 숨기는 데 사용.
+    public event Action<bool> OnShopUiVisibilityChanged;
 
     protected override void Awake()
     {
@@ -78,6 +82,8 @@ public class UIManager : Singleton<UIManager>
 
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)target.transform);
+
+        OnShopUiVisibilityChanged?.Invoke(target == shopPanel || target == checkPanel);
     }
 
     private void HideAll()
@@ -87,5 +93,7 @@ public class UIManager : Singleton<UIManager>
         checkPanel.SetActive(false);
         tabButtonGroup.SetActive(false);
         hudPanelRoot.SetActive(false);
+
+        OnShopUiVisibilityChanged?.Invoke(false);
     }
 }

@@ -8,6 +8,7 @@ public class CheckPanelController : MonoBehaviour
 {
     private const int DigitCount = 5;
 
+    [SerializeField] private RectTransform panelRoot;
     [SerializeField] private TMP_Text dueInText;
     [SerializeField] private TMP_Text remainingDebtText;
     [SerializeField] private TMP_Text[] digitTexts = new TMP_Text[DigitCount];
@@ -53,9 +54,9 @@ public class CheckPanelController : MonoBehaviour
             GameManager.Instance.OnDebtStatusChanged += HandleDebtStatusChanged;
         }
 
-        if (digitAnchors != null && digitAnchors.Length > 0 && digitAnchors[0] != null)
+        if (UIManager.Instance != null)
         {
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)digitAnchors[0].parent);
+            UIManager.Instance.OnShopUiVisibilityChanged += HandleShopUiVisibilityChanged;
         }
 
         ResetInput();
@@ -67,6 +68,32 @@ public class CheckPanelController : MonoBehaviour
         {
             GameManager.Instance.OnDebtStatusChanged -= HandleDebtStatusChanged;
         }
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.OnShopUiVisibilityChanged -= HandleShopUiVisibilityChanged;
+        }
+    }
+
+    private void HandleShopUiVisibilityChanged(bool isVisible)
+    {
+        if (!isVisible)
+        {
+            return;
+        }
+
+        RebuildPanelLayout();
+    }
+
+    private void RebuildPanelLayout()
+    {
+        if (panelRoot == null)
+        {
+            return;
+        }
+
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panelRoot);
     }
 
     private void Update()
@@ -190,6 +217,8 @@ public class CheckPanelController : MonoBehaviour
                 digitTexts[i].text = digits[i].ToString();
             }
         }
+
+        RebuildPanelLayout();
     }
 
     private void HandleDebtStatusChanged(int remainingDebt, int roundsUntilDue)
@@ -201,7 +230,7 @@ public class CheckPanelController : MonoBehaviour
 
         if (remainingDebtText != null)
         {
-            remainingDebtText.text = $"남은 빚 : {remainingDebt} G";
+            remainingDebtText.text = $"남은 빚 : {remainingDebt}";
         }
 
         ClampToMaxPayable();

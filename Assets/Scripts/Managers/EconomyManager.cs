@@ -2,12 +2,26 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public readonly struct SaleRecord
+{
+    public readonly Sprite Sprite;
+    public readonly int SellPrice;
+
+    public SaleRecord(Sprite sprite, int sellPrice)
+    {
+        Sprite = sprite;
+        SellPrice = sellPrice;
+    }
+}
+
 public class EconomyManager : Singleton<EconomyManager>
 {
     [SerializeField] private int startingGold = 10;
 
     public int Gold { get; private set; }
+    public IReadOnlyList<SaleRecord> LastRoundSaleRecords { get; private set; }
     public event Action<int> OnGoldChanged;
+    public event Action<IReadOnlyList<SaleRecord>> OnRoundResultsReady;
 
     protected override void Awake()
     {
@@ -35,6 +49,8 @@ public class EconomyManager : Singleton<EconomyManager>
     private void HandleRoundEnded(int roundNumber)
     {
         PlaceableEntity[] entities = new List<PlaceableEntity>(PlaceableEntity.ActiveEntities).ToArray();
+        List<SaleRecord> saleRecords = new List<SaleRecord>();
+
         foreach (PlaceableEntity entity in entities)
         {
             if (entity == null || entity.IsCarried)
@@ -42,8 +58,12 @@ public class EconomyManager : Singleton<EconomyManager>
                 continue;
             }
 
+            saleRecords.Add(new SaleRecord(entity.EconomyData.Sprite, GetSellPrice(entity)));
             SellEntity(entity);
         }
+
+        LastRoundSaleRecords = saleRecords;
+        OnRoundResultsReady?.Invoke(saleRecords);
     }
 
     public void AddGold(int amount)
@@ -66,13 +86,18 @@ public class EconomyManager : Singleton<EconomyManager>
 
     public void SellEntity(PlaceableEntity entity)
     {
+        AddGold(GetSellPrice(entity));
+        entity.HandleSold();
+    }
+
+    private int GetSellPrice(PlaceableEntity entity)
+    {
         int sellPrice = entity.EconomyData.SellPrice;
         if (UpgradeManager.Instance != null)
         {
             sellPrice = Mathf.RoundToInt(UpgradeManager.Instance.ApplyModifiers(ShopStatType.SellPrice, sellPrice));
         }
 
-        AddGold(sellPrice);
-        entity.HandleSold();
+        return sellPrice;
     }
 }
