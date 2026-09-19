@@ -103,6 +103,11 @@ public class PlayerCarry : MonoBehaviour
 
         playerAnimator.PlayDropReversed(data.PickUpLockDuration, data.DropMoveFrameIndex, () =>
         {
+            if (target == null || !target.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
             target.transform.position = dropPosition;
             target.SetCarried(false);
             carriedEntity = null;

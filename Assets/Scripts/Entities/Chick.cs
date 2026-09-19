@@ -43,6 +43,11 @@ public class Chick : PlaceableEntity
 
         StopAllCoroutines();
 
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (carried)
         {
             animator.SetBool(IsWalkingHash, false);
