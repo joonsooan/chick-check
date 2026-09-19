@@ -27,12 +27,12 @@ public class Egg : PlaceableEntity
         StopAllCoroutines();
     }
 
-    protected override void NotifySpawnCount()
+    public override void NotifySpawnCount()
     {
         SpawnManager.Instance?.RegisterEggSpawned();
     }
 
-    protected override void NotifyDespawnCount()
+    public override void NotifyDespawnCount()
     {
         SpawnManager.Instance?.RegisterEggDespawned();
     }

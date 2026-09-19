@@ -9,6 +9,7 @@ public class Chick : PlaceableEntity
     private bool colliderWasTrigger;
 
     public override EconomyEntityData EconomyData => data;
+    public override bool CanBeCarried => base.CanBeCarried && !IsExiting;
 
     protected override void Awake()
     {
@@ -44,11 +45,6 @@ public class Chick : PlaceableEntity
 
         if (carried)
         {
-            if (IsExiting)
-            {
-                CancelForceExit();
-            }
-
             animator.SetBool(IsWalkingHash, false);
         }
         else
@@ -56,14 +52,6 @@ public class Chick : PlaceableEntity
             StartCoroutine(WalkRoutine(data));
             StartCoroutine(GrowthRoutine(data));
         }
-    }
-
-    private void CancelForceExit()
-    {
-        IsExiting = false;
-        spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
-        spriteRenderer.sortingLayerName = "Objects";
-        RestoreCollider();
     }
 
     private void RestoreCollider()
@@ -74,25 +62,25 @@ public class Chick : PlaceableEntity
         }
     }
 
-    protected override void NotifySpawnCount()
+    public override void NotifySpawnCount()
     {
         SpawnManager.Instance?.RegisterChickSpawned();
     }
 
-    protected override void NotifyDespawnCount()
+    public override void NotifyDespawnCount()
     {
         SpawnManager.Instance?.RegisterChickDespawned();
     }
 
     public bool IsExiting { get; private set; }
 
-    public void ForceExit(Vector2 dir, float distance, bool masked)
+    public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked)
     {
         StopAllCoroutines();
-        StartCoroutine(ForceExitRoutine(dir.normalized, distance, masked));
+        StartCoroutine(ForceExitRoutine(dir.normalized, mirrorData, masked));
     }
 
-    private IEnumerator ForceExitRoutine(Vector2 dir, float distance, bool masked)
+    private IEnumerator ForceExitRoutine(Vector2 dir, MirrorData mirrorData, bool masked)
     {
         IsExiting = true;
         spriteRenderer.maskInteraction =
@@ -108,22 +96,19 @@ public class Chick : PlaceableEntity
             col.isTrigger = true;
         }
 
-        Vector3 target = transform.position + (Vector3)(dir * distance);
-        spriteRenderer.flipX = dir.x > 0f;
         animator.SetBool(IsWalkingHash, true);
 
-        float moveSpeed = data.MoveSpeed;
+        float moveSpeed = data.MoveSpeed * mirrorData.ExitSpeedMultiplier;
         if (UpgradeManager.Instance != null)
         {
             moveSpeed = UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed);
         }
 
-        while ((target - transform.position).sqrMagnitude > 0.0001f)
-        {
-            transform.position = Vector3.MoveTowards(
-                transform.position, target, moveSpeed * Time.deltaTime);
-            yield return null;
-        }
+        yield return MoveForDistance(dir, moveSpeed, mirrorData.ForcedExitDistance);
+
+        float randomAngle = Random.Range(-mirrorData.RandomExitAngle, mirrorData.RandomExitAngle);
+        Vector2 randomDir = Quaternion.Euler(0f, 0f, randomAngle) * dir;
+        yield return MoveForDuration(randomDir, moveSpeed, mirrorData.RandomExitDuration);
 
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         if (masked)
@@ -133,5 +118,30 @@ public class Chick : PlaceableEntity
         RestoreCollider();
         IsExiting = false;
         StartCoroutine(WalkRoutine(data));
+    }
+
+    private IEnumerator MoveForDuration(Vector2 dir, float moveSpeed, float duration)
+    {
+        spriteRenderer.flipX = dir.x > 0f;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            transform.position += (Vector3)(dir * moveSpeed * Time.deltaTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator MoveForDistance(Vector2 dir, float moveSpeed, float distance)
+    {
+        spriteRenderer.flipX = dir.x > 0f;
+
+        Vector3 target = transform.position + (Vector3)(dir * distance);
+        while ((target - transform.position).sqrMagnitude > 0.0001f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
     }
 }

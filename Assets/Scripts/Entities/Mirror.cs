@@ -78,9 +78,9 @@ public class Mirror : MonoBehaviour
         Vector3 spawnPos = reflection.GetReflectionPosition(source);
         Chick copy = SpawnManager.Instance.SpawnChick(spawnPos, chickSpawnParent);
 
-        Vector2 exitDir = transform.right;
-        source.ForceExit(exitDir, data.ExitDistance, masked: false);
-        copy.ForceExit(exitDir, data.ExitDistance, masked: true);
+        Vector2 exitDir = transform.right * (Random.value < 0.5f ? 1f : -1f);
+        source.ForceExit(exitDir, data, masked: false);
+        copy.ForceExit(exitDir, data, masked: true);
     }
 
     private Chick GetSourceChick()

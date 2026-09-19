@@ -7,7 +7,9 @@ public enum ShopStatType
     SellPrice,
     GrowthInterval,
     GrowthChance,
-    RoundDuration
+    RoundDuration,
+    EggLayInterval,
+    EggLayChance
 }
 
 public enum ShopModifierOp
@@ -20,7 +22,7 @@ public enum ShopModifierOp
 public class ShopItemData : ScriptableObject
 {
     [SerializeField] private string itemName;
-    [TextArea] [SerializeField] private string description;
+    [TextArea][SerializeField] private string description;
     [SerializeField] private Sprite icon;
     [SerializeField] private int cost = 10;
     [SerializeField] private ShopStatType targetStat;

@@ -19,6 +19,7 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsCarried { get; private set; }
+    public virtual bool CanBeCarried => true;
     public abstract EconomyEntityData EconomyData { get; }
 
     protected virtual void Awake()
@@ -79,11 +80,11 @@ public abstract class PlaceableEntity : MonoBehaviour
         PoolManager.Despawn(gameObject);
     }
 
-    protected virtual void NotifySpawnCount()
+    public virtual void NotifySpawnCount()
     {
     }
 
-    protected virtual void NotifyDespawnCount()
+    public virtual void NotifyDespawnCount()
     {
     }
 

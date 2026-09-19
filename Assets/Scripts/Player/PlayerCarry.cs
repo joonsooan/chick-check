@@ -108,7 +108,7 @@ public class PlayerCarry : MonoBehaviour
         for (int i = 0; i < activeEntities.Count; i++)
         {
             PlaceableEntity candidate = activeEntities[i];
-            if (candidate.IsCarried)
+            if (candidate.IsCarried || !candidate.CanBeCarried)
             {
                 continue;
             }

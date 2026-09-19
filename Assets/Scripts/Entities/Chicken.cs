@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Chicken : PlaceableEntity
@@ -19,6 +20,7 @@ public class Chicken : PlaceableEntity
 
         StartCoroutine(WalkRoutine(data));
         StartCoroutine(GrowthRoutine(data));
+        StartCoroutine(LayEggRoutine());
     }
 
     protected override void OnDisable()
@@ -42,15 +44,73 @@ public class Chicken : PlaceableEntity
         {
             StartCoroutine(WalkRoutine(data));
             StartCoroutine(GrowthRoutine(data));
+            StartCoroutine(LayEggRoutine());
         }
     }
 
-    protected override void NotifySpawnCount()
+    private IEnumerator LayEggRoutine()
+    {
+        if (data.EggPrefab == null)
+        {
+            yield break;
+        }
+
+        while (true)
+        {
+            float layInterval = data.LayInterval;
+            float layChance = data.LayChance;
+            if (UpgradeManager.Instance != null)
+            {
+                layInterval = UpgradeManager.Instance.ApplyModifiers(ShopStatType.EggLayInterval, layInterval);
+                layChance = UpgradeManager.Instance.ApplyModifiers(ShopStatType.EggLayChance, layChance);
+            }
+
+            yield return new WaitForSeconds(layInterval);
+
+            if (Random.value <= layChance)
+            {
+                for (int i = 0; i < data.LayCount; i++)
+                {
+                    Vector3 spawnPosition = TryPickEggPosition(out Vector3 candidate) ? candidate : transform.position + data.LayOffset;
+                    GameObject egg = PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
+                    egg.GetComponent<PlaceableEntity>()?.NotifySpawnCount();
+                }
+            }
+        }
+    }
+
+    private bool TryPickEggPosition(out Vector3 position)
+    {
+        Vector3 basePosition = transform.position + data.LayOffset;
+
+        if (GridManager.Instance == null || GridManager.Instance.IsWalkable(basePosition))
+        {
+            position = basePosition;
+            return true;
+        }
+
+        for (int attempt = 0; attempt < 10; attempt++)
+        {
+            Vector2 jitter = Random.insideUnitCircle * 0.5f;
+            Vector3 candidate = basePosition + (Vector3)jitter;
+
+            if (GridManager.Instance.IsWalkable(candidate))
+            {
+                position = candidate;
+                return true;
+            }
+        }
+
+        position = basePosition;
+        return false;
+    }
+
+    public override void NotifySpawnCount()
     {
         SpawnManager.Instance?.RegisterChickenSpawned();
     }
 
-    protected override void NotifyDespawnCount()
+    public override void NotifyDespawnCount()
     {
         SpawnManager.Instance?.RegisterChickenDespawned();
     }
