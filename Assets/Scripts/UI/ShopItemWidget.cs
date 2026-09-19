@@ -41,10 +41,7 @@ public class ShopItemWidget : MonoBehaviour
         }
         nameText.text = item.ItemName;
         descriptionText.text = item.Description;
-        if (costText != null)
-        {
-            costText.text = item.Cost.ToString();
-        }
+        RefreshCostText();
 
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(HandleBuyClicked);
@@ -62,18 +59,35 @@ public class ShopItemWidget : MonoBehaviour
         UpdateCostColor(gold);
     }
 
-    private void UpdateCostColor(int gold)
+    private void RefreshCostText()
     {
-        if (costText == null || boundItem == null)
+        if (costText == null || boundItem == null || UpgradeManager.Instance == null)
         {
             return;
         }
 
-        costText.color = gold < boundItem.Cost ? insufficientCostColor : normalCostColor;
+        costText.text = UpgradeManager.Instance.GetCurrentCost(boundItem).ToString();
+    }
+
+    private void UpdateCostColor(int gold)
+    {
+        if (costText == null || boundItem == null || UpgradeManager.Instance == null)
+        {
+            return;
+        }
+
+        costText.color = gold < UpgradeManager.Instance.GetCurrentCost(boundItem) ? insufficientCostColor : normalCostColor;
     }
 
     private void HandleBuyClicked()
     {
-        UpgradeManager.Instance.TryPurchase(boundItem);
+        if (UpgradeManager.Instance.TryPurchase(boundItem))
+        {
+            RefreshCostText();
+            if (EconomyManager.Instance != null)
+            {
+                UpdateCostColor(EconomyManager.Instance.Gold);
+            }
+        }
     }
 }

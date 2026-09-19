@@ -28,6 +28,7 @@ public class ShopItemData : ScriptableObject
     [SerializeField] private ShopStatType targetStat;
     [SerializeField] private ShopModifierOp op;
     [SerializeField] private float value = 1f;
+    [SerializeField] private float priceMultiplier = 2f;
 
     public string ItemName => itemName;
     public string Description => description;
@@ -36,4 +37,5 @@ public class ShopItemData : ScriptableObject
     public ShopStatType TargetStat => targetStat;
     public ShopModifierOp Op => op;
     public float Value => value;
+    public float PriceMultiplier => priceMultiplier;
 }

@@ -69,16 +69,9 @@ public class GameManager : MonoBehaviour
         PhaseTimeRemaining -= Time.deltaTime;
         OnPhaseTimerTick?.Invoke(Mathf.Max(PhaseTimeRemaining, 0f), phaseTotalTime);
 
-        if (PhaseTimeRemaining <= 0f)
+        if (PhaseTimeRemaining <= 0f && CurrentPhase == GamePhase.Playing)
         {
-            if (CurrentPhase == GamePhase.Playing)
-            {
-                EndRound();
-            }
-            else if (CurrentPhase == GamePhase.Shop)
-            {
-                EndShopPhase();
-            }
+            EndRound();
         }
     }
 
@@ -116,7 +109,7 @@ public class GameManager : MonoBehaviour
     private void EnterShopPhase()
     {
         SetPhase(GamePhase.Shop);
-        SetPhaseTimer(roundConfig.ShopPhaseDuration);
+        phaseHasTimer = false;
     }
 
     public void EndShopPhase()

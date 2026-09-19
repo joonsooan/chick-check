@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ChickData
   m_EditorClassIdentifier: Assembly-CSharp::ChickData
   sellPrice: 10
-  growthInterval: 10
+  growthInterval: 5
   growthChance: 0.2
   nextStagePrefab: {fileID: 4856076502637182611, guid: 97255384a9ab2a243be9134c74a50537, type: 3}
   moveSpeed: 1

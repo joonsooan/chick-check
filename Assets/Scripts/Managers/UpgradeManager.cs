@@ -14,6 +14,7 @@ public class UpgradeManager : MonoBehaviour
     private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
     private readonly Dictionary<ShopStatType, float> additiveBonus = new Dictionary<ShopStatType, float>();
     private readonly Dictionary<ShopStatType, float> multiplier = new Dictionary<ShopStatType, float>();
+    private readonly Dictionary<ShopItemData, int> purchaseCounts = new Dictionary<ShopItemData, int>();
 
     private void Awake()
     {
@@ -40,6 +41,7 @@ public class UpgradeManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnPhaseChanged += HandlePhaseChanged;
+            GameManager.Instance.OnGameOver += HandleGameOver;
         }
     }
 
@@ -48,7 +50,13 @@ public class UpgradeManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnPhaseChanged -= HandlePhaseChanged;
+            GameManager.Instance.OnGameOver -= HandleGameOver;
         }
+    }
+
+    private void HandleGameOver(GameOverReason reason)
+    {
+        purchaseCounts.Clear();
     }
 
     private void HandlePhaseChanged(GamePhase phase)
@@ -77,7 +85,7 @@ public class UpgradeManager : MonoBehaviour
 
     public bool TryPurchase(ShopItemData item)
     {
-        if (!EconomyManager.Instance.TrySpendGold(item.Cost))
+        if (!EconomyManager.Instance.TrySpendGold(GetCurrentCost(item)))
         {
             return false;
         }
@@ -93,7 +101,16 @@ public class UpgradeManager : MonoBehaviour
             multiplier[item.TargetStat] = (current == 0f ? 1f : current) * item.Value;
         }
 
+        purchaseCounts.TryGetValue(item, out int count);
+        purchaseCounts[item] = count + 1;
+
         return true;
+    }
+
+    public int GetCurrentCost(ShopItemData item)
+    {
+        purchaseCounts.TryGetValue(item, out int count);
+        return Mathf.RoundToInt(item.Cost * Mathf.Pow(item.PriceMultiplier, count));
     }
 
     public float GetMultiplier(ShopStatType stat)
