@@ -17,6 +17,6 @@ MonoBehaviour:
   pickUpLockDuration: 0.3
   pickUpGraspFrameIndex: 2
   dropOffsetX: 0.5
-  dropOffsetYUp: 0.7
+  dropOffsetYUp: 0.5
   dropOffsetYDown: 0.2
   dropMoveFrameIndex: 3

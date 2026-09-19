@@ -78,3 +78,6 @@ crashlytics-build.properties
 .mcp.json
 CLAUDE.md
 CLAUDE.local.md
+
+# TextMeshPro asset
+/Assets/Wood UI/Font/VaultUI SDF.asset
