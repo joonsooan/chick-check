@@ -27,6 +27,23 @@ public class Egg : PlaceableEntity
         StopAllCoroutines();
     }
 
+    public override void SetCarried(bool carried)
+    {
+        base.SetCarried(carried);
+
+        StopAllCoroutines();
+
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        if (!carried)
+        {
+            StartCoroutine(GrowthRoutine(data));
+        }
+    }
+
     public override void NotifySpawnCount()
     {
         SpawnManager.Instance?.RegisterEggSpawned();

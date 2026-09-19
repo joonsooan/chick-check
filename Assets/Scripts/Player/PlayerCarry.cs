@@ -89,9 +89,16 @@ public class PlayerCarry : MonoBehaviour
         isPickingUp = true;
         playerAnimator.PlayPickUp(data.PickUpGraspFrameIndex, () =>
         {
+            isPickingUp = false;
+
+            if (target == null || !target.gameObject.activeInHierarchy
+                || target.IsCarried || !target.CanBeCarried)
+            {
+                return;
+            }
+
             target.SetCarried(true);
             carriedEntity = target;
-            isPickingUp = false;
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }
@@ -103,6 +110,8 @@ public class PlayerCarry : MonoBehaviour
 
         playerAnimator.PlayDropReversed(data.PickUpLockDuration, data.DropMoveFrameIndex, () =>
         {
+            carriedEntity = null;
+
             if (target == null || !target.gameObject.activeInHierarchy)
             {
                 return;
@@ -110,7 +119,6 @@ public class PlayerCarry : MonoBehaviour
 
             target.transform.position = dropPosition;
             target.SetCarried(false);
-            carriedEntity = null;
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }
