@@ -9,6 +9,7 @@ public class ShopItemWidget : MonoBehaviour
     [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private Button buyButton;
+    [SerializeField] private GameObject soldImage;
     [SerializeField] private Color normalCostColor = Color.white;
     [SerializeField] private Color insufficientCostColor = Color.red;
 
@@ -59,6 +60,12 @@ public class ShopItemWidget : MonoBehaviour
 
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(HandleBuyClicked);
+        buyButton.interactable = true;
+
+        if (soldImage != null)
+        {
+            soldImage.SetActive(false);
+        }
 
         if (EconomyManager.Instance != null)
         {
@@ -103,6 +110,21 @@ public class ShopItemWidget : MonoBehaviour
             {
                 UpdateCostColor(EconomyManager.Instance.Gold);
             }
+
+            MarkAsSold();
+        }
+    }
+
+    private void MarkAsSold()
+    {
+        if (buyButton != null)
+        {
+            buyButton.interactable = false;
+        }
+
+        if (soldImage != null)
+        {
+            soldImage.SetActive(true);
         }
     }
 }

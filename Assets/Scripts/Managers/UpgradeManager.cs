@@ -52,6 +52,19 @@ public class UpgradeManager : Singleton<UpgradeManager>
         }
     }
 
+    public int RerollCost => GameManager.Instance != null ? GameManager.Instance.RerollCost : 0;
+
+    public bool TryReroll()
+    {
+        if (EconomyManager.Instance == null || !EconomyManager.Instance.TrySpendGold(RerollCost))
+        {
+            return false;
+        }
+
+        OnShopCatalogReady?.Invoke(PickRandomItems());
+        return true;
+    }
+
     private List<ShopItemData> PickRandomItems()
     {
         List<ShopItemData> pool = new List<ShopItemData>(allShopItems);

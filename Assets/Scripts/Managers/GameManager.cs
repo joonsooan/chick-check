@@ -13,6 +13,7 @@ public class GameManager : Singleton<GameManager>
     public float PhaseTimeRemaining { get; private set; }
     public int RemainingDebt { get; private set; }
     public int NextDebtDueRound { get; private set; }
+    public int RerollCost => roundConfig.RerollCost;
 
     public event Action<int> OnRoundStarted;
     public event Action<float, float> OnPhaseTimerTick;
@@ -25,11 +26,13 @@ public class GameManager : Singleton<GameManager>
 
     private float phaseTotalTime;
     private bool phaseHasTimer;
+    private float currentDebtAmount;
 
     private void Start()
     {
         NextDebtDueRound = roundConfig.DebtCheckpointInterval;
-        RemainingDebt = roundConfig.DebtAmount;
+        currentDebtAmount = roundConfig.DebtAmount;
+        RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
 
         StartRound(1);
     }
@@ -141,7 +144,8 @@ public class GameManager : Singleton<GameManager>
         RemainingDebt -= payable;
         if (RemainingDebt <= 0)
         {
-            RemainingDebt = roundConfig.DebtAmount;
+            currentDebtAmount *= roundConfig.DebtMultiplier;
+            RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
             NextDebtDueRound += roundConfig.DebtCheckpointInterval;
         }
 
