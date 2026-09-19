@@ -7,6 +7,9 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TMP_Text roundText;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private TMP_Text goldText;
+    [SerializeField] private TMP_Text eggCountText;
+    [SerializeField] private TMP_Text chickCountText;
+    [SerializeField] private TMP_Text chickenCountText;
     [SerializeField] private RectTransform infoPanel;
 
     private void Start()
@@ -24,6 +27,17 @@ public class HUDController : MonoBehaviour
         {
             EconomyManager.Instance.OnGoldChanged += HandleGoldChanged;
             HandleGoldChanged(EconomyManager.Instance.Gold);
+        }
+
+        if (SpawnManager.Instance != null)
+        {
+            SpawnManager.Instance.OnEggCountChanged += HandleEggCountChanged;
+            SpawnManager.Instance.OnChickCountChanged += HandleChickCountChanged;
+            SpawnManager.Instance.OnChickenCountChanged += HandleChickenCountChanged;
+
+            HandleEggCountChanged(SpawnManager.Instance.EggCount);
+            HandleChickCountChanged(SpawnManager.Instance.ChickCount);
+            HandleChickenCountChanged(SpawnManager.Instance.ChickenCount);
         }
 
         if (infoPanel != null)
@@ -44,6 +58,13 @@ public class HUDController : MonoBehaviour
         if (EconomyManager.Instance != null)
         {
             EconomyManager.Instance.OnGoldChanged -= HandleGoldChanged;
+        }
+
+        if (SpawnManager.Instance != null)
+        {
+            SpawnManager.Instance.OnEggCountChanged -= HandleEggCountChanged;
+            SpawnManager.Instance.OnChickCountChanged -= HandleChickCountChanged;
+            SpawnManager.Instance.OnChickenCountChanged -= HandleChickenCountChanged;
         }
     }
 
@@ -70,6 +91,30 @@ public class HUDController : MonoBehaviour
     {
         int totalSeconds = Mathf.CeilToInt(remaining);
         timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+    }
+
+    private void HandleEggCountChanged(int count)
+    {
+        if (eggCountText != null)
+        {
+            eggCountText.text = count.ToString();
+        }
+    }
+
+    private void HandleChickCountChanged(int count)
+    {
+        if (chickCountText != null)
+        {
+            chickCountText.text = count.ToString();
+        }
+    }
+
+    private void HandleChickenCountChanged(int count)
+    {
+        if (chickenCountText != null)
+        {
+            chickenCountText.text = count.ToString();
+        }
     }
 
     private void HandleGoldChanged(int gold)
