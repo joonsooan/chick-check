@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
 
     public event Action<int> OnRoundStarted;
     public event Action<float, float> OnPhaseTimerTick;
+    public event Action<int> OnRoundEnding;
     public event Action<int> OnRoundEnded;
     public event Action<GamePhase> OnPhaseChanged;
     public event Action<int> OnDebtDue;
@@ -89,6 +90,7 @@ public class GameManager : Singleton<GameManager>
 
     private void EndRound()
     {
+        OnRoundEnding?.Invoke(CurrentRound);
         OnRoundEnded?.Invoke(CurrentRound);
         EnterShopPhase();
     }

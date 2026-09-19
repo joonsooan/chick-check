@@ -19,11 +19,32 @@ public class PlayerCarry : MonoBehaviour
     private void OnEnable()
     {
         playerMovement.OnInteractPressed += HandleInteractPressed;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnRoundEnding += HandleRoundEnding;
+        }
     }
 
     private void OnDisable()
     {
         playerMovement.OnInteractPressed -= HandleInteractPressed;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnRoundEnding -= HandleRoundEnding;
+        }
+    }
+
+    private void HandleRoundEnding(int roundNumber)
+    {
+        if (carriedEntity == null)
+        {
+            return;
+        }
+
+        carriedEntity.SetCarried(false);
+        carriedEntity = null;
     }
 
     private void Update()

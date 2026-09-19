@@ -63,11 +63,20 @@ public class UIManager : Singleton<UIManager>
     private void SetActivePanel(GameObject target)
     {
         hudPanelRoot.SetActive(true);
-        shopPanel.SetActive(target == shopPanel);
-        resultsPanel.SetActive(target == resultsPanel);
+
+        bool showResults = target == resultsPanel;
+
+        shopPanel.SetActive(showResults || target == shopPanel);
+        resultsPanel.SetActive(showResults);
         checkPanel.SetActive(target == checkPanel);
         tabButtonGroup.SetActive(target == shopPanel || target == checkPanel);
 
+        if (showResults)
+        {
+            resultsPanel.transform.SetAsLastSibling();
+        }
+
+        Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)target.transform);
     }
 

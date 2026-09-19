@@ -65,6 +65,7 @@ public class ShopItemWidget : MonoBehaviour
             UpdateCostColor(EconomyManager.Instance.Gold);
         }
 
+        Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 

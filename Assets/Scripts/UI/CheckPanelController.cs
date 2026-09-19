@@ -71,6 +71,11 @@ public class CheckPanelController : MonoBehaviour
 
     private void Update()
     {
+        if (digitSelectButtonPanel == null || !digitSelectButtonPanel.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (Keyboard.current == null)
         {
             return;
@@ -191,12 +196,12 @@ public class CheckPanelController : MonoBehaviour
     {
         if (dueInText != null)
         {
-            dueInText.text = $"D - {roundsUntilDue}";
+            dueInText.text = $"상환까지 D - {roundsUntilDue}";
         }
 
         if (remainingDebtText != null)
         {
-            remainingDebtText.text = remainingDebt.ToString();
+            remainingDebtText.text = $"남은 빚 : {remainingDebt} G";
         }
 
         ClampToMaxPayable();

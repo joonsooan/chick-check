@@ -12845,7 +12845,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_text
-      value: 99999 G
+      value: "\uB0A8\uC740 \uBE5A : 99999 G"
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_fontSize
@@ -12901,7 +12901,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7306392370801578630, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 7306392370801578630, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_SizeDelta.y
@@ -40220,7 +40220,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -20, y: 20}
-  m_SizeDelta: {x: 220, y: 120}
+  m_SizeDelta: {x: 230, y: 120}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1280375989
 MonoBehaviour:

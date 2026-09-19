@@ -71,6 +71,7 @@ public class ShopPanelController : MonoBehaviour
             spawnedWidgets.Add(widget);
         }
 
+        Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)itemContainer);
     }
 
