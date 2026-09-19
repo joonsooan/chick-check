@@ -7,6 +7,7 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TMP_Text roundText;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private TMP_Text goldText;
+    [SerializeField] private RectTransform infoPanel;
 
     private void Start()
     {
@@ -22,6 +23,11 @@ public class HUDController : MonoBehaviour
         {
             EconomyManager.Instance.OnGoldChanged += HandleGoldChanged;
             HandleGoldChanged(EconomyManager.Instance.Gold);
+        }
+
+        if (infoPanel != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(infoPanel);
         }
     }
 
