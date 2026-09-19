@@ -4,10 +4,11 @@ using UnityEngine.UI;
 
 public class ShopPanelController : MonoBehaviour
 {
-    [SerializeField] private GameObject panelRoot;
     [SerializeField] private Transform itemContainer;
     [SerializeField] private ShopItemWidget itemWidgetPrefab;
     [SerializeField] private Button nextRoundButton;
+    [SerializeField] private Button shopTabButton;
+    [SerializeField] private Button checkTabButton;
 
     private readonly List<ShopItemWidget> spawnedWidgets = new List<ShopItemWidget>();
 
@@ -17,15 +18,20 @@ public class ShopPanelController : MonoBehaviour
         {
             nextRoundButton.onClick.AddListener(HandleNextRoundClicked);
         }
+
+        if (shopTabButton != null)
+        {
+            shopTabButton.onClick.AddListener(HandleShopTabClicked);
+        }
+
+        if (checkTabButton != null)
+        {
+            checkTabButton.onClick.AddListener(HandleCheckTabClicked);
+        }
     }
 
     private void Start()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnPhaseChanged += HandlePhaseChanged;
-        }
-
         if (UpgradeManager.Instance != null)
         {
             UpgradeManager.Instance.OnShopCatalogReady += HandleShopCatalogReady;
@@ -34,29 +40,24 @@ public class ShopPanelController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnPhaseChanged -= HandlePhaseChanged;
-        }
-
         if (UpgradeManager.Instance != null)
         {
             UpgradeManager.Instance.OnShopCatalogReady -= HandleShopCatalogReady;
         }
     }
 
-    private void HandlePhaseChanged(GamePhase phase)
+    private void HandleShopTabClicked()
     {
-        panelRoot.SetActive(phase == GamePhase.Shop);
+        UIManager.Instance.ShowShop();
+    }
+
+    private void HandleCheckTabClicked()
+    {
+        UIManager.Instance.ShowCheck();
     }
 
     private void HandleShopCatalogReady(IReadOnlyList<ShopItemData> catalog)
     {
-        if (panelRoot != null)
-        {
-            panelRoot.SetActive(true);
-        }
-
         foreach (ShopItemWidget widget in spawnedWidgets)
         {
             Destroy(widget.gameObject);
