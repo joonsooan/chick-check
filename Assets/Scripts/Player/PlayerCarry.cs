@@ -65,10 +65,10 @@ public class PlayerCarry : MonoBehaviour
             return;
         }
 
-        target.SetCarried(true);
         isPickingUp = true;
         playerAnimator.PlayPickUp(data.PickUpGraspFrameIndex, () =>
         {
+            target.SetCarried(true);
             carriedEntity = target;
             isPickingUp = false;
         });
