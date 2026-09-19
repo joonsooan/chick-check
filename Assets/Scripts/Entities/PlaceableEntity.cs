@@ -118,10 +118,6 @@ public abstract class PlaceableEntity : MonoBehaviour
             }
 
             float moveSpeed = data.MoveSpeed;
-            if (UpgradeManager.Instance != null)
-            {
-                moveSpeed = UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed);
-            }
 
             while ((target - transform.position).sqrMagnitude > 0.0001f)
             {
@@ -142,19 +138,20 @@ public abstract class PlaceableEntity : MonoBehaviour
     private bool TryPickWalkTarget(EconomyEntityData data, out Vector3 target)
     {
         Vector2 distance = data.WalkDistanceRange;
-        for (int attempt = 0; attempt < 10; attempt++)
+        Vector3 origin = transform.position;
+
+        Vector3 RandomCandidate(int attempt)
         {
             Vector2 dir = Random.insideUnitCircle.normalized;
-            Vector3 candidate = transform.position + (Vector3)(dir * Random.Range(distance.x, distance.y));
-
-            if (GridManager.Instance == null || GridManager.Instance.IsWalkable(candidate))
-            {
-                target = candidate;
-                return true;
-            }
+            return origin + (Vector3)(dir * Random.Range(distance.x, distance.y));
         }
 
-        target = transform.position;
-        return false;
+        if (GridManager.Instance == null)
+        {
+            target = RandomCandidate(0);
+            return true;
+        }
+
+        return GridManager.Instance.TryFindWalkable(origin, 10, RandomCandidate, out target);
     }
 }

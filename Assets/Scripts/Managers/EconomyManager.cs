@@ -2,23 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EconomyManager : MonoBehaviour
+public class EconomyManager : Singleton<EconomyManager>
 {
-    public static EconomyManager Instance { get; private set; }
-
     [SerializeField] private int startingGold = 10;
 
     public int Gold { get; private set; }
     public event Action<int> OnGoldChanged;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        base.Awake();
 
         Gold = startingGold;
     }
@@ -36,14 +29,6 @@ public class EconomyManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRoundEnded -= HandleRoundEnded;
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
         }
     }
 

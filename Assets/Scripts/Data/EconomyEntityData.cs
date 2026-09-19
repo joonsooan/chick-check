@@ -2,6 +2,9 @@ using UnityEngine;
 
 public abstract class EconomyEntityData : ScriptableObject
 {
+    [Header("Visual")]
+    [SerializeField] private Sprite sprite;
+
     [Header("Economy")]
     [SerializeField] private int sellPrice;
 
@@ -15,6 +18,7 @@ public abstract class EconomyEntityData : ScriptableObject
     [SerializeField] private Vector2 walkIntervalRange = new Vector2(1.5f, 4f);
     [SerializeField] private Vector2 walkDistanceRange = new Vector2(0.3f, 1f);
 
+    public Sprite Sprite => sprite;
     public int SellPrice => sellPrice;
     public float GrowthInterval => growthInterval;
     public float GrowthChance => growthChance;

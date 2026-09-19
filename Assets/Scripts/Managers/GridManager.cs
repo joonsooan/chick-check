@@ -1,34 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class GridManager : MonoBehaviour
+public class GridManager : Singleton<GridManager>
 {
-    public static GridManager Instance { get; private set; }
-
     [SerializeField] private Grid grid;
-    [Tooltip("타일이 실제로 깔려 있는 셀만 이동 가능 영역으로 취급한다. 비워두면 범위 제한 없음.")]
     [SerializeField] private Tilemap walkableAreaTilemap;
 
     private readonly HashSet<Vector3Int> blocked = new HashSet<Vector3Int>();
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
 
     public Vector3Int WorldToCell(Vector3 worldPos) => grid.WorldToCell(worldPos);
 
@@ -48,6 +28,22 @@ public class GridManager : MonoBehaviour
         {
             blocked.Remove(cell);
         }
+    }
+
+    public bool TryFindWalkable(Vector3 fallback, int attempts, Func<int, Vector3> candidateGenerator, out Vector3 result)
+    {
+        for (int attempt = 0; attempt < attempts; attempt++)
+        {
+            Vector3 candidate = candidateGenerator(attempt);
+            if (IsWalkable(candidate))
+            {
+                result = candidate;
+                return true;
+            }
+        }
+
+        result = fallback;
+        return false;
     }
 
     public void ForEachCellInBox(Vector2 worldCenter, Vector2 worldSize, System.Action<Vector3Int> action)

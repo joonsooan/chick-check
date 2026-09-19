@@ -2,10 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Instance { get; private set; }
-
     [SerializeField] private RoundConfigData roundConfig;
     [SerializeField] private Vector3 chickSpawnCenter;
     [SerializeField] private bool enterKeyEndsRoundForTest = true;
@@ -23,24 +21,6 @@ public class GameManager : MonoBehaviour
 
     private float phaseTotalTime;
     private bool phaseHasTimer;
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
 
     private void Start()
     {
@@ -162,7 +142,14 @@ public class GameManager : MonoBehaviour
     private void SetPhase(GamePhase phase)
     {
         CurrentPhase = phase;
+        Time.timeScale = phase == GamePhase.Playing ? 1f : 0f;
         OnPhaseChanged?.Invoke(CurrentPhase);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Time.timeScale = 1f;
     }
 
     private void SetPhaseTimer(float duration)

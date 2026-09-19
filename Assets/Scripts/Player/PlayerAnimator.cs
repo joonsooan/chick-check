@@ -56,17 +56,7 @@ public class PlayerAnimator : MonoBehaviour
         return null;
     }
 
-    public void PlayPickUp()
-    {
-        PlayPickUpCore(-1, null);
-    }
-
     public void PlayPickUp(int graspFrameIndex, Action onGraspFrameReached)
-    {
-        PlayPickUpCore(graspFrameIndex, onGraspFrameReached);
-    }
-
-    private void PlayPickUpCore(int graspFrameIndex, Action onGraspFrameReached)
     {
         if (reversePlaybackRoutine != null)
         {
@@ -119,17 +109,7 @@ public class PlayerAnimator : MonoBehaviour
         pickUpGraspRoutine = null;
     }
 
-    public void PlayDropReversed(float duration)
-    {
-        PlayDropReversedCore(duration, -1, null);
-    }
-
     public void PlayDropReversed(float duration, int dropFrameIndex, Action onFrameReached)
-    {
-        PlayDropReversedCore(duration, dropFrameIndex, onFrameReached);
-    }
-
-    private void PlayDropReversedCore(float duration, int dropFrameIndex, Action onFrameReached)
     {
         if (reversePlaybackRoutine != null)
         {

@@ -99,10 +99,6 @@ public class Chick : PlaceableEntity
         animator.SetBool(IsWalkingHash, true);
 
         float moveSpeed = data.MoveSpeed * mirrorData.ExitSpeedMultiplier;
-        if (UpgradeManager.Instance != null)
-        {
-            moveSpeed = UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed);
-        }
 
         yield return MoveForDistance(dir, moveSpeed, mirrorData.ForcedExitDistance);
 

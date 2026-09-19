@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolManager : MonoBehaviour
+public class PoolManager : Singleton<PoolManager>
 {
-    public static PoolManager Instance { get; private set; }
-
     [Serializable]
     public class PrewarmConfig
     {
@@ -18,14 +16,9 @@ public class PoolManager : MonoBehaviour
 
     private readonly Dictionary<GameObject, ObjectPool> pools = new Dictionary<GameObject, ObjectPool>();
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        base.Awake();
 
         if (prewarm != null)
         {
@@ -37,14 +30,6 @@ public class PoolManager : MonoBehaviour
                     pools[config.prefab] = new ObjectPool(config.prefab, root, config.count);
                 }
             }
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
         }
     }
 

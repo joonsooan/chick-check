@@ -3,16 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ChickenData", menuName = "Chicken Data")]
 public class ChickenData : EconomyEntityData
 {
-    [SerializeField] private Sprite sprite;
-
     [Header("Egg Laying")]
     [SerializeField] private Egg eggPrefab;
     [SerializeField] private float layInterval = 5f;
     [SerializeField] private float layChance = 0.5f;
     [SerializeField] private Vector3 layOffset;
     [SerializeField] private int layCount = 1;
-
-    public Sprite Sprite => sprite;
 
     public Egg EggPrefab => eggPrefab;
     public float LayInterval => layInterval;

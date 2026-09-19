@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradeManager : MonoBehaviour
+public class UpgradeManager : Singleton<UpgradeManager>
 {
-    public static UpgradeManager Instance { get; private set; }
-
     [SerializeField] private string shopItemsResourcePath = "Shop Items";
     [SerializeField] private int shopItemsPerRound = 3;
 
@@ -16,24 +14,11 @@ public class UpgradeManager : MonoBehaviour
     private readonly Dictionary<ShopStatType, float> multiplier = new Dictionary<ShopStatType, float>();
     private readonly Dictionary<ShopItemData, int> purchaseCounts = new Dictionary<ShopItemData, int>();
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        base.Awake();
 
         allShopItems.AddRange(Resources.LoadAll<ShopItemData>(shopItemsResourcePath));
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
     }
 
     private void Start()

@@ -83,26 +83,15 @@ public class Chicken : PlaceableEntity
     {
         Vector3 basePosition = transform.position + data.LayOffset;
 
-        if (GridManager.Instance == null || GridManager.Instance.IsWalkable(basePosition))
+        if (GridManager.Instance == null)
         {
             position = basePosition;
             return true;
         }
 
-        for (int attempt = 0; attempt < 10; attempt++)
-        {
-            Vector2 jitter = Random.insideUnitCircle * 0.5f;
-            Vector3 candidate = basePosition + (Vector3)jitter;
-
-            if (GridManager.Instance.IsWalkable(candidate))
-            {
-                position = candidate;
-                return true;
-            }
-        }
-
-        position = basePosition;
-        return false;
+        return GridManager.Instance.TryFindWalkable(basePosition, 11,
+            attempt => attempt == 0 ? basePosition : basePosition + (Vector3)(Random.insideUnitCircle * 0.5f),
+            out position);
     }
 
     public override void NotifySpawnCount()
