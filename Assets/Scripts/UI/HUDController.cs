@@ -15,6 +15,7 @@ public class HUDController : MonoBehaviour
         {
             GameManager.Instance.OnRoundStarted += HandleRoundStarted;
             GameManager.Instance.OnPhaseTimerTick += HandlePhaseTimerTick;
+            GameManager.Instance.OnRoundEnded += HandleRoundEnded;
 
             HandleRoundStarted(GameManager.Instance.CurrentRound);
         }
@@ -37,6 +38,7 @@ public class HUDController : MonoBehaviour
         {
             GameManager.Instance.OnRoundStarted -= HandleRoundStarted;
             GameManager.Instance.OnPhaseTimerTick -= HandlePhaseTimerTick;
+            GameManager.Instance.OnRoundEnded -= HandleRoundEnded;
         }
 
         if (EconomyManager.Instance != null)
@@ -48,6 +50,20 @@ public class HUDController : MonoBehaviour
     private void HandleRoundStarted(int roundNumber)
     {
         roundText.text = $"Day {roundNumber}";
+
+        if (infoPanel != null)
+        {
+            infoPanel.gameObject.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(infoPanel);
+        }
+    }
+
+    private void HandleRoundEnded(int roundNumber)
+    {
+        if (infoPanel != null)
+        {
+            infoPanel.gameObject.SetActive(false);
+        }
     }
 
     private void HandlePhaseTimerTick(float remaining, float total)

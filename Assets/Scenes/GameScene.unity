@@ -2272,7 +2272,7 @@ MonoBehaviour:
   roundText: {fileID: 1285055503}
   timerText: {fileID: 595280471}
   goldText: {fileID: 1655213839}
-  infoPanel: {fileID: 109666434}
+  infoPanel: {fileID: 2058324684}
 --- !u!1 &225684228
 GameObject:
   m_ObjectHideFlags: 0
@@ -10103,7 +10103,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2, z: -10}
+  m_LocalPosition: {x: 0, y: -1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38351,7 +38351,7 @@ Transform:
   m_GameObject: {fileID: 1455231356}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2, z: -10}
+  m_LocalPosition: {x: 0, y: -1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45999,7 +45999,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5946581086186817039, guid: 997a5c924880d194393f0de7e61c1eaa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 5946581086186817039, guid: 997a5c924880d194393f0de7e61c1eaa, type: 3}
       propertyPath: m_LocalPosition.z
