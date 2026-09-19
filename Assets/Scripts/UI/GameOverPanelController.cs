@@ -1,15 +1,26 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverPanelController : MonoBehaviour
 {
     [SerializeField] private GameObject panelRoot;
-    [SerializeField] private TMP_Text reasonText;
+    [SerializeField] private Button restartButton;
 
-    [SerializeField] private string notEnoughGoldMessage = "빚을 갚지 못했습니다";
-    [SerializeField] private string defaultGameOverMessage = "게임 오버";
+    private void Awake()
+    {
+        if (restartButton != null)
+        {
+            restartButton.onClick.AddListener(RestartGame);
+        }
 
-    private void OnEnable()
+        if (panelRoot != null)
+        {
+            panelRoot.SetActive(false);
+        }
+    }
+
+    private void Start()
     {
         if (GameManager.Instance != null)
         {
@@ -17,26 +28,28 @@ public class GameOverPanelController : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameOver -= HandleGameOver;
         }
+
+        if (restartButton != null)
+        {
+            restartButton.onClick.RemoveListener(RestartGame);
+        }
+    }
+
+    private void RestartGame()
+    {
+        Time.timeScale = 1f;
+        Scene current = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(current.buildIndex);
     }
 
     private void HandleGameOver(GameOverReason reason)
     {
         panelRoot.SetActive(true);
-
-        switch (reason)
-        {
-            case GameOverReason.NotEnoughGold:
-                reasonText.text = notEnoughGoldMessage;
-                break;
-            default:
-                reasonText.text = defaultGameOverMessage;
-                break;
-        }
     }
 }
