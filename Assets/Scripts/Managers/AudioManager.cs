@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>
@@ -23,6 +24,7 @@ public class AudioManager : Singleton<AudioManager>
     private float bgmFadeFactor = 1f;
     private Coroutine bgmFadeRoutine;
     private float lastAmbientTime = -999f;
+    private readonly Dictionary<AudioClip, int> bgmResumeSamples = new Dictionary<AudioClip, int>();
 
     protected override void Awake()
     {
@@ -250,7 +252,7 @@ public class AudioManager : Singleton<AudioManager>
         bgmSource.Play();
     }
 
-    public void FadeToBgm(AudioClip clip, float seconds)
+    public void FadeToBgm(AudioClip clip, float seconds, bool resume = false)
     {
         if (bgmSource == null || clip == null)
         {
@@ -258,7 +260,23 @@ public class AudioManager : Singleton<AudioManager>
         }
 
         StopBgmFade();
-        bgmFadeRoutine = StartCoroutine(FadeToBgmRoutine(clip, seconds));
+        bgmFadeRoutine = StartCoroutine(FadeToBgmRoutine(clip, seconds, resume));
+    }
+
+    private void SaveBgmPosition()
+    {
+        if (bgmSource != null && bgmSource.clip != null && bgmSource.isPlaying)
+        {
+            bgmResumeSamples[bgmSource.clip] = bgmSource.timeSamples;
+        }
+    }
+
+    private void ApplyResumePosition(AudioClip clip, bool resume)
+    {
+        if (resume && bgmResumeSamples.TryGetValue(clip, out int samples))
+        {
+            bgmSource.timeSamples = Mathf.Clamp(samples, 0, clip.samples - 1);
+        }
     }
 
     public void StopBgm(float fadeSeconds = 0f)
@@ -287,7 +305,7 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private IEnumerator FadeToBgmRoutine(AudioClip clip, float seconds)
+    private IEnumerator FadeToBgmRoutine(AudioClip clip, float seconds, bool resume)
     {
         if (bgmSource.isPlaying && seconds > 0f)
         {
@@ -302,10 +320,13 @@ public class AudioManager : Singleton<AudioManager>
             }
         }
 
+        SaveBgmPosition();
+
         bgmFadeFactor = 0f;
         bgmSource.clip = clip;
         ApplyBgmVolume();
         bgmSource.Play();
+        ApplyResumePosition(clip, resume);
 
         if (seconds > 0f)
         {
@@ -345,7 +366,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (library != null)
         {
-            FadeToBgm(library.GameBgm, library.ResultBgmFadeSeconds);
+            FadeToBgm(library.GameBgm, library.ResultBgmFadeSeconds, resume: true);
         }
     }
 
