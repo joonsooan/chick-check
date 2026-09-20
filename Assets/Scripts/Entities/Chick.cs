@@ -9,6 +9,8 @@ public class Chick : PlaceableEntity
     private Collider2D col;
     private bool colliderWasTrigger;
 
+    private float contagionTimer;
+
     public override EconomyEntityData EconomyData => data;
     public override bool CanBeCarried => base.CanBeCarried && !IsExiting;
 
@@ -27,18 +29,18 @@ public class Chick : PlaceableEntity
         spriteRenderer.sprite = data.Sprite;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
-        StartLifeRoutines();
+        ResetLifeState();
     }
 
-    private void StartLifeRoutines()
+    private void ResetLifeState()
     {
-        StartCoroutine(WalkRoutine(data));
-        StartCoroutine(GrowthRoutine(data));
-        StartCoroutine(AmbientRoutine(AmbientSoundKind.Chick));
+        ResetWalk(data);
+        ResetAmbient(AmbientSoundKind.Chick);
 
         if (data.IsMutant)
         {
-            StartCoroutine(ContagionRoutine());
+            MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
+            contagionTimer = mutationData != null ? mutationData.ContagionInterval : 1f;
         }
     }
 
@@ -49,11 +51,27 @@ public class Chick : PlaceableEntity
         StopAllCoroutines();
     }
 
+    public override void Tick(float dt)
+    {
+        if (IsCarried || IsExiting)
+        {
+            return;
+        }
+
+        TickWalk(data, dt);
+        TickAmbient(AmbientSoundKind.Chick, dt);
+
+        if (data.IsMutant)
+        {
+            TickContagion(dt);
+        }
+
+        TickGrowth(dt);
+    }
+
     public override void SetCarried(bool carried)
     {
         base.SetCarried(carried);
-
-        StopAllCoroutines();
 
         if (!gameObject.activeInHierarchy)
         {
@@ -66,7 +84,7 @@ public class Chick : PlaceableEntity
         }
         else
         {
-            StartLifeRoutines();
+            ResetLifeState();
         }
     }
 
@@ -137,7 +155,7 @@ public class Chick : PlaceableEntity
         }
         RestoreCollider();
         IsExiting = false;
-        StartLifeRoutines();
+        ResetLifeState();
     }
 
     public bool IsMutant => data.IsMutant;
@@ -160,35 +178,33 @@ public class Chick : PlaceableEntity
         PoolManager.Despawn(gameObject);
     }
 
-    private IEnumerator ContagionRoutine()
+    private void TickContagion(float dt)
     {
         MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
         if (mutationData == null)
         {
-            yield break;
+            return;
         }
 
-        while (true)
+        contagionTimer -= dt;
+        if (contagionTimer > 0f)
         {
-            yield return new WaitForSeconds(mutationData.ContagionInterval);
-
-            if (IsCarried || IsExiting)
-            {
-                continue;
-            }
-
-            if (UpgradeManager.Instance == null || !UpgradeManager.Instance.ContagionEnabled)
-            {
-                continue;
-            }
-
-            if (Random.value > mutationData.ContagionChance)
-            {
-                continue;
-            }
-
-            SpreadContagion(mutationData);
+            return;
         }
+
+        contagionTimer = mutationData.ContagionInterval;
+
+        if (UpgradeManager.Instance == null || !UpgradeManager.Instance.ContagionEnabled)
+        {
+            return;
+        }
+
+        if (Random.value > mutationData.ContagionChance)
+        {
+            return;
+        }
+
+        SpreadContagion(mutationData);
     }
 
     private void SpreadContagion(MutationData mutationData)

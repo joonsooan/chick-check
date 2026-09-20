@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,10 +11,18 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     public static IReadOnlyList<PlaceableEntity> ActiveEntities => activeEntities;
 
+    protected enum WalkState
+    {
+        Waiting,
+        Moving
+    }
+
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
 
     private int defaultSortingOrder;
+
+    private int activeIndex = -1;
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsCarried { get; private set; }
@@ -27,6 +34,12 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     private float growthElapsed;
 
+    private WalkState walkState;
+    private float walkTimer;
+    private Vector3 walkTarget;
+
+    private float ambientTimer;
+
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -36,24 +49,42 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        activeIndex = activeEntities.Count;
         activeEntities.Add(this);
-        growthElapsed = 0f;
 
-        if (UpgradeManager.Instance != null)
-        {
-            UpgradeManager.Instance.OnModifiersChanged += RefreshDebugStats;
-        }
+        growthElapsed = 0f;
         RefreshDebugStats();
     }
 
     protected virtual void OnDisable()
     {
-        activeEntities.Remove(this);
+        RemoveFromActive();
+    }
 
-        if (UpgradeManager.Instance != null)
+    private void RemoveFromActive()
+    {
+        int last = activeEntities.Count - 1;
+        if (activeIndex < 0 || activeIndex > last)
         {
-            UpgradeManager.Instance.OnModifiersChanged -= RefreshDebugStats;
+            activeIndex = -1;
+            return;
         }
+
+        PlaceableEntity moved = activeEntities[last];
+        activeEntities[activeIndex] = moved;
+        moved.activeIndex = activeIndex;
+        activeEntities.RemoveAt(last);
+        activeIndex = -1;
+    }
+
+    public virtual void Tick(float dt)
+    {
+        if (IsCarried)
+        {
+            return;
+        }
+
+        TickGrowth(dt);
     }
 
     protected virtual void RefreshDebugStats()
@@ -92,36 +123,33 @@ public abstract class PlaceableEntity : MonoBehaviour
         }
     }
 
-    protected IEnumerator GrowthRoutine(EconomyEntityData data)
+    protected void TickGrowth(float dt)
     {
-        if (!data.CanGrow)
+        EconomyEntityData data = EconomyData;
+        if (data == null || !data.CanGrow)
         {
-            yield break;
+            return;
         }
 
-        while (true)
+        CurrentGrowthInterval = data.GrowthInterval;
+        CurrentGrowthChance = ApplyModifier(GrowthChanceStat, data.GrowthChance);
+
+        growthElapsed += dt;
+        if (growthElapsed < CurrentGrowthInterval)
         {
-            CurrentGrowthInterval = data.GrowthInterval;
-            CurrentGrowthChance = ApplyModifier(GrowthChanceStat, data.GrowthChance);
+            return;
+        }
 
-            while (growthElapsed < CurrentGrowthInterval)
+        growthElapsed = 0f;
+
+        if (Random.value <= CurrentGrowthChance)
+        {
+            if (!CanGrowNow())
             {
-                growthElapsed += Time.deltaTime;
-                yield return null;
+                return;
             }
 
-            growthElapsed = 0f;
-
-            if (Random.value <= CurrentGrowthChance)
-            {
-                if (!CanGrowNow())
-                {
-                    continue;
-                }
-
-                GrowToNextStage(data.NextStagePrefab);
-                yield break;
-            }
+            GrowToNextStage(data.NextStagePrefab);
         }
     }
 
@@ -147,61 +175,86 @@ public abstract class PlaceableEntity : MonoBehaviour
         PoolManager.Despawn(gameObject);
     }
 
-    protected IEnumerator WalkRoutine(EconomyEntityData data)
+    protected void ResetWalk(EconomyEntityData data)
     {
-        while (true)
+        if (animator != null)
         {
-            if (animator != null)
+            animator.SetBool(IsWalkingHash, false);
+        }
+
+        walkState = WalkState.Waiting;
+        Vector2 interval = data.WalkIntervalRange;
+        walkTimer = Random.Range(interval.x, interval.y);
+    }
+
+    protected void TickWalk(EconomyEntityData data, float dt)
+    {
+        if (walkState == WalkState.Waiting)
+        {
+            walkTimer -= dt;
+            if (walkTimer > 0f)
             {
-                animator.SetBool(IsWalkingHash, false);
+                return;
             }
 
-            Vector2 interval = data.WalkIntervalRange;
-            yield return new WaitForSeconds(Random.Range(interval.x, interval.y));
-
-            if (!TryPickWalkTarget(data, out Vector3 target))
+            if (!TryPickWalkTarget(data, out walkTarget))
             {
-                continue;
+                Vector2 interval = data.WalkIntervalRange;
+                walkTimer = Random.Range(interval.x, interval.y);
+                return;
             }
 
-            spriteRenderer.flipX = target.x > transform.position.x;
+            spriteRenderer.flipX = walkTarget.x > transform.position.x;
             if (animator != null)
             {
                 animator.SetBool(IsWalkingHash, true);
             }
 
-            float moveSpeed = data.MoveSpeed;
+            walkState = WalkState.Moving;
+            return;
+        }
 
-            while ((target - transform.position).sqrMagnitude > 0.0001f)
-            {
-                Vector3 next = Vector3.MoveTowards(
-                    transform.position, target, moveSpeed * Time.deltaTime);
+        float moveSpeed = data.MoveSpeed;
+        Vector3 next = Vector3.MoveTowards(transform.position, walkTarget, moveSpeed * dt);
 
-                if (GridManager.Instance != null && !GridManager.Instance.IsWalkable(next))
-                {
-                    break;
-                }
+        if (GridManager.Instance != null && !GridManager.Instance.IsWalkable(next))
+        {
+            ResetWalk(data);
+            return;
+        }
 
-                transform.position = next;
-                yield return null;
-            }
+        transform.position = next;
+
+        if ((walkTarget - transform.position).sqrMagnitude <= 0.0001f)
+        {
+            ResetWalk(data);
         }
     }
 
-    protected IEnumerator AmbientRoutine(AmbientSoundKind kind)
+    protected void ResetAmbient(AmbientSoundKind kind)
     {
-        while (true)
+        Vector2 range = AudioManager.Instance != null
+            ? AudioManager.Instance.AmbientIntervalRange(kind)
+            : new Vector2(4f, 9f);
+        ambientTimer = Random.Range(range.x, range.y);
+    }
+
+    protected void TickAmbient(AmbientSoundKind kind, float dt)
+    {
+        ambientTimer -= dt;
+        if (ambientTimer > 0f)
         {
-            Vector2 range = AudioManager.Instance != null
-                ? AudioManager.Instance.AmbientIntervalRange(kind)
-                : new Vector2(4f, 9f);
+            return;
+        }
 
-            yield return new WaitForSeconds(Random.Range(range.x, range.y));
+        Vector2 range = AudioManager.Instance != null
+            ? AudioManager.Instance.AmbientIntervalRange(kind)
+            : new Vector2(4f, 9f);
+        ambientTimer = Random.Range(range.x, range.y);
 
-            if (!IsCarried)
-            {
-                AudioManager.Instance?.PlayAmbient(kind);
-            }
+        if (!IsCarried)
+        {
+            AudioManager.Instance?.PlayAmbient(kind);
         }
     }
 

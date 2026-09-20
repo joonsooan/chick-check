@@ -15,31 +15,6 @@ public class Egg : PlaceableEntity
         base.OnEnable();
 
         spriteRenderer.sprite = data.Sprite;
-        StartCoroutine(GrowthRoutine(data));
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-
-        StopAllCoroutines();
-    }
-
-    public override void SetCarried(bool carried)
-    {
-        base.SetCarried(carried);
-
-        StopAllCoroutines();
-
-        if (!gameObject.activeInHierarchy)
-        {
-            return;
-        }
-
-        if (!carried)
-        {
-            StartCoroutine(GrowthRoutine(data));
-        }
     }
 
     public override void NotifySpawnCount()

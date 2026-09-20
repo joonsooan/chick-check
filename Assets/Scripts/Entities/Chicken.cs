@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Chicken : PlaceableEntity
@@ -11,6 +10,9 @@ public class Chicken : PlaceableEntity
 
     public float CurrentLayInterval { get; private set; }
     public float CurrentLayChance { get; private set; }
+
+    private float layTimer;
+    private float goldMineTimer;
 
     protected override void RefreshDebugStats()
     {
@@ -25,69 +27,83 @@ public class Chicken : PlaceableEntity
         base.OnEnable();
 
         spriteRenderer.sprite = data.Sprite;
-        StartCoroutine(WalkRoutine(data));
-        StartCoroutine(GrowthRoutine(data));
-        StartCoroutine(LayEggRoutine());
-        StartCoroutine(GoldMineRoutine());
-        StartCoroutine(AmbientRoutine(AmbientSoundKind.Chicken));
+        ResetLifeState();
     }
 
-    protected override void OnDisable()
+    private void ResetLifeState()
     {
-        base.OnDisable();
-
-        StopAllCoroutines();
+        ResetWalk(data);
+        ResetAmbient(AmbientSoundKind.Chicken);
+        layTimer = data.LayInterval;
+        goldMineTimer = ResolveGoldMineInterval();
     }
 
     public override void SetCarried(bool carried)
     {
         base.SetCarried(carried);
 
-        StopAllCoroutines();
-
         if (carried)
         {
-            animator.SetBool(IsWalkingHash, false);
+            if (animator != null)
+            {
+                animator.SetBool(IsWalkingHash, false);
+            }
         }
-        else
+        else if (gameObject.activeInHierarchy)
         {
-            StartCoroutine(WalkRoutine(data));
-            StartCoroutine(GrowthRoutine(data));
-            StartCoroutine(LayEggRoutine());
-            StartCoroutine(AmbientRoutine(AmbientSoundKind.Chicken));
+            ResetLifeState();
         }
     }
 
-    private IEnumerator LayEggRoutine()
+    public override void Tick(float dt)
+    {
+        if (IsCarried)
+        {
+            return;
+        }
+
+        TickWalk(data, dt);
+        TickAmbient(AmbientSoundKind.Chicken, dt);
+        TickLayEgg(dt);
+        TickGoldMine(dt);
+        TickGrowth(dt);
+    }
+
+    private void TickLayEgg(float dt)
     {
         if (data.EggPrefab == null)
         {
-            yield break;
+            return;
         }
 
-        while (true)
+        CurrentLayInterval = data.LayInterval;
+        CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
+
+        layTimer -= dt;
+        if (layTimer > 0f)
         {
-            CurrentLayInterval = data.LayInterval;
-            CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
+            return;
+        }
 
-            yield return new WaitForSeconds(CurrentLayInterval);
+        layTimer = CurrentLayInterval;
 
-            if (Random.value <= CurrentLayChance)
-            {
-                int layCount = data.LayCount;
+        if (Random.value > CurrentLayChance)
+        {
+            return;
+        }
 
-                if (UpgradeManager.Instance != null
-                    && UpgradeManager.Instance.MultiLayBonusCount > 0
-                    && Random.value <= UpgradeManager.Instance.MultiLayChance)
-                {
-                    layCount += UpgradeManager.Instance.MultiLayBonusCount;
-                }
+        int layCount = data.LayCount;
 
-                for (int i = 0; i < layCount; i++)
-                {
-                    SpawnEgg();
-                }
-            }
+        if (UpgradeManager.Instance != null
+            && UpgradeManager.Instance.MultiLayBonusCount > 0
+            && Random.value <= UpgradeManager.Instance.MultiLayChance)
+        {
+            layCount += UpgradeManager.Instance.MultiLayBonusCount;
+        }
+
+        for (int i = 0; i < layCount; i++)
+        {
+            SpawnEgg();
         }
     }
 
@@ -99,24 +115,31 @@ public class Chicken : PlaceableEntity
         AudioManager.Instance?.PlayEggLaid();
     }
 
-    private IEnumerator GoldMineRoutine()
+    private float ResolveGoldMineInterval()
     {
-        while (true)
+        UpgradeManager manager = UpgradeManager.Instance;
+        return manager != null && manager.GoldMineLevel > 0 ? manager.GoldMineInterval : 1f;
+    }
+
+    private void TickGoldMine(float dt)
+    {
+        goldMineTimer -= dt;
+        if (goldMineTimer > 0f)
         {
-            UpgradeManager manager = UpgradeManager.Instance;
-            float interval = manager != null && manager.GoldMineLevel > 0 ? manager.GoldMineInterval : 1f;
+            return;
+        }
 
-            yield return new WaitForSeconds(interval);
+        goldMineTimer = ResolveGoldMineInterval();
 
-            if (manager == null || manager.GoldMineLevel <= 0 || EconomyManager.Instance == null)
-            {
-                continue;
-            }
+        UpgradeManager manager = UpgradeManager.Instance;
+        if (manager == null || manager.GoldMineLevel <= 0 || EconomyManager.Instance == null)
+        {
+            return;
+        }
 
-            if (Random.value <= manager.GoldMineChance)
-            {
-                EconomyManager.Instance.AddGold(manager.GoldMineGoldAmount);
-            }
+        if (Random.value <= manager.GoldMineChance)
+        {
+            EconomyManager.Instance.AddGold(manager.GoldMineGoldAmount);
         }
     }
 
