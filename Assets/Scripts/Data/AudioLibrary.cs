@@ -14,6 +14,7 @@ public class AudioLibrary : ScriptableObject
     [Range(0f, 1f)][SerializeField] private float defaultBgmVolume = 1f;
     [Range(0f, 1f)][SerializeField] private float sfxVolume = 1f;
     [Range(0f, 1f)][SerializeField] private float bgmVolume = 1f;
+    [Range(0f, 0.5f)][SerializeField] private float sfxPitchVariance = 0.08f;
 
     [Header("BGM")]
     [SerializeField] private AudioClip titleBgm;
@@ -55,6 +56,7 @@ public class AudioLibrary : ScriptableObject
     public float DefaultBgmVolume => defaultBgmVolume;
     public float SfxVolume => sfxVolume;
     public float BgmVolume => bgmVolume;
+    public float SfxPitchVariance => sfxPitchVariance;
 
     public AudioClip TitleBgm => titleBgm;
     public AudioClip GameBgm => gameBgm;

@@ -16,6 +16,7 @@ MonoBehaviour:
   defaultBgmVolume: 0.75
   sfxVolume: 0.5
   bgmVolume: 0.5
+  sfxPitchVariance: 0.1
   titleBgm: {fileID: 8300000, guid: 01c2607c35616574580edebd2ff30bff, type: 3}
   gameBgm: {fileID: 8300000, guid: fa76359149b27294a9e11b473a46412a, type: 3}
   resultBgm: {fileID: 8300000, guid: 65b5fe27262089c469f67a85d32af3c7, type: 3}

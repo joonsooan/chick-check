@@ -101,6 +101,8 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
+        float variance = library.SfxPitchVariance;
+        sfxSource.pitch = variance > 0f ? 1f + Random.Range(-variance, variance) : 1f;
         sfxSource.PlayOneShot(clip, sfxVolume * library.SfxVolume);
     }
 
