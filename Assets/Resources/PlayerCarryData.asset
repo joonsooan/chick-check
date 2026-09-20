@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2341fb2335ce14b977f831fc845ea7, type: 3}
   m_Name: PlayerCarryData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCarryData
-  carryRadius: 1.5
+  carryRadius: 1
   carryOffset: {x: 0, y: 0.8}
   pickUpLockDuration: 0.3
   pickUpGraspFrameIndex: 2
