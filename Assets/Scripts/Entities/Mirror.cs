@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Mirror : MonoBehaviour
 {
+    public event Action OnDuplicated;
+
     [SerializeField] private MirrorData data;
     [SerializeField] private bool duplicationEnabled = true;
     [SerializeField] private Transform chickSpawnParent;
@@ -112,11 +115,13 @@ public class Mirror : MonoBehaviour
             ? SpawnManager.Instance.SpawnChick(SourceMutantPrefab, spawnPos, chickSpawnParent)
             : SpawnManager.Instance.SpawnChick(spawnPos, chickSpawnParent);
 
-        Vector2 exitDir = transform.right * (Random.value < 0.5f ? 1f : -1f);
+        Vector2 exitDir = transform.right * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
         source.ForceExit(exitDir, data, masked: false);
         copy.ForceExit(exitDir, data, masked: true);
 
         AudioManager.Instance?.PlayChickDuplicated();
+
+        OnDuplicated?.Invoke();
     }
 
     private Chick GetSourceChick()

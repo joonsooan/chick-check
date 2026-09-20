@@ -7,6 +7,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private RoundConfigData roundConfig;
     [SerializeField] private Vector3 chickSpawnCenter;
     [SerializeField] private bool enterKeyEndsRoundForTest = true;
+    [SerializeField] private bool tutorialMode;
 
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
@@ -34,7 +35,33 @@ public class GameManager : Singleton<GameManager>
         currentDebtAmount = roundConfig.DebtAmount;
         RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
 
+        if (tutorialMode)
+        {
+            CurrentRound = 1;
+            SetPhase(GamePhase.Playing);
+            OnRoundStarted?.Invoke(CurrentRound);
+            phaseHasTimer = false;
+            NotifyDebtStatus();
+            return;
+        }
+
         StartRound(1);
+    }
+
+    public void BeginTutorialRound()
+    {
+        if (!tutorialMode || CurrentPhase != GamePhase.Playing)
+        {
+            return;
+        }
+
+        float roundDuration = roundConfig.RoundDuration;
+        if (UpgradeManager.Instance != null)
+        {
+            roundDuration = UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration);
+        }
+
+        SetPhaseTimer(roundDuration * 0.5f);
     }
 
     private void Update()

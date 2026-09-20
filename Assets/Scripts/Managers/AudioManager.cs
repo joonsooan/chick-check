@@ -18,6 +18,7 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private SceneBgm sceneBgm = SceneBgm.Game;
 
     private AudioSource sfxSource;
+    private AudioSource fixedSfxSource;
     private AudioSource bgmSource;
     private float sfxVolume = 1f;
     private float bgmVolume = 1f;
@@ -41,6 +42,9 @@ public class AudioManager : Singleton<AudioManager>
 
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.playOnAwake = false;
+
+        fixedSfxSource = gameObject.AddComponent<AudioSource>();
+        fixedSfxSource.playOnAwake = false;
 
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.playOnAwake = false;
@@ -94,10 +98,17 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public void PlaySfx(AudioClip clip)
+    public void PlaySfx(AudioClip clip, bool varyPitch = true)
     {
         if (clip == null || sfxSource == null || library == null)
         {
+            return;
+        }
+
+        if (!varyPitch)
+        {
+            fixedSfxSource.pitch = 1f;
+            fixedSfxSource.PlayOneShot(clip, sfxVolume * library.SfxVolume);
             return;
         }
 
@@ -140,7 +151,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (library != null)
         {
-            PlaySfx(library.RoundEnd);
+            PlaySfx(library.RoundEnd, varyPitch: false);
         }
     }
 
@@ -148,7 +159,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (library != null)
         {
-            PlaySfx(library.GameOver);
+            PlaySfx(library.GameOver, varyPitch: false);
         }
     }
 

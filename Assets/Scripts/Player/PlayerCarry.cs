@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
 
 public class PlayerCarry : MonoBehaviour
 {
+    public event Action<PlaceableEntity> OnPickedUp;
+    public event Action<PlaceableEntity> OnDropped;
+
     [SerializeField] private PlayerCarryData data;
 
     private PlayerMovement playerMovement;
@@ -99,6 +103,7 @@ public class PlayerCarry : MonoBehaviour
 
             target.SetCarried(true);
             carriedEntity = target;
+            OnPickedUp?.Invoke(target);
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }
@@ -119,6 +124,7 @@ public class PlayerCarry : MonoBehaviour
 
             target.transform.position = dropPosition;
             target.SetCarried(false);
+            OnDropped?.Invoke(target);
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }

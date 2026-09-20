@@ -12016,7 +12016,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
   chickSpawnCenter: {x: 0, y: 0, z: 0}
-  enterKeyEndsRoundForTest: 1
+  enterKeyEndsRoundForTest: 0
+  tutorialMode: 0
 --- !u!4 &619461839
 Transform:
   m_ObjectHideFlags: 0
