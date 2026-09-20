@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
-  m_Name: Upgrade_GrowthChance_Add0.2
+  m_Name: Upgrade_GrowthChance_Add_0.1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uBE60\uB978 \uC131\uC7A5"
-  description: "\uBCD1\uC544\uB9AC \uC131\uC7A5\n\uD655\uB960 +20%"
-  icon: {fileID: -1863859237976802683, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  itemName: "\uD3ED\uD48D \uC131\uC7A5"
+  description: "\uBCD1\uC544\uB9AC \uC131\uC7A5\n\uD655\uB960 +10%"
+  icon: {fileID: 2130535880278150251, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 100
+  effectKind: 0
+  oneTimeOnly: 0
   targetStat: 4
   op: 0
-  value: 0.2
+  value: 0.1
   priceMultiplier: 2
+  mirrorReplacementPrefab: {fileID: 0}

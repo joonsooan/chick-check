@@ -16,7 +16,12 @@ public class SpawnManager : Singleton<SpawnManager>
 
     public Chick SpawnChick(Vector3 position, Transform parent = null)
     {
-        Chick chick = PoolManager.Instance.Spawn(chickPrefab, position, Quaternion.identity, parent);
+        return SpawnChick(chickPrefab, position, parent);
+    }
+
+    public Chick SpawnChick(Chick prefab, Vector3 position, Transform parent = null)
+    {
+        Chick chick = PoolManager.Instance.Spawn(prefab, position, Quaternion.identity, parent);
         RegisterChickSpawned();
         return chick;
     }

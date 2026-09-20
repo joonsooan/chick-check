@@ -81,10 +81,25 @@ public class GameManager : Singleton<GameManager>
             roundDuration = UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration);
         }
 
+        int mutantCount = 0;
+        Chick mutantPrefab = null;
+        if (UpgradeManager.Instance != null && UpgradeManager.Instance.MutationData != null)
+        {
+            mutantPrefab = UpgradeManager.Instance.MutationData.MutatedChickPrefab;
+            mutantCount = Mathf.Min(UpgradeManager.Instance.MutantSpawnCount, spawnCount);
+        }
+
         for (int i = 0; i < spawnCount; i++)
         {
             Vector3 spawnPosition = GetRandomSpawnPoint();
-            SpawnManager.Instance.SpawnChick(spawnPosition);
+            if (i < mutantCount && mutantPrefab != null)
+            {
+                SpawnManager.Instance.SpawnChick(mutantPrefab, spawnPosition);
+            }
+            else
+            {
+                SpawnManager.Instance.SpawnChick(spawnPosition);
+            }
         }
 
         SetPhaseTimer(roundDuration);
@@ -197,7 +212,9 @@ public class GameManager : Singleton<GameManager>
 
         float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
         float radius = Mathf.Sqrt(UnityEngine.Random.Range(innerRadius * innerRadius, outerRadius * outerRadius));
-        return chickSpawnCenter + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f);
+        Vector3 point = chickSpawnCenter + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f);
+        point += (Vector3)(UnityEngine.Random.insideUnitCircle * roundConfig.ChickSpawnJitter);
+        return point;
     }
 }
 

@@ -6,15 +6,23 @@ public class UpgradeManager : Singleton<UpgradeManager>
 {
     [SerializeField] private string shopItemsResourcePath = "Shop Items";
     [SerializeField] private int shopItemsPerRound = 3;
+    [SerializeField] private MutationData mutationData;
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
 
     public event Action OnModifiersChanged;
 
+    public event Action<GameObject> OnMirrorUpgrade;
+
     private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
     private readonly Dictionary<ShopStatType, float> additiveBonus = new Dictionary<ShopStatType, float>();
     private readonly Dictionary<ShopStatType, float> multiplier = new Dictionary<ShopStatType, float>();
     private readonly Dictionary<ShopItemData, int> purchaseCounts = new Dictionary<ShopItemData, int>();
+    private readonly HashSet<ShopItemData> retiredItems = new HashSet<ShopItemData>();
+
+    public MutationData MutationData => mutationData;
+    public int MutantSpawnCount { get; private set; }
+    public bool ContagionEnabled { get; private set; }
 
     protected override void Awake()
     {
@@ -46,6 +54,9 @@ public class UpgradeManager : Singleton<UpgradeManager>
     private void HandleGameOver(GameOverReason reason)
     {
         purchaseCounts.Clear();
+        retiredItems.Clear();
+        MutantSpawnCount = 0;
+        ContagionEnabled = false;
     }
 
     private void HandlePhaseChanged(GamePhase phase)
@@ -71,7 +82,14 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private List<ShopItemData> PickRandomItems()
     {
-        List<ShopItemData> pool = new List<ShopItemData>(allShopItems);
+        List<ShopItemData> pool = new List<ShopItemData>();
+        foreach (ShopItemData item in allShopItems)
+        {
+            if (!retiredItems.Contains(item))
+            {
+                pool.Add(item);
+            }
+        }
         int pickCount = Mathf.Min(shopItemsPerRound, pool.Count);
         List<ShopItemData> result = new List<ShopItemData>(pickCount);
 
@@ -92,15 +110,34 @@ public class UpgradeManager : Singleton<UpgradeManager>
             return false;
         }
 
-        if (item.Op == ShopModifierOp.Add)
+        switch (item.EffectKind)
         {
-            additiveBonus.TryGetValue(item.TargetStat, out float current);
-            additiveBonus[item.TargetStat] = current + item.Value;
+            case ShopEffectKind.StatModifier:
+                if (item.Op == ShopModifierOp.Add)
+                {
+                    additiveBonus.TryGetValue(item.TargetStat, out float current);
+                    additiveBonus[item.TargetStat] = current + item.Value;
+                }
+                else
+                {
+                    multiplier.TryGetValue(item.TargetStat, out float current);
+                    multiplier[item.TargetStat] = (current == 0f ? 1f : current) + (item.Value - 1f);
+                }
+                break;
+            case ShopEffectKind.EnableMutation:
+                MutantSpawnCount++;
+                break;
+            case ShopEffectKind.EnableContagion:
+                ContagionEnabled = true;
+                break;
+            case ShopEffectKind.MirrorUpgrade:
+                OnMirrorUpgrade?.Invoke(item.MirrorReplacementPrefab);
+                break;
         }
-        else
+
+        if (item.OneTimeOnly)
         {
-            multiplier.TryGetValue(item.TargetStat, out float current);
-            multiplier[item.TargetStat] = (current == 0f ? 1f : current) * item.Value;
+            retiredItems.Add(item);
         }
 
         purchaseCounts.TryGetValue(item, out int count);

@@ -11,6 +11,7 @@ public class RoundConfigData : ScriptableObject
     [SerializeField] private int rerollCost = 5;
     [SerializeField] private float chickSpawnOuterRadius = 5f;
     [SerializeField] private float chickSpawnInnerRadius = 1.5f;
+    [SerializeField] private float chickSpawnJitter = 0.25f;
 
     public float RoundDuration => roundDuration;
     public int ChickSpawnCountPerRound => chickSpawnCountPerRound;
@@ -20,4 +21,5 @@ public class RoundConfigData : ScriptableObject
     public int RerollCost => rerollCost;
     public float ChickSpawnOuterRadius => chickSpawnOuterRadius;
     public float ChickSpawnInnerRadius => chickSpawnInnerRadius;
+    public float ChickSpawnJitter => chickSpawnJitter;
 }
