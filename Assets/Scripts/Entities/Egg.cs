@@ -10,17 +10,11 @@ public class Egg : PlaceableEntity
 
     public override ShopStatType SellPriceStat => ShopStatType.SellPriceEgg;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        spriteRenderer.sprite = data.Sprite;
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
 
+        spriteRenderer.sprite = data.Sprite;
         StartCoroutine(GrowthRoutine(data));
     }
 

@@ -104,10 +104,17 @@ public class UpgradeManager : Singleton<UpgradeManager>
         List<ShopItemData> pool = new List<ShopItemData>();
         foreach (ShopItemData item in allShopItems)
         {
-            if (!retiredItems.Contains(item))
+            if (retiredItems.Contains(item))
             {
-                pool.Add(item);
+                continue;
             }
+
+            if (item.EffectKind == ShopEffectKind.EnableContagion && MutantSpawnCount <= 0)
+            {
+                continue;
+            }
+
+            pool.Add(item);
         }
         int pickCount = Mathf.Min(shopItemsPerRound, pool.Count);
         List<ShopItemData> result = new List<ShopItemData>(pickCount);
