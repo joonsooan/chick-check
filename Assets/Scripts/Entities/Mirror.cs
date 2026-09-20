@@ -15,6 +15,11 @@ public class Mirror : MonoBehaviour
 
     public IReadOnlyList<Chick> ChicksInZone => chicksInZone;
 
+    private static Chick SourceMutantPrefab =>
+        UpgradeManager.Instance != null && UpgradeManager.Instance.MutationData != null
+            ? UpgradeManager.Instance.MutationData.MutatedChickPrefab
+            : null;
+
     public Chick PeekSource()
     {
         if (revealingSource != null && revealingSource.gameObject.activeInHierarchy)
@@ -27,6 +32,33 @@ public class Mirror : MonoBehaviour
     private void Awake()
     {
         reflection = GetComponent<MirrorReflection>();
+    }
+
+    private void Start()
+    {
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OnMirrorUpgrade += HandleMirrorUpgrade;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OnMirrorUpgrade -= HandleMirrorUpgrade;
+        }
+    }
+
+    private void HandleMirrorUpgrade(GameObject replacementPrefab)
+    {
+        if (replacementPrefab == null)
+        {
+            return;
+        }
+
+        Instantiate(replacementPrefab, transform.position, transform.rotation, transform.parent);
+        Destroy(gameObject);
     }
 
     private void OnDisable()
@@ -76,7 +108,9 @@ public class Mirror : MonoBehaviour
         revealingSource = source;
 
         Vector3 spawnPos = reflection.GetReflectionPosition(source);
-        Chick copy = SpawnManager.Instance.SpawnChick(spawnPos, chickSpawnParent);
+        Chick copy = source.IsMutant && SourceMutantPrefab != null
+            ? SpawnManager.Instance.SpawnChick(SourceMutantPrefab, spawnPos, chickSpawnParent)
+            : SpawnManager.Instance.SpawnChick(spawnPos, chickSpawnParent);
 
         Vector2 exitDir = transform.right * (Random.value < 0.5f ? 1f : -1f);
         source.ForceExit(exitDir, data, masked: false);

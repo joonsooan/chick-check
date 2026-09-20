@@ -826,6 +826,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: House_9
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 52
+        width: 32
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c0d8da9caceb2b4a8e3be7aa06b7e76
+      internalID: 977714548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: House_10
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 52
+        width: 24
+        height: 12
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4478b9f77bdc6284d947fb59ec8d004c
+      internalID: -168642948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -868,6 +912,7 @@ TextureImporter:
       House winter_2: -707160646
       House_0: 458521504
       House_1: 2109971593
+      House_10: -168642948
       House_2: -1571995162
       House_3: 2010882892
       House_4: -645645426
@@ -875,6 +920,7 @@ TextureImporter:
       House_6: 1658893812
       House_7: 1230517301
       House_8: 2030794227
+      House_9: 977714548
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

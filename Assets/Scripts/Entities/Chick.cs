@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Chick : PlaceableEntity
@@ -26,8 +27,18 @@ public class Chick : PlaceableEntity
         IsExiting = false;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
+        StartLifeRoutines();
+    }
+
+    private void StartLifeRoutines()
+    {
         StartCoroutine(WalkRoutine(data));
         StartCoroutine(GrowthRoutine(data));
+
+        if (data.IsMutant)
+        {
+            StartCoroutine(ContagionRoutine());
+        }
     }
 
     protected override void OnDisable()
@@ -54,8 +65,7 @@ public class Chick : PlaceableEntity
         }
         else
         {
-            StartCoroutine(WalkRoutine(data));
-            StartCoroutine(GrowthRoutine(data));
+            StartLifeRoutines();
         }
     }
 
@@ -103,7 +113,10 @@ public class Chick : PlaceableEntity
 
         animator.SetBool(IsWalkingHash, true);
 
-        float moveSpeed = data.MoveSpeed * mirrorData.ExitSpeedMultiplier;
+        float exitMultiplier = data.IsMutant
+            ? mirrorData.MutantExitSpeedMultiplier
+            : mirrorData.ExitSpeedMultiplier;
+        float moveSpeed = data.MoveSpeed * exitMultiplier;
 
         yield return MoveForDistance(dir, moveSpeed, mirrorData.ForcedExitDistance);
 
@@ -118,8 +131,87 @@ public class Chick : PlaceableEntity
         }
         RestoreCollider();
         IsExiting = false;
-        StartCoroutine(WalkRoutine(data));
-        StartCoroutine(GrowthRoutine(data));
+        StartLifeRoutines();
+    }
+
+    public bool IsMutant => data.IsMutant;
+
+    public void Mutate()
+    {
+        if (data.IsMutant || !gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
+        if (mutationData == null || mutationData.MutatedChickPrefab == null)
+        {
+            return;
+        }
+
+        NotifyDespawnCount();
+        SpawnManager.Instance.SpawnChick(mutationData.MutatedChickPrefab, transform.position, transform.parent);
+        PoolManager.Despawn(gameObject);
+    }
+
+    private IEnumerator ContagionRoutine()
+    {
+        MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
+        if (mutationData == null)
+        {
+            yield break;
+        }
+
+        while (true)
+        {
+            yield return new WaitForSeconds(mutationData.ContagionInterval);
+
+            if (IsCarried || IsExiting)
+            {
+                continue;
+            }
+
+            if (UpgradeManager.Instance == null || !UpgradeManager.Instance.ContagionEnabled)
+            {
+                continue;
+            }
+
+            if (Random.value > mutationData.ContagionChance)
+            {
+                continue;
+            }
+
+            SpreadContagion(mutationData);
+        }
+    }
+
+    private void SpreadContagion(MutationData mutationData)
+    {
+        float radiusSqr = mutationData.ContagionRadius * mutationData.ContagionRadius;
+        IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
+
+        for (int i = entities.Count - 1; i >= 0; i--)
+        {
+            if (!(entities[i] is Chick other) || other == this || other.IsMutant)
+            {
+                continue;
+            }
+
+            if (other.IsCarried || other.IsExiting)
+            {
+                continue;
+            }
+
+            if ((other.transform.position - transform.position).sqrMagnitude > radiusSqr)
+            {
+                continue;
+            }
+
+            if (Random.value <= mutationData.ContagionChance)
+            {
+                other.Mutate();
+            }
+        }
     }
 
     private IEnumerator MoveForDuration(Vector2 dir, float moveSpeed, float duration)

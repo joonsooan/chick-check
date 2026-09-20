@@ -219,6 +219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
   shopItemsResourcePath: Shop Items
   shopItemsPerRound: 3
+  mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}
 --- !u!4 &45256426
 Transform:
   m_ObjectHideFlags: 0
@@ -42885,6 +42886,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1390938743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1390938744}
+  m_Layer: 0
+  m_Name: Pool_ChickMutant
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1390938744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390938743}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2047025293}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1393278272
 GameObject:
   m_ObjectHideFlags: 0
@@ -49135,6 +49167,9 @@ MonoBehaviour:
   - prefab: {fileID: 3660991588947072175, guid: 763194d141ed13741acd54fa57f43dbf, type: 3}
     count: 20
     parent: {fileID: 1393278273}
+  - prefab: {fileID: 3660991588947072175, guid: 1f35d633a14c2634bac169d6fcecb669, type: 3}
+    count: 20
+    parent: {fileID: 1390938744}
   - prefab: {fileID: 1112561281134678425, guid: 16891e54070e8dd439062d7858753e22, type: 3}
     count: 20
     parent: {fileID: 35241017}
@@ -49158,6 +49193,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1393278273}
+  - {fileID: 1390938744}
   - {fileID: 35241017}
   - {fileID: 1754543893}
   - {fileID: 225684229}

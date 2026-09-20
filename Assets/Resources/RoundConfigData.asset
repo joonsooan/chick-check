@@ -18,5 +18,6 @@ MonoBehaviour:
   debtAmount: 300
   debtMultiplier: 2.2
   rerollCost: 10
-  chickSpawnOuterRadius: 4
+  chickSpawnOuterRadius: 3
   chickSpawnInnerRadius: 2
+  chickSpawnJitter: 0.25

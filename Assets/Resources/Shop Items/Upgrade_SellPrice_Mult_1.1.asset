@@ -20,6 +20,6 @@ MonoBehaviour:
   oneTimeOnly: 0
   targetStat: 2
   op: 1
-  value: 0.1
+  value: 1.1
   priceMultiplier: 2
   mirrorReplacementPrefab: {fileID: 0}

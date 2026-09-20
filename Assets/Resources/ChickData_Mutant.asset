@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b22793243929ffa4b89aae83aecb1823, type: 3}
+  m_Name: ChickData_Mutant
+  m_EditorClassIdentifier: Assembly-CSharp::ChickData
+  sprite: {fileID: -96939911167606162, guid: 7be036183c2efa947a8d851ab48ac930, type: 3}
+  sellPrice: 20
+  growthInterval: 5
+  growthChance: 0.2
+  nextStagePrefab: {fileID: 4856076502637182611, guid: 97255384a9ab2a243be9134c74a50537, type: 3}
+  moveSpeed: 2
+  walkIntervalRange: {x: 1.5, y: 3}
+  walkDistanceRange: {x: 0.5, y: 1}
+  isMutant: 1
