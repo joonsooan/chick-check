@@ -45,6 +45,7 @@ public class ShopPanelController : MonoBehaviour
         if (UpgradeManager.Instance != null && UpgradeManager.Instance.TryReroll())
         {
             UpdateRerollCostColor();
+            AudioManager.Instance?.PlayShopReroll();
         }
     }
 

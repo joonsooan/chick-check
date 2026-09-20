@@ -12,13 +12,6 @@ public class Chicken : PlaceableEntity
     public float CurrentLayInterval { get; private set; }
     public float CurrentLayChance { get; private set; }
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        spriteRenderer.sprite = data.Sprite;
-    }
-
     protected override void RefreshDebugStats()
     {
         base.RefreshDebugStats();
@@ -31,10 +24,12 @@ public class Chicken : PlaceableEntity
     {
         base.OnEnable();
 
+        spriteRenderer.sprite = data.Sprite;
         StartCoroutine(WalkRoutine(data));
         StartCoroutine(GrowthRoutine(data));
         StartCoroutine(LayEggRoutine());
         StartCoroutine(GoldMineRoutine());
+        StartCoroutine(AmbientRoutine(AmbientSoundKind.Chicken));
     }
 
     protected override void OnDisable()
@@ -59,6 +54,7 @@ public class Chicken : PlaceableEntity
             StartCoroutine(WalkRoutine(data));
             StartCoroutine(GrowthRoutine(data));
             StartCoroutine(LayEggRoutine());
+            StartCoroutine(AmbientRoutine(AmbientSoundKind.Chicken));
         }
     }
 
@@ -100,6 +96,7 @@ public class Chicken : PlaceableEntity
         Vector3 spawnPosition = TryPickEggPosition(out Vector3 candidate) ? candidate : transform.position + data.LayOffset;
         GameObject egg = PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
         egg.GetComponent<PlaceableEntity>()?.NotifySpawnCount();
+        AudioManager.Instance?.PlayEggLaid();
     }
 
     private IEnumerator GoldMineRoutine()

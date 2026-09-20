@@ -16,7 +16,6 @@ public class Chick : PlaceableEntity
     {
         base.Awake();
 
-        spriteRenderer.sprite = data.Sprite;
         col = GetComponent<Collider2D>();
     }
 
@@ -25,6 +24,7 @@ public class Chick : PlaceableEntity
         base.OnEnable();
 
         IsExiting = false;
+        spriteRenderer.sprite = data.Sprite;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
         StartLifeRoutines();
@@ -34,6 +34,7 @@ public class Chick : PlaceableEntity
     {
         StartCoroutine(WalkRoutine(data));
         StartCoroutine(GrowthRoutine(data));
+        StartCoroutine(AmbientRoutine(AmbientSoundKind.Chick));
 
         if (data.IsMutant)
         {

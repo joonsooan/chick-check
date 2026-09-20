@@ -10,13 +10,15 @@ public class SettingsPanelController : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Button toTitleButton;
     [SerializeField] private Button quitButton;
-    [SerializeField] private Slider soundSlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider bgmSlider;
     [SerializeField] private string titleSceneName = "TitleScene";
-
-    private float soundVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float defaultSfxVolume = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float defaultBgmVolume = 0.5f;
 
     private void Awake()
     {
+
         if (settingsButton != null)
         {
             settingsButton.onClick.AddListener(Open);
@@ -41,15 +43,34 @@ public class SettingsPanelController : MonoBehaviour
             quitButton.onClick.AddListener(QuitGame);
         }
 
-        if (soundSlider != null)
+        if (sfxSlider != null)
         {
-            soundSlider.SetValueWithoutNotify(soundVolume);
-            soundSlider.onValueChanged.AddListener(HandleSoundChanged);
+            sfxSlider.onValueChanged.AddListener(HandleSfxChanged);
+        }
+
+        if (bgmSlider != null)
+        {
+            bgmSlider.onValueChanged.AddListener(HandleBgmChanged);
         }
 
         if (panelRoot != null)
         {
             panelRoot.SetActive(false);
+        }
+    }
+
+    private void Start()
+    {
+        if (sfxSlider != null)
+        {
+            float sfx = AudioManager.Instance != null ? AudioManager.Instance.SfxVolume : defaultSfxVolume;
+            sfxSlider.SetValueWithoutNotify(sfx);
+        }
+
+        if (bgmSlider != null)
+        {
+            float bgm = AudioManager.Instance != null ? AudioManager.Instance.BgmVolume : defaultBgmVolume;
+            bgmSlider.SetValueWithoutNotify(bgm);
         }
     }
 
@@ -75,9 +96,14 @@ public class SettingsPanelController : MonoBehaviour
             quitButton.onClick.RemoveListener(QuitGame);
         }
 
-        if (soundSlider != null)
+        if (sfxSlider != null)
         {
-            soundSlider.onValueChanged.RemoveListener(HandleSoundChanged);
+            sfxSlider.onValueChanged.RemoveListener(HandleSfxChanged);
+        }
+
+        if (bgmSlider != null)
+        {
+            bgmSlider.onValueChanged.RemoveListener(HandleBgmChanged);
         }
     }
 
@@ -113,6 +139,9 @@ public class SettingsPanelController : MonoBehaviour
         {
             panelRoot.SetActive(true);
         }
+
+        AudioManager.Instance?.PlaySettingsToggle();
+        Time.timeScale = 0f;
     }
 
     public void Close()
@@ -121,6 +150,15 @@ public class SettingsPanelController : MonoBehaviour
         {
             panelRoot.SetActive(false);
         }
+
+        AudioManager.Instance?.PlaySettingsToggle();
+        RestorePhaseTimeScale();
+    }
+
+    private void RestorePhaseTimeScale()
+    {
+        bool paused = GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.Playing;
+        Time.timeScale = paused ? 0f : 1f;
     }
 
     private void GoToTitle()
@@ -138,8 +176,13 @@ public class SettingsPanelController : MonoBehaviour
 #endif
     }
 
-    private void HandleSoundChanged(float value)
+    private void HandleSfxChanged(float value)
     {
-        soundVolume = value;
+        AudioManager.Instance?.SetSfxVolume(value);
+    }
+
+    private void HandleBgmChanged(float value)
+    {
+        AudioManager.Instance?.SetBgmVolume(value);
     }
 }

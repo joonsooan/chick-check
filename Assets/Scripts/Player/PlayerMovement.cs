@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private bool isMovementLocked;
     private Coroutine movementLockRoutine;
+    private float footstepTimer;
+    private Vector2 startPosition;
 
     public float BaseMoveSpeed => UpgradeManager.Instance != null
         ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed)
@@ -37,12 +39,22 @@ public class PlayerMovement : MonoBehaviour
         interactAction = playerInput.actions.FindAction("Jump");
     }
 
+    private void Start()
+    {
+        startPosition = transform.position;
+    }
+
     private void OnEnable()
     {
         moveAction.Enable();
         sprintAction.Enable();
         interactAction.Enable();
         interactAction.performed += HandleInteractPerformed;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnRoundEnding += HandleRoundEnding;
+        }
     }
 
     private void OnDisable()
@@ -51,16 +63,50 @@ public class PlayerMovement : MonoBehaviour
         moveAction.Disable();
         sprintAction.Disable();
         interactAction.Disable();
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnRoundEnding -= HandleRoundEnding;
+        }
     }
+
+    private void HandleRoundEnding(int roundNumber)
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.position = startPosition;
+        transform.position = startPosition;
+        moveInput = Vector2.zero;
+    }
+
+    private bool CanMove => !isMovementLocked
+        && (GameManager.Instance == null || GameManager.Instance.CurrentPhase == GamePhase.Playing);
 
     private void Update()
     {
-        moveInput = isMovementLocked ? Vector2.zero : moveAction.ReadValue<Vector2>();
+        moveInput = CanMove ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+        UpdateFootsteps();
+    }
+
+    private void UpdateFootsteps()
+    {
+        if (!IsMoving || AudioManager.Instance == null)
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        footstepTimer -= Time.deltaTime;
+        if (footstepTimer <= 0f)
+        {
+            AudioManager.Instance.PlayFootstep();
+            float interval = AudioManager.Instance.FootstepInterval;
+            footstepTimer = IsSprinting ? interval * 0.5f : interval;
+        }
     }
 
     private void FixedUpdate()
     {
-        if (isMovementLocked)
+        if (!CanMove)
         {
             return;
         }

@@ -124,6 +124,7 @@ public class CheckPanelController : MonoBehaviour
     private void MoveSelection(int direction)
     {
         selectedDigitIndex = (selectedDigitIndex + direction + DigitCount) % DigitCount;
+        AudioManager.Instance?.PlayDigitMove();
         OnSelectedDigitChanged?.Invoke(selectedDigitIndex);
         RefreshDigitDisplay();
         UpdateDigitSelectButtonPanelPosition();
@@ -145,6 +146,7 @@ public class CheckPanelController : MonoBehaviour
     private void AdjustSelectedDigit(int direction)
     {
         digits[selectedDigitIndex] = (digits[selectedDigitIndex] + direction + 10) % 10;
+        AudioManager.Instance?.PlayDigitMove();
         ClampToMaxPayable();
         RefreshDigitDisplay();
     }
@@ -240,6 +242,7 @@ public class CheckPanelController : MonoBehaviour
         }
 
         GameManager.Instance.PayDebt(amount);
+        AudioManager.Instance?.PlayPay();
         ResetInput();
     }
 

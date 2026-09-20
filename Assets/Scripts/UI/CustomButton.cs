@@ -5,6 +5,15 @@ using UnityEngine.UI;
 [AddComponentMenu("UI/Custom Button")]
 public class CustomButton : Button
 {
+    public override void OnPointerClick(PointerEventData eventData)
+    {
+        base.OnPointerClick(eventData);
+        if (IsInteractable() && eventData.button == PointerEventData.InputButton.Left)
+        {
+            AudioManager.Instance?.PlayUiClick();
+        }
+    }
+
     public override void OnPointerEnter(PointerEventData eventData)
     {
         base.OnPointerEnter(eventData);

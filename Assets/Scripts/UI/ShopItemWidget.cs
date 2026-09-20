@@ -111,6 +111,7 @@ public class ShopItemWidget : MonoBehaviour
             }
 
             MarkAsSold();
+            AudioManager.Instance?.PlayShopBuy();
         }
     }
 

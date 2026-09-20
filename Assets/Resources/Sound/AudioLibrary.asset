@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e1eaf743e7e424491cb088fc789e26, type: 3}
+  m_Name: AudioLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::AudioLibrary
+  defaultSfxVolume: 0.75
+  defaultBgmVolume: 0.75
+  sfxVolume: 0.5
+  bgmVolume: 0.5
+  titleBgm: {fileID: 8300000, guid: 01c2607c35616574580edebd2ff30bff, type: 3}
+  gameBgm: {fileID: 8300000, guid: fa76359149b27294a9e11b473a46412a, type: 3}
+  resultBgm: {fileID: 8300000, guid: 65b5fe27262089c469f67a85d32af3c7, type: 3}
+  resultBgmFadeSeconds: 1.5
+  bgmCrossfadeSeconds: 0.75
+  uiClick: {fileID: 8300000, guid: 1393ed3def2585342a0fc285b0cd0609, type: 3}
+  digitMove: {fileID: 8300000, guid: 5d09f17ee875627489e7e990ca502a34, type: 3}
+  pay: {fileID: 8300000, guid: 4c38121001362934bb090a661d309e01, type: 3}
+  settingsToggle: {fileID: 8300000, guid: 1393ed3def2585342a0fc285b0cd0609, type: 3}
+  shopBuy: {fileID: 8300000, guid: 4c38121001362934bb090a661d309e01, type: 3}
+  shopReroll: {fileID: 8300000, guid: 5d09f17ee875627489e7e990ca502a34, type: 3}
+  eggLaid: {fileID: 8300000, guid: be6057fac55c0fc4eabfdee35d216fd8, type: 3}
+  chickDuplicated: {fileID: 8300000, guid: be6057fac55c0fc4eabfdee35d216fd8, type: 3}
+  roundEnd: {fileID: 8300000, guid: d7873688c569c1c4390ad03c374d942a, type: 3}
+  gameOver: {fileID: 8300000, guid: 54342969cec0ecc4f9fa518318ffc764, type: 3}
+  footsteps:
+  - {fileID: 8300000, guid: 65a194dac75d2e54da4a622424acdc63, type: 3}
+  - {fileID: 8300000, guid: ef72cea0d254bc249a534e4cf40ff0a8, type: 3}
+  footstepInterval: 0.5
+  chickAmbient:
+  - {fileID: 8300000, guid: 5f1f07615f7cb9d43bcf88eb9d914d1b, type: 3}
+  - {fileID: 8300000, guid: ce5177915c78ecf4f9647f21cbc51e07, type: 3}
+  chickAmbientIntervalRange: {x: 7, y: 12}
+  chickenAmbient:
+  - {fileID: 8300000, guid: e51dff664710c944ca84e59d6ae5f5a4, type: 3}
+  chickenAmbientIntervalRange: {x: 7, y: 12}
+  ambientGlobalCooldown: 3

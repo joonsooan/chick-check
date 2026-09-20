@@ -83,6 +83,11 @@ public abstract class PlaceableEntity : MonoBehaviour
     {
         IsCarried = carried;
         spriteRenderer.sortingOrder = carried ? CarriedSortingOrder : defaultSortingOrder;
+
+        if (carried)
+        {
+            growthElapsed = 0f;
+        }
     }
 
     protected IEnumerator GrowthRoutine(EconomyEntityData data)
@@ -172,6 +177,23 @@ public abstract class PlaceableEntity : MonoBehaviour
 
                 transform.position = next;
                 yield return null;
+            }
+        }
+    }
+
+    protected IEnumerator AmbientRoutine(AmbientSoundKind kind)
+    {
+        while (true)
+        {
+            Vector2 range = AudioManager.Instance != null
+                ? AudioManager.Instance.AmbientIntervalRange(kind)
+                : new Vector2(4f, 9f);
+
+            yield return new WaitForSeconds(Random.Range(range.x, range.y));
+
+            if (!IsCarried)
+            {
+                AudioManager.Instance?.PlayAmbient(kind);
             }
         }
     }

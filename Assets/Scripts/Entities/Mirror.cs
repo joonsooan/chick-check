@@ -115,6 +115,8 @@ public class Mirror : MonoBehaviour
         Vector2 exitDir = transform.right * (Random.value < 0.5f ? 1f : -1f);
         source.ForceExit(exitDir, data, masked: false);
         copy.ForceExit(exitDir, data, masked: true);
+
+        AudioManager.Instance?.PlayChickDuplicated();
     }
 
     private Chick GetSourceChick()
