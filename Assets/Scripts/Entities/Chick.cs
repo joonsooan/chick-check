@@ -78,6 +78,11 @@ public class Chick : PlaceableEntity
         }
     }
 
+    protected override bool CanGrowNow()
+    {
+        return SpawnManager.Instance == null || SpawnManager.Instance.ChickCount > 1;
+    }
+
     public override void NotifySpawnCount()
     {
         SpawnManager.Instance?.RegisterChickSpawned();

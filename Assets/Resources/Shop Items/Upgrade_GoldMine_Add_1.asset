@@ -26,6 +26,6 @@ MonoBehaviour:
   goldMineInterval: 5
   goldMineChance: 0.5
   goldMineBaseGold: 0
-  goldMineGoldPerPurchase: 30
+  goldMineGoldPerPurchase: 10
   multiLayChance: 0.2
   multiLayCountPerPurchase: 1

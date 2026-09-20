@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
-  m_Name: Upgrade_ChickGrowthChance_Add_0.1
+  m_Name: Upgrade_EggLayChance_Add_0.05
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uD3ED\uD48D \uC131\uC7A5"
-  description: "\uBCD1\uC544\uB9AC \uC131\uC7A5\n\uD655\uB960 +10%"
-  icon: {fileID: 7576617242518483205, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
-  cost: 120
+  itemName: "\uB2E4\uC0B0\uC655"
+  description: "\uC54C \uC0DD\uC131\n\uD655\uB960 +5%"
+  icon: {fileID: 2130535880278150251, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  cost: 100
   effectKind: 0
   oneTimeOnly: 0
-  targetStat: 3
+  targetStat: 5
   op: 0
-  value: 0.1
+  value: 0.05
   priceMultiplier: 2
   mirrorReplacementPrefab: {fileID: 0}
   goldMineInterval: 5

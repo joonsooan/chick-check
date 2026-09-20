@@ -14,6 +14,7 @@ public class CheckPanelController : MonoBehaviour
     [SerializeField] private TMP_Text[] digitTexts = new TMP_Text[DigitCount];
     [SerializeField] private Button payButton;
     [SerializeField] private Button nextDayButton;
+    [SerializeField] private ConfirmDialogController nextDayConfirmDialog;
     [SerializeField] private RectTransform[] digitAnchors = new RectTransform[DigitCount];
     [SerializeField] private RectTransform digitSelectButtonPanel;
     [SerializeField] private Button digitSelectButtonUp;
@@ -248,6 +249,12 @@ public class CheckPanelController : MonoBehaviour
 
     private void HandleNextDayClicked()
     {
+        if (nextDayConfirmDialog != null)
+        {
+            nextDayConfirmDialog.Show(() => GameManager.Instance.EndShopPhase());
+            return;
+        }
+
         GameManager.Instance.EndShopPhase();
     }
 }

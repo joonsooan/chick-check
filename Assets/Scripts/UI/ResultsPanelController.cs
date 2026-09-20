@@ -12,6 +12,7 @@ public class ResultsPanelController : MonoBehaviour
     [SerializeField] private ResultEntityWidget entityWidgetPrefab;
     [SerializeField] private Transform defaultWidget;
     [SerializeField] private TMP_Text totalGoldText;
+    [SerializeField] private ScrollRect scrollRect;
 
     [Header("Reveal")]
     [SerializeField] private float initialDelay = 0.5f;
@@ -134,6 +135,7 @@ public class ResultsPanelController : MonoBehaviour
         {
             spawnedWidgets[i].gameObject.SetActive(true);
             UILayoutUtil.Rebuild((RectTransform)entityContainer);
+            ScrollToBottom();
 
             if (AudioManager.Instance != null)
             {
@@ -147,6 +149,7 @@ public class ResultsPanelController : MonoBehaviour
         {
             defaultWidget.gameObject.SetActive(true);
             UILayoutUtil.Rebuild((RectTransform)entityContainer);
+            ScrollToBottom();
 
             if (AudioManager.Instance != null)
             {
@@ -196,6 +199,14 @@ public class ResultsPanelController : MonoBehaviour
                 j--;
             }
             order[j + 1] = current;
+        }
+    }
+
+    private void ScrollToBottom()
+    {
+        if (scrollRect != null)
+        {
+            scrollRect.verticalNormalizedPosition = 0f;
         }
     }
 

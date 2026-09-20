@@ -70,6 +70,8 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     protected virtual ShopStatType GrowthChanceStat => ShopStatType.GrowthChance;
 
+    protected virtual bool CanGrowNow() => true;
+
     public virtual ShopStatType SellPriceStat => ShopStatType.SellPriceChick;
 
     protected static float ApplyModifier(ShopStatType stat, float baseValue)
@@ -112,6 +114,11 @@ public abstract class PlaceableEntity : MonoBehaviour
 
             if (Random.value <= CurrentGrowthChance)
             {
+                if (!CanGrowNow())
+                {
+                    continue;
+                }
+
                 GrowToNextStage(data.NextStagePrefab);
                 yield break;
             }

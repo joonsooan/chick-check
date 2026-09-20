@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: "\uC30D\uB780"
   description: "\uC54C \uC0DD\uC131\n\uAC00\uB054 +1"
   icon: {fileID: 5543941588292853863, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
-  cost: 200
+  cost: 150
   effectKind: 6
   oneTimeOnly: 0
   targetStat: 0

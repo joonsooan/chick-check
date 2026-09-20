@@ -8,6 +8,7 @@ public class ShopPanelController : MonoBehaviour
     [SerializeField] private Transform itemContainer;
     [SerializeField] private ShopItemWidget itemWidgetPrefab;
     [SerializeField] private Button nextRoundButton;
+    [SerializeField] private ConfirmDialogController nextRoundConfirmDialog;
     [SerializeField] private Button shopTabButton;
     [SerializeField] private Button checkTabButton;
     [SerializeField] private Button rerollButton;
@@ -130,6 +131,12 @@ public class ShopPanelController : MonoBehaviour
 
     private void HandleNextRoundClicked()
     {
+        if (nextRoundConfirmDialog != null)
+        {
+            nextRoundConfirmDialog.Show(() => GameManager.Instance.EndShopPhase());
+            return;
+        }
+
         GameManager.Instance.EndShopPhase();
     }
 }
