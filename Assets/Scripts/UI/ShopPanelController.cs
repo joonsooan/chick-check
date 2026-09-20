@@ -48,16 +48,13 @@ public class ShopPanelController : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
         if (UpgradeManager.Instance != null)
         {
             UpgradeManager.Instance.OnShopCatalogReady += HandleShopCatalogReady;
         }
-    }
 
-    private void OnEnable()
-    {
         if (EconomyManager.Instance != null)
         {
             EconomyManager.Instance.OnGoldChanged += HandleGoldChanged;
@@ -68,17 +65,14 @@ public class ShopPanelController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (EconomyManager.Instance != null)
-        {
-            EconomyManager.Instance.OnGoldChanged -= HandleGoldChanged;
-        }
-    }
-
-    private void OnDestroy()
-    {
         if (UpgradeManager.Instance != null)
         {
             UpgradeManager.Instance.OnShopCatalogReady -= HandleShopCatalogReady;
+        }
+
+        if (EconomyManager.Instance != null)
+        {
+            EconomyManager.Instance.OnGoldChanged -= HandleGoldChanged;
         }
     }
 
@@ -130,8 +124,7 @@ public class ShopPanelController : MonoBehaviour
             spawnedWidgets.Add(widget);
         }
 
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)itemContainer);
+        UILayoutUtil.Rebuild((RectTransform)itemContainer);
     }
 
     private void HandleNextRoundClicked()

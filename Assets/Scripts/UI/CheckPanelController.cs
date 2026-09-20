@@ -87,13 +87,7 @@ public class CheckPanelController : MonoBehaviour
 
     private void RebuildPanelLayout()
     {
-        if (panelRoot == null)
-        {
-            return;
-        }
-
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(panelRoot);
+        UILayoutUtil.Rebuild(panelRoot);
     }
 
     private void Update()

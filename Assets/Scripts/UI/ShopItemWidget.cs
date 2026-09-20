@@ -29,7 +29,7 @@ public class ShopItemWidget : MonoBehaviour
             UpdateCostColor(EconomyManager.Instance.Gold);
         }
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+        UILayoutUtil.Rebuild(rectTransform);
     }
 
     private void OnDisable()
@@ -72,8 +72,7 @@ public class ShopItemWidget : MonoBehaviour
             UpdateCostColor(EconomyManager.Instance.Gold);
         }
 
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+        UILayoutUtil.Rebuild(rectTransform);
     }
 
     private void HandleGoldChanged(int gold)

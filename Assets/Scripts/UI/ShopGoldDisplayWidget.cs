@@ -7,7 +7,7 @@ public class ShopGoldDisplayWidget : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private GameObject displayPanel;
 
-    private void Start()
+    private void OnEnable()
     {
         if (EconomyManager.Instance != null)
         {
@@ -40,6 +40,11 @@ public class ShopGoldDisplayWidget : MonoBehaviour
         {
             goldText.text = gold.ToString();
         }
+
+        if (displayPanel != null)
+        {
+            UILayoutUtil.Rebuild((RectTransform)displayPanel.transform);
+        }
     }
 
     private void HandleShopUiVisibilityChanged(bool isVisible)
@@ -53,8 +58,7 @@ public class ShopGoldDisplayWidget : MonoBehaviour
 
         if (isVisible)
         {
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)displayPanel.transform);
+            UILayoutUtil.Rebuild((RectTransform)displayPanel.transform);
         }
     }
 }

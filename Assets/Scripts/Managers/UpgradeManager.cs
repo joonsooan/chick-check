@@ -9,6 +9,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
 
+    public event Action OnModifiersChanged;
+
     private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
     private readonly Dictionary<ShopStatType, float> additiveBonus = new Dictionary<ShopStatType, float>();
     private readonly Dictionary<ShopStatType, float> multiplier = new Dictionary<ShopStatType, float>();
@@ -30,8 +32,10 @@ public class UpgradeManager : Singleton<UpgradeManager>
         }
     }
 
-    private void OnDisable()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnPhaseChanged -= HandlePhaseChanged;
@@ -101,6 +105,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
         purchaseCounts.TryGetValue(item, out int count);
         purchaseCounts[item] = count + 1;
+
+        OnModifiersChanged?.Invoke();
 
         return true;
     }

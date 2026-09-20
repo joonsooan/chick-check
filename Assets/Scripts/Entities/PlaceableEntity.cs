@@ -22,6 +22,11 @@ public abstract class PlaceableEntity : MonoBehaviour
     public virtual bool CanBeCarried => true;
     public abstract EconomyEntityData EconomyData { get; }
 
+    public float CurrentGrowthInterval { get; private set; }
+    public float CurrentGrowthChance { get; private set; }
+
+    private float growthElapsed;
+
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -32,11 +37,42 @@ public abstract class PlaceableEntity : MonoBehaviour
     protected virtual void OnEnable()
     {
         activeEntities.Add(this);
+        growthElapsed = 0f;
+
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OnModifiersChanged += RefreshDebugStats;
+        }
+        RefreshDebugStats();
     }
 
     protected virtual void OnDisable()
     {
         activeEntities.Remove(this);
+
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OnModifiersChanged -= RefreshDebugStats;
+        }
+    }
+
+    protected virtual void RefreshDebugStats()
+    {
+        EconomyEntityData data = EconomyData;
+        if (data == null)
+        {
+            return;
+        }
+
+        CurrentGrowthInterval = ApplyModifier(ShopStatType.GrowthInterval, data.GrowthInterval);
+        CurrentGrowthChance = ApplyModifier(ShopStatType.GrowthChance, data.GrowthChance);
+    }
+
+    protected static float ApplyModifier(ShopStatType stat, float baseValue)
+    {
+        return UpgradeManager.Instance != null
+            ? UpgradeManager.Instance.ApplyModifiers(stat, baseValue)
+            : baseValue;
     }
 
     public virtual void SetCarried(bool carried)
@@ -54,17 +90,18 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         while (true)
         {
-            float growthInterval = data.GrowthInterval;
-            float growthChance = data.GrowthChance;
-            if (UpgradeManager.Instance != null)
+            CurrentGrowthInterval = ApplyModifier(ShopStatType.GrowthInterval, data.GrowthInterval);
+            CurrentGrowthChance = ApplyModifier(ShopStatType.GrowthChance, data.GrowthChance);
+
+            while (growthElapsed < CurrentGrowthInterval)
             {
-                growthInterval = UpgradeManager.Instance.ApplyModifiers(ShopStatType.GrowthInterval, growthInterval);
-                growthChance = UpgradeManager.Instance.ApplyModifiers(ShopStatType.GrowthChance, growthChance);
+                growthElapsed += Time.deltaTime;
+                yield return null;
             }
 
-            yield return new WaitForSeconds(growthInterval);
+            growthElapsed = 0f;
 
-            if (Random.value <= growthChance)
+            if (Random.value <= CurrentGrowthChance)
             {
                 GrowToNextStage(data.NextStagePrefab);
                 yield break;

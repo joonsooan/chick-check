@@ -80,8 +80,7 @@ public class UIManager : Singleton<UIManager>
             resultsPanel.transform.SetAsLastSibling();
         }
 
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)target.transform);
+        UILayoutUtil.Rebuild((RectTransform)target.transform);
 
         OnShopUiVisibilityChanged?.Invoke(target == shopPanel || target == checkPanel);
     }

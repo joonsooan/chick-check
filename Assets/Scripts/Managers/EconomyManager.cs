@@ -38,8 +38,10 @@ public class EconomyManager : Singleton<EconomyManager>
         }
     }
 
-    private void OnDisable()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRoundEnded -= HandleRoundEnded;

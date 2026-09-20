@@ -40,10 +40,7 @@ public class HUDController : MonoBehaviour
             HandleChickenCountChanged(SpawnManager.Instance.ChickenCount);
         }
 
-        if (infoPanel != null)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(infoPanel);
-        }
+        UILayoutUtil.Rebuild(infoPanel);
     }
 
     private void OnDestroy()
@@ -75,8 +72,9 @@ public class HUDController : MonoBehaviour
         if (infoPanel != null)
         {
             infoPanel.gameObject.SetActive(true);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(infoPanel);
         }
+
+        UILayoutUtil.Rebuild(infoPanel);
     }
 
     private void HandleRoundEnded(int roundNumber)
@@ -99,6 +97,8 @@ public class HUDController : MonoBehaviour
         {
             eggCountText.text = count.ToString();
         }
+
+        UILayoutUtil.Rebuild(infoPanel);
     }
 
     private void HandleChickCountChanged(int count)
@@ -107,6 +107,8 @@ public class HUDController : MonoBehaviour
         {
             chickCountText.text = count.ToString();
         }
+
+        UILayoutUtil.Rebuild(infoPanel);
     }
 
     private void HandleChickenCountChanged(int count)
@@ -115,16 +117,14 @@ public class HUDController : MonoBehaviour
         {
             chickenCountText.text = count.ToString();
         }
+
+        UILayoutUtil.Rebuild(infoPanel);
     }
 
     private void HandleGoldChanged(int gold)
     {
         goldText.text = gold.ToString();
 
-        RectTransform parent = goldText.transform.parent as RectTransform;
-        if (parent != null)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(parent);
-        }
+        UILayoutUtil.Rebuild(infoPanel);
     }
 }

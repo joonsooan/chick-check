@@ -7,11 +7,22 @@ public class Chicken : PlaceableEntity
 
     public override EconomyEntityData EconomyData => data;
 
+    public float CurrentLayInterval { get; private set; }
+    public float CurrentLayChance { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
 
         spriteRenderer.sprite = data.Sprite;
+    }
+
+    protected override void RefreshDebugStats()
+    {
+        base.RefreshDebugStats();
+
+        CurrentLayInterval = ApplyModifier(ShopStatType.EggLayInterval, data.LayInterval);
+        CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
     }
 
     protected override void OnEnable()
@@ -57,17 +68,12 @@ public class Chicken : PlaceableEntity
 
         while (true)
         {
-            float layInterval = data.LayInterval;
-            float layChance = data.LayChance;
-            if (UpgradeManager.Instance != null)
-            {
-                layInterval = UpgradeManager.Instance.ApplyModifiers(ShopStatType.EggLayInterval, layInterval);
-                layChance = UpgradeManager.Instance.ApplyModifiers(ShopStatType.EggLayChance, layChance);
-            }
+            CurrentLayInterval = ApplyModifier(ShopStatType.EggLayInterval, data.LayInterval);
+            CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
 
-            yield return new WaitForSeconds(layInterval);
+            yield return new WaitForSeconds(CurrentLayInterval);
 
-            if (Random.value <= layChance)
+            if (Random.value <= CurrentLayChance)
             {
                 for (int i = 0; i < data.LayCount; i++)
                 {

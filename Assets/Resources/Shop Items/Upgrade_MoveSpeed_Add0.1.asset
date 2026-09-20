@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
-  m_Name: Upgrade_SellPrice_Mul1.2
+  m_Name: Upgrade_MoveSpeed_Add0.1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uBD80\uC790 \uBCD1\uC544\uB9AC"
-  description: "\uBCD1\uC544\uB9AC \uACE8\uB4DC\n+20%"
-  icon: {fileID: 184950751378207249, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
-  cost: 100
-  targetStat: 2
-  op: 1
-  value: 1.2
+  itemName: "\uBE60\uB978 \uBC1C"
+  description: "\uC774\uB3D9 \uC18D\uB3C4\n+10%"
+  icon: {fileID: -7058561907366660472, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  cost: 80
+  targetStat: 1
+  op: 0
+  value: 0.1
+  priceMultiplier: 2

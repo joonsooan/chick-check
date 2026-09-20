@@ -90,8 +90,7 @@ public class ResultsPanelController : MonoBehaviour
             defaultWidget.SetAsLastSibling();
         }
 
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)entityContainer);
+        UILayoutUtil.Rebuild((RectTransform)entityContainer);
     }
 
     private void HandleNextClicked()

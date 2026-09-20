@@ -119,6 +119,7 @@ public class Chick : PlaceableEntity
         RestoreCollider();
         IsExiting = false;
         StartCoroutine(WalkRoutine(data));
+        StartCoroutine(GrowthRoutine(data));
     }
 
     private IEnumerator MoveForDuration(Vector2 dir, float moveSpeed, float duration)
