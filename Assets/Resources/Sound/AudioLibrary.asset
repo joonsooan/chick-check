@@ -16,7 +16,7 @@ MonoBehaviour:
   defaultBgmVolume: 0.75
   sfxVolume: 0.5
   bgmVolume: 0.5
-  sfxPitchVariance: 0.1
+  sfxPitchVariance: 0.04
   titleBgm: {fileID: 8300000, guid: 01c2607c35616574580edebd2ff30bff, type: 3}
   gameBgm: {fileID: 8300000, guid: fa76359149b27294a9e11b473a46412a, type: 3}
   resultBgm: {fileID: 8300000, guid: 65b5fe27262089c469f67a85d32af3c7, type: 3}
@@ -32,6 +32,8 @@ MonoBehaviour:
   chickDuplicated: {fileID: 8300000, guid: 5f1f07615f7cb9d43bcf88eb9d914d1b, type: 3}
   roundEnd: {fileID: 8300000, guid: d7873688c569c1c4390ad03c374d942a, type: 3}
   gameOver: {fileID: 8300000, guid: 54342969cec0ecc4f9fa518318ffc764, type: 3}
+  resultReveal: {fileID: 8300000, guid: 5d09f17ee875627489e7e990ca502a34, type: 3}
+  resultRevealFinal: {fileID: 8300000, guid: 4c38121001362934bb090a661d309e01, type: 3}
   footsteps:
   - {fileID: 8300000, guid: 65a194dac75d2e54da4a622424acdc63, type: 3}
   - {fileID: 8300000, guid: ef72cea0d254bc249a534e4cf40ff0a8, type: 3}

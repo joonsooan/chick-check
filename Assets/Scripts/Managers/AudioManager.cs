@@ -152,6 +152,22 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+    public void PlayResultReveal()
+    {
+        if (library != null)
+        {
+            PlaySfx(library.ResultReveal);
+        }
+    }
+
+    public void PlayResultRevealFinal()
+    {
+        if (library != null)
+        {
+            PlaySfx(library.ResultRevealFinal);
+        }
+    }
+
     public void PlayUiClick()
     {
         if (library != null)

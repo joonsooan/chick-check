@@ -8,6 +8,9 @@ public abstract class EconomyEntityData : ScriptableObject
     [Header("Economy")]
     [SerializeField] private int sellPrice;
 
+    [Header("Results")]
+    [SerializeField] private int displayOrder;
+
     [Header("Growth")]
     [SerializeField] private float growthInterval = 5f;
     [SerializeField] private float growthChance = 0.1f;
@@ -20,6 +23,7 @@ public abstract class EconomyEntityData : ScriptableObject
 
     public Sprite Sprite => sprite;
     public int SellPrice => sellPrice;
+    public int DisplayOrder => displayOrder;
     public float GrowthInterval => growthInterval;
     public float GrowthChance => growthChance;
     public GameObject NextStagePrefab => nextStagePrefab;

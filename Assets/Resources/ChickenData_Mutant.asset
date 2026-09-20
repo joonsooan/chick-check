@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChickenData
   sprite: {fileID: -7760270051123019610, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
   sellPrice: 40
+  displayOrder: 12
   growthInterval: 0
   growthChance: 0
   nextStagePrefab: {fileID: 0}
