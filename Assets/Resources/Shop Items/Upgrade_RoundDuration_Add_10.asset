@@ -18,8 +18,7 @@ MonoBehaviour:
   cost: 120
   effectKind: 0
   oneTimeOnly: 0
-  targetStat: 5
-  op: 0
+  targetStat: 4
   value: 10
   priceMultiplier: 2
   mirrorReplacementPrefab: {fileID: 0}

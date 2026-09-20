@@ -64,9 +64,13 @@ public abstract class PlaceableEntity : MonoBehaviour
             return;
         }
 
-        CurrentGrowthInterval = ApplyModifier(ShopStatType.GrowthInterval, data.GrowthInterval);
-        CurrentGrowthChance = ApplyModifier(ShopStatType.GrowthChance, data.GrowthChance);
+        CurrentGrowthInterval = data.GrowthInterval;
+        CurrentGrowthChance = ApplyModifier(GrowthChanceStat, data.GrowthChance);
     }
+
+    protected virtual ShopStatType GrowthChanceStat => ShopStatType.GrowthChance;
+
+    public virtual ShopStatType SellPriceStat => ShopStatType.SellPriceChick;
 
     protected static float ApplyModifier(ShopStatType stat, float baseValue)
     {
@@ -90,8 +94,8 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         while (true)
         {
-            CurrentGrowthInterval = ApplyModifier(ShopStatType.GrowthInterval, data.GrowthInterval);
-            CurrentGrowthChance = ApplyModifier(ShopStatType.GrowthChance, data.GrowthChance);
+            CurrentGrowthInterval = data.GrowthInterval;
+            CurrentGrowthChance = ApplyModifier(GrowthChanceStat, data.GrowthChance);
 
             while (growthElapsed < CurrentGrowthInterval)
             {

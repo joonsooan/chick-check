@@ -4,12 +4,13 @@ public enum ShopStatType
 {
     ChickSpawnCountPerRound,
     PlayerMoveSpeed,
-    SellPrice,
-    GrowthInterval,
+    SellPriceChick,
     GrowthChance,
     RoundDuration,
-    EggLayInterval,
-    EggLayChance
+    EggLayChance,
+    EggGrowthChance,
+    SellPriceEgg,
+    SellPriceChicken
 }
 
 public enum ShopModifierOp
@@ -23,7 +24,10 @@ public enum ShopEffectKind
     StatModifier,
     EnableMutation,
     EnableContagion,
-    MirrorUpgrade
+    MirrorUpgrade,
+    EnableSprint,
+    GoldMine,
+    MultiLay
 }
 
 [CreateAssetMenu(fileName = "ShopItemData", menuName = "Shop Item Data")]
@@ -45,6 +49,16 @@ public class ShopItemData : ScriptableObject
     [Header("Mirror Upgrade")]
     [SerializeField] private GameObject mirrorReplacementPrefab;
 
+    [Header("Gold Mine")]
+    [SerializeField] private float goldMineInterval = 5f;
+    [SerializeField] private float goldMineChance = 0.5f;
+    [SerializeField] private int goldMineBaseGold = 1;
+    [SerializeField] private int goldMineGoldPerPurchase = 1;
+
+    [Header("Multi Lay")]
+    [SerializeField] private float multiLayChance = 0.5f;
+    [SerializeField] private int multiLayCountPerPurchase = 1;
+
     public string ItemName => itemName;
     public string Description => description;
     public Sprite Icon => icon;
@@ -56,4 +70,10 @@ public class ShopItemData : ScriptableObject
     public float Value => value;
     public float PriceMultiplier => priceMultiplier;
     public GameObject MirrorReplacementPrefab => mirrorReplacementPrefab;
+    public float GoldMineInterval => goldMineInterval;
+    public float GoldMineChance => goldMineChance;
+    public int GoldMineBaseGold => goldMineBaseGold;
+    public int GoldMineGoldPerPurchase => goldMineGoldPerPurchase;
+    public float MultiLayChance => multiLayChance;
+    public int MultiLayCountPerPurchase => multiLayCountPerPurchase;
 }

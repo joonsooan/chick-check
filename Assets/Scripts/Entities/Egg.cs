@@ -6,6 +6,10 @@ public class Egg : PlaceableEntity
 
     public override EconomyEntityData EconomyData => data;
 
+    protected override ShopStatType GrowthChanceStat => ShopStatType.EggGrowthChance;
+
+    public override ShopStatType SellPriceStat => ShopStatType.SellPriceEgg;
+
     protected override void Awake()
     {
         base.Awake();

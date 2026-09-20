@@ -19,7 +19,12 @@ MonoBehaviour:
   effectKind: 3
   oneTimeOnly: 1
   targetStat: 4
-  op: 0
-  value: 0.2
+  value: 0
   priceMultiplier: 2
   mirrorReplacementPrefab: {fileID: 3729750936595538712, guid: fb17951919f71774eb87d79d77784d3e, type: 3}
+  goldMineInterval: 5
+  goldMineChance: 0.5
+  goldMineBaseGold: 1
+  goldMineGoldPerPurchase: 1
+  multiLayChance: 0.5
+  multiLayCountPerPurchase: 1

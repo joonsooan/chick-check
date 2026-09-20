@@ -7,6 +7,8 @@ public class Chicken : PlaceableEntity
 
     public override EconomyEntityData EconomyData => data;
 
+    public override ShopStatType SellPriceStat => ShopStatType.SellPriceChicken;
+
     public float CurrentLayInterval { get; private set; }
     public float CurrentLayChance { get; private set; }
 
@@ -21,7 +23,7 @@ public class Chicken : PlaceableEntity
     {
         base.RefreshDebugStats();
 
-        CurrentLayInterval = ApplyModifier(ShopStatType.EggLayInterval, data.LayInterval);
+        CurrentLayInterval = data.LayInterval;
         CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
     }
 
@@ -32,6 +34,7 @@ public class Chicken : PlaceableEntity
         StartCoroutine(WalkRoutine(data));
         StartCoroutine(GrowthRoutine(data));
         StartCoroutine(LayEggRoutine());
+        StartCoroutine(GoldMineRoutine());
     }
 
     protected override void OnDisable()
@@ -68,19 +71,54 @@ public class Chicken : PlaceableEntity
 
         while (true)
         {
-            CurrentLayInterval = ApplyModifier(ShopStatType.EggLayInterval, data.LayInterval);
+            CurrentLayInterval = data.LayInterval;
             CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
 
             yield return new WaitForSeconds(CurrentLayInterval);
 
             if (Random.value <= CurrentLayChance)
             {
-                for (int i = 0; i < data.LayCount; i++)
+                int layCount = data.LayCount;
+
+                if (UpgradeManager.Instance != null
+                    && UpgradeManager.Instance.MultiLayBonusCount > 0
+                    && Random.value <= UpgradeManager.Instance.MultiLayChance)
                 {
-                    Vector3 spawnPosition = TryPickEggPosition(out Vector3 candidate) ? candidate : transform.position + data.LayOffset;
-                    GameObject egg = PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
-                    egg.GetComponent<PlaceableEntity>()?.NotifySpawnCount();
+                    layCount += UpgradeManager.Instance.MultiLayBonusCount;
                 }
+
+                for (int i = 0; i < layCount; i++)
+                {
+                    SpawnEgg();
+                }
+            }
+        }
+    }
+
+    private void SpawnEgg()
+    {
+        Vector3 spawnPosition = TryPickEggPosition(out Vector3 candidate) ? candidate : transform.position + data.LayOffset;
+        GameObject egg = PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
+        egg.GetComponent<PlaceableEntity>()?.NotifySpawnCount();
+    }
+
+    private IEnumerator GoldMineRoutine()
+    {
+        while (true)
+        {
+            UpgradeManager manager = UpgradeManager.Instance;
+            float interval = manager != null && manager.GoldMineLevel > 0 ? manager.GoldMineInterval : 1f;
+
+            yield return new WaitForSeconds(interval);
+
+            if (manager == null || manager.GoldMineLevel <= 0 || EconomyManager.Instance == null)
+            {
+                continue;
+            }
+
+            if (Random.value <= manager.GoldMineChance)
+            {
+                EconomyManager.Instance.AddGold(manager.GoldMineGoldAmount);
             }
         }
     }

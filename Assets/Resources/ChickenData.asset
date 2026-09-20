@@ -22,6 +22,6 @@ MonoBehaviour:
   walkDistanceRange: {x: 0.3, y: 1}
   eggPrefab: {fileID: 5182355378179198010, guid: 52c4809b507d499479dda85a99799fda, type: 3}
   layInterval: 5
-  layChance: 0.2
+  layChance: 0.05
   layOffset: {x: 0, y: -0.2, z: 0}
   layCount: 1

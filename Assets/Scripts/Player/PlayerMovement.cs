@@ -24,7 +24,8 @@ public class PlayerMovement : MonoBehaviour
     public float SprintSpeed => BaseMoveSpeed * sprintMultiplier;
     public Vector2 MoveInput => moveInput;
     public bool IsMoving => moveInput.sqrMagnitude > 0f;
-    public bool IsSprinting => sprintAction.IsPressed();
+    public bool SprintUnlocked => UpgradeManager.Instance != null && UpgradeManager.Instance.SprintEnabled;
+    public bool IsSprinting => SprintUnlocked && sprintAction.IsPressed();
 
     private void Awake()
     {
@@ -64,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        float speed = sprintAction.IsPressed() ? SprintSpeed : BaseMoveSpeed;
+        float speed = IsSprinting ? SprintSpeed : BaseMoveSpeed;
         rb.MovePosition(rb.position + moveInput * (speed * Time.fixedDeltaTime));
     }
 

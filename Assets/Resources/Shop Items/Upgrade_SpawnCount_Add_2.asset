@@ -19,7 +19,6 @@ MonoBehaviour:
   effectKind: 0
   oneTimeOnly: 0
   targetStat: 0
-  op: 0
   value: 2
   priceMultiplier: 2
   mirrorReplacementPrefab: {fileID: 0}

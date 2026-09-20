@@ -23,6 +23,17 @@ public class UpgradeManager : Singleton<UpgradeManager>
     public MutationData MutationData => mutationData;
     public int MutantSpawnCount { get; private set; }
     public bool ContagionEnabled { get; private set; }
+    public bool SprintEnabled { get; private set; }
+
+    public int GoldMineLevel { get; private set; }
+    public float GoldMineInterval { get; private set; }
+    public float GoldMineChance { get; private set; }
+    private int goldMineBaseGold;
+    private int goldMineGoldPerPurchase;
+    public int GoldMineGoldAmount => GoldMineLevel <= 0 ? 0 : goldMineBaseGold + goldMineGoldPerPurchase * (GoldMineLevel - 1);
+
+    public float MultiLayChance { get; private set; }
+    public int MultiLayBonusCount { get; private set; }
 
     protected override void Awake()
     {
@@ -57,6 +68,14 @@ public class UpgradeManager : Singleton<UpgradeManager>
         retiredItems.Clear();
         MutantSpawnCount = 0;
         ContagionEnabled = false;
+        SprintEnabled = false;
+        GoldMineLevel = 0;
+        GoldMineInterval = 0f;
+        GoldMineChance = 0f;
+        goldMineBaseGold = 0;
+        goldMineGoldPerPurchase = 0;
+        MultiLayChance = 0f;
+        MultiLayBonusCount = 0;
     }
 
     private void HandlePhaseChanged(GamePhase phase)
@@ -133,6 +152,20 @@ public class UpgradeManager : Singleton<UpgradeManager>
             case ShopEffectKind.MirrorUpgrade:
                 OnMirrorUpgrade?.Invoke(item.MirrorReplacementPrefab);
                 break;
+            case ShopEffectKind.EnableSprint:
+                SprintEnabled = true;
+                break;
+            case ShopEffectKind.GoldMine:
+                GoldMineInterval = item.GoldMineInterval;
+                GoldMineChance = item.GoldMineChance;
+                goldMineBaseGold = item.GoldMineBaseGold;
+                goldMineGoldPerPurchase = item.GoldMineGoldPerPurchase;
+                GoldMineLevel++;
+                break;
+            case ShopEffectKind.MultiLay:
+                MultiLayChance = item.MultiLayChance;
+                MultiLayBonusCount += item.MultiLayCountPerPurchase;
+                break;
         }
 
         if (item.OneTimeOnly)
@@ -154,14 +187,14 @@ public class UpgradeManager : Singleton<UpgradeManager>
         return Mathf.RoundToInt(item.Cost * Mathf.Pow(item.PriceMultiplier, count));
     }
 
-    public float GetMultiplier(ShopStatType stat)
-    {
-        return multiplier.TryGetValue(stat, out float value) ? value : 1f;
-    }
-
     public float GetAdditive(ShopStatType stat)
     {
         return additiveBonus.TryGetValue(stat, out float value) ? value : 0f;
+    }
+
+    public float GetMultiplier(ShopStatType stat)
+    {
+        return multiplier.TryGetValue(stat, out float value) ? value : 1f;
     }
 
     public float ApplyModifiers(ShopStatType stat, float baseValue)

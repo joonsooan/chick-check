@@ -97,7 +97,7 @@ public class EconomyManager : Singleton<EconomyManager>
         int sellPrice = entity.EconomyData.SellPrice;
         if (UpgradeManager.Instance != null)
         {
-            sellPrice = Mathf.RoundToInt(UpgradeManager.Instance.ApplyModifiers(ShopStatType.SellPrice, sellPrice));
+            sellPrice = Mathf.RoundToInt(UpgradeManager.Instance.ApplyModifiers(entity.SellPriceStat, sellPrice));
         }
 
         return sellPrice;
