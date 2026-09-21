@@ -10,6 +10,8 @@ public class Chick : PlaceableEntity
         Random
     }
 
+    private static readonly List<PlaceableEntity> contagionBuffer = new List<PlaceableEntity>();
+
     [SerializeField] private ChickData data;
     [SerializeField] private MutationData mutationData;
 
@@ -43,7 +45,6 @@ public class Chick : PlaceableEntity
         base.OnEnable();
 
         exitPhase = ExitPhase.None;
-        spriteRenderer.sprite = data.Sprite;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
         ResetLifeState();
@@ -79,13 +80,8 @@ public class Chick : PlaceableEntity
         contagionActive = manager != null && manager.State.ContagionEnabled;
     }
 
-    public override void Tick(float dt)
+    protected override void TickBehaviour(float dt)
     {
-        if (IsCarried)
-        {
-            return;
-        }
-
         if (exitPhase != ExitPhase.None)
         {
             TickExit(dt);
@@ -114,7 +110,7 @@ public class Chick : PlaceableEntity
 
         if (carried)
         {
-            animator.SetBool(IsWalkingHash, false);
+            flipbook.Play(data.IdleAnimation);
         }
         else
         {
@@ -154,7 +150,7 @@ public class Chick : PlaceableEntity
             col.isTrigger = true;
         }
 
-        animator.SetBool(IsWalkingHash, true);
+        flipbook.Play(data.WalkAnimation);
 
         float exitMultiplier = data.IsMutant
             ? mirrorData.MutantExitSpeedMultiplier
@@ -227,7 +223,7 @@ public class Chick : PlaceableEntity
         }
 
         SpawnManager.Instance.SpawnChick(mutationData.MutatedChickPrefab, transform.position, transform.parent);
-        PoolManager.Despawn(gameObject);
+        DespawnSelf();
     }
 
     private void TickContagion(float dt)
@@ -261,11 +257,13 @@ public class Chick : PlaceableEntity
     private void SpreadContagion(MutationData mutation)
     {
         float radiusSqr = mutation.ContagionRadius * mutation.ContagionRadius;
-        IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
 
-        for (int i = entities.Count - 1; i >= 0; i--)
+        contagionBuffer.Clear();
+        PlaceableEntity.Spatial.Query(transform.position, mutation.ContagionRadius, contagionBuffer);
+
+        for (int i = contagionBuffer.Count - 1; i >= 0; i--)
         {
-            if (!(entities[i] is Chick other) || other == this || other.IsMutant)
+            if (!(contagionBuffer[i] is Chick other) || other == this || other.IsMutant)
             {
                 continue;
             }

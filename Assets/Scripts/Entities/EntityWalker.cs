@@ -9,31 +9,26 @@ public class EntityWalker
         Moving
     }
 
-    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
-
     private readonly Transform transform;
     private readonly SpriteRenderer spriteRenderer;
-    private readonly Animator animator;
+    private readonly SpriteFlipbook flipbook;
     private readonly Func<Vector3, bool> isWalkable;
 
     private WalkState state;
     private float timer;
     private Vector3 target;
 
-    public EntityWalker(Transform transform, SpriteRenderer spriteRenderer, Animator animator, Func<Vector3, bool> isWalkable)
+    public EntityWalker(Transform transform, SpriteRenderer spriteRenderer, SpriteFlipbook flipbook, Func<Vector3, bool> isWalkable)
     {
         this.transform = transform;
         this.spriteRenderer = spriteRenderer;
-        this.animator = animator;
+        this.flipbook = flipbook;
         this.isWalkable = isWalkable;
     }
 
     public void Reset(EconomyEntityData data)
     {
-        if (animator != null)
-        {
-            animator.SetBool(IsWalkingHash, false);
-        }
+        flipbook?.Play(data.IdleAnimation);
 
         state = WalkState.Waiting;
         Vector2 interval = data.WalkIntervalRange;
@@ -58,10 +53,7 @@ public class EntityWalker
             }
 
             spriteRenderer.flipX = target.x > transform.position.x;
-            if (animator != null)
-            {
-                animator.SetBool(IsWalkingHash, true);
-            }
+            flipbook?.Play(data.WalkAnimation);
 
             state = WalkState.Moving;
             return;

@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCarry : MonoBehaviour
 {
     public event Action<PlaceableEntity> OnPickedUp;
     public event Action<PlaceableEntity> OnDropped;
+
+    private static readonly List<PlaceableEntity> carryQueryBuffer = new List<PlaceableEntity>();
 
     [SerializeField] private PlayerCarryData data;
 
@@ -144,10 +147,12 @@ public class PlayerCarry : MonoBehaviour
         PlaceableEntity nearest = null;
         float nearestSqrDistance = data.CarryRadius * data.CarryRadius;
 
-        var activeEntities = PlaceableEntity.ActiveEntities;
-        for (int i = 0; i < activeEntities.Count; i++)
+        carryQueryBuffer.Clear();
+        PlaceableEntity.Spatial.Query(transform.position, data.CarryRadius, carryQueryBuffer);
+
+        for (int i = 0; i < carryQueryBuffer.Count; i++)
         {
-            PlaceableEntity candidate = activeEntities[i];
+            PlaceableEntity candidate = carryQueryBuffer[i];
             if (candidate.IsCarried || !candidate.CanBeCarried)
             {
                 continue;

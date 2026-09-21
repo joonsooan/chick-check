@@ -45,7 +45,6 @@ public class Chicken : PlaceableEntity
     {
         base.OnEnable();
 
-        spriteRenderer.sprite = data.Sprite;
         ResetLifeState();
     }
 
@@ -63,10 +62,7 @@ public class Chicken : PlaceableEntity
 
         if (carried)
         {
-            if (animator != null)
-            {
-                animator.SetBool(IsWalkingHash, false);
-            }
+            flipbook.Play(data.IdleAnimation);
         }
         else if (gameObject.activeInHierarchy)
         {
@@ -74,13 +70,8 @@ public class Chicken : PlaceableEntity
         }
     }
 
-    public override void Tick(float dt)
+    protected override void TickBehaviour(float dt)
     {
-        if (IsCarried)
-        {
-            return;
-        }
-
         TickWalk(data, dt);
         TickAmbient(AmbientSoundKind.Chicken, dt);
         TickLayEgg(dt);

@@ -83,6 +83,16 @@ public class SpawnManager : Singleton<SpawnManager>
             mutantCount = Mathf.Min(UpgradeManager.Instance.State.MutantSpawnCount, spawnCount);
         }
 
+        SpawnChicksInRing(spawnCount, mutantCount, mutantPrefab);
+    }
+
+    public void SpawnDebugChicks(int count)
+    {
+        SpawnChicksInRing(count, 0, null);
+    }
+
+    private void SpawnChicksInRing(int spawnCount, int mutantCount, Chick mutantPrefab)
+    {
         for (int i = 0; i < spawnCount; i++)
         {
             Vector3 spawnPosition = SpawnPointSampler.Sample(
@@ -115,7 +125,14 @@ public class SpawnManager : Singleton<SpawnManager>
 
     public void DespawnChick(Chick chick)
     {
-        PoolManager.Despawn(chick.gameObject);
+        if (chick.TryGetComponent(out PooledObject pooled))
+        {
+            PoolManager.Despawn(pooled);
+        }
+        else
+        {
+            PoolManager.Despawn(chick.gameObject);
+        }
     }
 
     private void HandleActiveChanged(PlaceableEntity entity, bool active)

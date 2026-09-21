@@ -30,6 +30,7 @@ public class MirrorReflection : MonoBehaviour
     private Mirror mirror;
     private readonly Dictionary<Chick, SpriteRenderer> active = new Dictionary<Chick, SpriteRenderer>();
     private readonly List<Chick> targets = new List<Chick>();
+    private readonly HashSet<Chick> targetSet = new HashSet<Chick>();
     private readonly List<Chick> stale = new List<Chick>();
 
     private void Awake()
@@ -59,6 +60,7 @@ public class MirrorReflection : MonoBehaviour
     private void BuildTargets()
     {
         targets.Clear();
+        targetSet.Clear();
 
         if (mode == ReflectionMode.NextChickOnly)
         {
@@ -66,6 +68,7 @@ public class MirrorReflection : MonoBehaviour
             if (source != null)
             {
                 targets.Add(source);
+                targetSet.Add(source);
             }
             return;
         }
@@ -77,6 +80,7 @@ public class MirrorReflection : MonoBehaviour
             if (chick != null && chick.gameObject.activeInHierarchy)
             {
                 targets.Add(chick);
+                targetSet.Add(chick);
             }
         }
     }
@@ -86,7 +90,7 @@ public class MirrorReflection : MonoBehaviour
         stale.Clear();
         foreach (KeyValuePair<Chick, SpriteRenderer> pair in active)
         {
-            if (!targets.Contains(pair.Key))
+            if (!targetSet.Contains(pair.Key))
             {
                 stale.Add(pair.Key);
             }

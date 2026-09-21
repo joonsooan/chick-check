@@ -190,6 +190,67 @@ public class ScriptableObjectValidationTests
     }
 
     [Test]
+    public void EntityData_ChickAndChickenHaveAnimations()
+    {
+        List<string> guids = new List<string>();
+        guids.AddRange(AssetDatabase.FindAssets("t:ChickData"));
+        guids.AddRange(AssetDatabase.FindAssets("t:ChickenData"));
+
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            EconomyEntityData data = AssetDatabase.LoadAssetAtPath<EconomyEntityData>(path);
+            Assert.IsTrue(data.IdleAnimation != null, $"{path} has no IdleAnimation assigned");
+            Assert.IsTrue(data.WalkAnimation != null, $"{path} has no WalkAnimation assigned");
+
+            Assert.Greater(data.IdleAnimation.FrameCount, 0, $"{path} IdleAnimation has no frames");
+            Assert.Greater(data.WalkAnimation.FrameCount, 0, $"{path} WalkAnimation has no frames");
+
+            Assert.Greater(data.IdleAnimation.FramesPerSecond, 0f, $"{path} IdleAnimation has non-positive FramesPerSecond");
+            Assert.Greater(data.WalkAnimation.FramesPerSecond, 0f, $"{path} WalkAnimation has non-positive FramesPerSecond");
+        }
+    }
+
+    [Test]
+    public void SpriteAnimationData_AllAssetsHaveFrames()
+    {
+        string[] guids = AssetDatabase.FindAssets("t:SpriteAnimationData");
+
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            SpriteAnimationData data = AssetDatabase.LoadAssetAtPath<SpriteAnimationData>(path);
+
+            foreach (Sprite frame in data.Frames)
+            {
+                Assert.IsTrue(frame != null, $"{path} has a null frame");
+            }
+        }
+    }
+
+    [Test]
+    public void Prefabs_EntitiesHaveNoAnimator()
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Prefabs/Objects" }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+
+            if (prefab.GetComponent<PlaceableEntity>() == null)
+            {
+                continue;
+            }
+
+            Assert.IsTrue(prefab.GetComponent<Animator>() == null, $"{path} still has an Animator component");
+        }
+    }
+
+    [Test]
     public void Prefabs_ChickAndPlayerHaveConfigAssigned()
     {
         foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Prefabs" }))

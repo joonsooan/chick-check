@@ -9,11 +9,4 @@ public class Egg : PlaceableEntity
     protected override ShopStatType GrowthChanceStat => ShopStatType.EggGrowthChance;
 
     public override ShopStatType SellPriceStat => ShopStatType.SellPriceEgg;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        spriteRenderer.sprite = data.Sprite;
-    }
 }

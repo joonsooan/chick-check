@@ -38,7 +38,13 @@ public class EntityTickManager : MonoBehaviour
         var entities = PlaceableEntity.ActiveEntities;
         for (int i = entities.Count - 1; i >= 0; i--)
         {
-            entities[i].Tick(dt);
+            PlaceableEntity entity = entities[i];
+            entity.Tick(dt);
+
+            if (entity.isActiveAndEnabled)
+            {
+                entity.SyncSpatialCell();
+            }
         }
     }
 }

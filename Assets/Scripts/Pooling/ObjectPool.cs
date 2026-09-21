@@ -5,7 +5,7 @@ public class ObjectPool
 {
     private readonly GameObject prefab;
     private readonly Transform root;
-    private readonly Queue<GameObject> inactive = new Queue<GameObject>();
+    private readonly Queue<PooledObject> inactive = new Queue<PooledObject>();
 
     public ObjectPool(GameObject prefab, Transform root, int prewarm)
     {
@@ -14,13 +14,13 @@ public class ObjectPool
 
         for (int i = 0; i < prewarm; i++)
         {
-            GameObject go = CreateInstance();
-            go.SetActive(false);
-            inactive.Enqueue(go);
+            PooledObject pooled = CreateInstance();
+            pooled.gameObject.SetActive(false);
+            inactive.Enqueue(pooled);
         }
     }
 
-    private GameObject CreateInstance()
+    private PooledObject CreateInstance()
     {
         GameObject go = Object.Instantiate(prefab, root);
 
@@ -31,27 +31,27 @@ public class ObjectPool
         }
         pooled.Pool = this;
 
-        return go;
+        return pooled;
     }
 
-    public GameObject Get(Vector3 position, Quaternion rotation, Transform parent)
+    public PooledObject Get(Vector3 position, Quaternion rotation, Transform parent)
     {
-        GameObject go = inactive.Count > 0 ? inactive.Dequeue() : CreateInstance();
+        PooledObject pooled = inactive.Count > 0 ? inactive.Dequeue() : CreateInstance();
 
-        Transform t = go.transform;
+        Transform t = pooled.transform;
         t.SetParent(parent != null ? parent : root, false);
         t.SetPositionAndRotation(position, rotation);
-        go.SetActive(true);
+        pooled.gameObject.SetActive(true);
 
-        go.GetComponent<PooledObject>().InvokeSpawn();
-        return go;
+        pooled.InvokeSpawn();
+        return pooled;
     }
 
-    public void Release(GameObject go)
+    public void Release(PooledObject pooled)
     {
-        go.GetComponent<PooledObject>().InvokeDespawn();
-        go.SetActive(false);
-        go.transform.SetParent(root, false);
-        inactive.Enqueue(go);
+        pooled.InvokeDespawn();
+        pooled.gameObject.SetActive(false);
+        pooled.transform.SetParent(root, false);
+        inactive.Enqueue(pooled);
     }
 }

@@ -4,20 +4,22 @@ using UnityEngine;
 
 public abstract class PlaceableEntity : MonoBehaviour
 {
-    protected static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
-
     private const int CarriedSortingOrder = 100;
+    private const float SpatialCellSize = 1f;
 
     private static readonly List<PlaceableEntity> activeEntities = new List<PlaceableEntity>();
 
     public static IReadOnlyList<PlaceableEntity> ActiveEntities => activeEntities;
     public static event Action<PlaceableEntity, bool> OnActiveChanged;
 
+    public static SpatialHash<PlaceableEntity> Spatial { get; } = new SpatialHash<PlaceableEntity>(SpatialCellSize);
+
     protected SpriteRenderer spriteRenderer;
-    protected Animator animator;
+    protected SpriteFlipbook flipbook;
 
     private EntityWalker walker;
     private AmbientVoice ambientVoice;
+    private PooledObject pooledObject;
 
     private int defaultSortingOrder;
 
@@ -36,10 +38,11 @@ public abstract class PlaceableEntity : MonoBehaviour
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
+        flipbook = new SpriteFlipbook(spriteRenderer);
         defaultSortingOrder = spriteRenderer.sortingOrder;
-        walker = new EntityWalker(transform, spriteRenderer, animator, IsWalkable);
+        walker = new EntityWalker(transform, spriteRenderer, flipbook, IsWalkable);
         ambientVoice = new AmbientVoice();
+        pooledObject = GetComponent<PooledObject>();
     }
 
     protected virtual void OnEnable()
@@ -47,17 +50,40 @@ public abstract class PlaceableEntity : MonoBehaviour
         activeIndex = activeEntities.Count;
         activeEntities.Add(this);
 
+        Spatial.Insert(this, transform.position);
+
         growthElapsed = 0f;
         RefreshStats();
+        ApplyIdleVisual();
 
         OnActiveChanged?.Invoke(this, true);
+    }
+
+    private void ApplyIdleVisual()
+    {
+        EconomyEntityData data = EconomyData;
+        if (data == null)
+        {
+            return;
+        }
+
+        spriteRenderer.sprite = data.Sprite;
+        flipbook.Stop();
+        flipbook.Play(data.IdleAnimation);
     }
 
     protected virtual void OnDisable()
     {
         RemoveFromActive();
 
+        Spatial.Remove(this);
+
         OnActiveChanged?.Invoke(this, false);
+    }
+
+    public void SyncSpatialCell()
+    {
+        Spatial.Move(this, transform.position);
     }
 
     private void RemoveFromActive()
@@ -76,13 +102,20 @@ public abstract class PlaceableEntity : MonoBehaviour
         activeIndex = -1;
     }
 
-    public virtual void Tick(float dt)
+    public void Tick(float dt)
     {
+        flipbook.Tick(dt);
+
         if (IsCarried)
         {
             return;
         }
 
+        TickBehaviour(dt);
+    }
+
+    protected virtual void TickBehaviour(float dt)
+    {
         TickGrowth(dt);
     }
 
@@ -156,12 +189,29 @@ public abstract class PlaceableEntity : MonoBehaviour
     private void GrowToNextStage(GameObject nextStagePrefab)
     {
         PoolManager.Instance.Spawn(nextStagePrefab, transform.position, transform.rotation, transform.parent);
-        PoolManager.Despawn(gameObject);
+        DespawnSelf();
     }
 
     public void HandleSold()
     {
-        PoolManager.Despawn(gameObject);
+        DespawnSelf();
+    }
+
+    protected void DespawnSelf()
+    {
+        if (pooledObject == null)
+        {
+            TryGetComponent(out pooledObject);
+        }
+
+        if (pooledObject != null)
+        {
+            PoolManager.Despawn(pooledObject);
+        }
+        else
+        {
+            PoolManager.Despawn(gameObject);
+        }
     }
 
     private static bool IsWalkable(Vector3 position)

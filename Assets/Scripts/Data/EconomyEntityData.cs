@@ -4,6 +4,8 @@ public abstract class EconomyEntityData : ScriptableObject
 {
     [Header("Visual")]
     [SerializeField] private Sprite sprite;
+    [SerializeField] private SpriteAnimationData idleAnimation;
+    [SerializeField] private SpriteAnimationData walkAnimation;
 
     [Header("Economy")]
     [SerializeField, Min(0)] private int sellPrice;
@@ -27,6 +29,8 @@ public abstract class EconomyEntityData : ScriptableObject
     public abstract EntityKind Kind { get; }
 
     public Sprite Sprite => sprite;
+    public SpriteAnimationData IdleAnimation => idleAnimation;
+    public SpriteAnimationData WalkAnimation => walkAnimation;
     public int SellPrice => sellPrice;
     public int DisplayOrder => displayOrder;
     public float GrowthInterval => growthInterval;

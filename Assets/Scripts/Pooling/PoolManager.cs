@@ -37,26 +37,28 @@ public class PoolManager : Singleton<PoolManager>
     {
         if (!pools.TryGetValue(prefab, out ObjectPool pool))
         {
-            return null;
+            pool = new ObjectPool(prefab, transform, 0);
+            pools[prefab] = pool;
+            Debug.LogWarning($"PoolManager: auto-created pool for {prefab.name}. Add it to prewarm.", this);
         }
+
         return pool;
     }
 
     public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        return GetPool(prefab)?.Get(position, rotation, parent);
+        return GetPool(prefab).Get(position, rotation, parent).gameObject;
     }
 
     public T Spawn<T>(T prefabComponent, Vector3 position, Quaternion rotation, Transform parent = null)
         where T : Component
     {
-        return Spawn(prefabComponent.gameObject, position, rotation, parent)?.GetComponent<T>();
+        return GetPool(prefabComponent.gameObject).Get(position, rotation, parent).GetCached<T>();
     }
 
     public static void Despawn(GameObject instance)
     {
-        PooledObject pooled = instance.GetComponent<PooledObject>();
-        if (pooled != null)
+        if (instance.TryGetComponent(out PooledObject pooled))
         {
             pooled.Release();
         }
@@ -64,5 +66,10 @@ public class PoolManager : Singleton<PoolManager>
         {
             Destroy(instance);
         }
+    }
+
+    public static void Despawn(PooledObject pooled)
+    {
+        pooled.Release();
     }
 }
