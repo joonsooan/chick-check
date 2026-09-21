@@ -26,6 +26,8 @@ public abstract class PlaceableEntity : MonoBehaviour
     private int activeIndex = -1;
     private Vector2Int currentCell;
 
+    private float lastSlowTime;
+
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsCarried { get; private set; }
     public virtual bool CanBeCarried => true;
@@ -57,6 +59,8 @@ public abstract class PlaceableEntity : MonoBehaviour
         ResetGrowthTimer();
         RefreshStats();
         ApplyIdleVisual();
+
+        lastSlowTime = Time.time;
 
         OnActiveChanged?.Invoke(this, true);
     }
@@ -120,6 +124,23 @@ public abstract class PlaceableEntity : MonoBehaviour
     }
 
     protected virtual void TickBehaviour(float dt)
+    {
+    }
+
+    public void SlowTick(float now)
+    {
+        float dt = now - lastSlowTime;
+        lastSlowTime = now;
+
+        if (IsCarried)
+        {
+            return;
+        }
+
+        SlowTickBehaviour(dt);
+    }
+
+    protected virtual void SlowTickBehaviour(float dt)
     {
         TickGrowth(dt);
     }

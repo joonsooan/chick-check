@@ -1,7 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityTickManager : MonoBehaviour
 {
+    [SerializeField] private int slowTickSlices = 4;
+
+    private static readonly List<PlaceableEntity> slowBuffer = new List<PlaceableEntity>();
+
+    private int slowCursor;
+
     private void Start()
     {
         if (UpgradeManager.Instance != null)
@@ -39,6 +46,43 @@ public class EntityTickManager : MonoBehaviour
         for (int i = entities.Count - 1; i >= 0; i--)
         {
             entities[i].Tick(dt);
+        }
+
+        RunSlowTick(entities);
+    }
+
+    private void RunSlowTick(IReadOnlyList<PlaceableEntity> entities)
+    {
+        int count = entities.Count;
+        if (count == 0)
+        {
+            slowCursor = 0;
+            return;
+        }
+
+        int slices = Mathf.Max(1, slowTickSlices);
+        int perFrame = Mathf.CeilToInt(count / (float)slices);
+
+        slowBuffer.Clear();
+        for (int n = 0; n < perFrame; n++)
+        {
+            if (slowCursor >= count)
+            {
+                slowCursor = 0;
+            }
+
+            slowBuffer.Add(entities[slowCursor]);
+            slowCursor++;
+        }
+
+        float now = Time.time;
+        for (int i = 0; i < slowBuffer.Count; i++)
+        {
+            PlaceableEntity entity = slowBuffer[i];
+            if (entity.isActiveAndEnabled)
+            {
+                entity.SlowTick(now);
+            }
         }
     }
 }

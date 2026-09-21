@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CursorController
   cursorTexture: {fileID: 2800000, guid: 284ba533b427b7748b052b0040eacacc, type: 3}
   hotspot: {x: 0, y: 0}
-  scale: 2
+  scale: 1

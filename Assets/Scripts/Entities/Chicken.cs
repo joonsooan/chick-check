@@ -74,6 +74,10 @@ public class Chicken : PlaceableEntity
     {
         TickWalk(data, dt);
         TickAmbient(AmbientSoundKind.Chicken, dt);
+    }
+
+    protected override void SlowTickBehaviour(float dt)
+    {
         TickLayEgg(dt);
         TickGoldMine(dt);
         TickGrowth(dt);

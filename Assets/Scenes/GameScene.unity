@@ -42255,6 +42255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3aaa1bd307b445d84eb4649d44e4953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityTickManager
+  slowTickSlices: 4
 --- !u!4 &1181023726
 Transform:
   m_ObjectHideFlags: 0

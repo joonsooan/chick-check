@@ -87,6 +87,14 @@ public class Chick : PlaceableEntity
 
         TickWalk(data, dt);
         TickAmbient(AmbientSoundKind.Chick, dt);
+    }
+
+    protected override void SlowTickBehaviour(float dt)
+    {
+        if (exitPhase != ExitPhase.None)
+        {
+            return;
+        }
 
         if (data.IsMutant)
         {
