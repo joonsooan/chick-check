@@ -220,6 +220,7 @@ MonoBehaviour:
   shopItemsResourcePath: Shop Items
   shopItemsPerRound: 3
   mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}
+  roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
 --- !u!4 &45256426
 Transform:
   m_ObjectHideFlags: 0
@@ -11676,6 +11677,7 @@ GameObject:
   m_Component:
   - component: {fileID: 619461839}
   - component: {fileID: 619461838}
+  - component: {fileID: 619461840}
   m_Layer: 0
   m_Name: _GameManager
   m_TagString: Untagged
@@ -11696,8 +11698,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
-  chickSpawnCenter: {x: 0, y: 0, z: 0}
-  enterKeyEndsRoundForTest: 0
   tutorialMode: 1
 --- !u!4 &619461839
 Transform:
@@ -11714,6 +11714,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &619461840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619461837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3aaa1bd307b445d84eb4649d44e4953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ChickColony.Runtime::EntityTickManager
 --- !u!1001 &629599959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42643,6 +42655,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   chickPrefab: {fileID: 2220129118985389323, guid: 763194d141ed13741acd54fa57f43dbf, type: 3}
+  roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
+  chickSpawnCenter: {x: 0, y: 0, z: 0}
 --- !u!4 &1469212773
 Transform:
   m_ObjectHideFlags: 0
@@ -51726,6 +51740,7 @@ MonoBehaviour:
   - {fileID: 629599961}
   payButton: {fileID: 1204167733}
   nextDayButton: {fileID: 0}
+  nextDayConfirmDialog: {fileID: 0}
   digitAnchors:
   - {fileID: 1357333474}
   - {fileID: 2088970075}
@@ -51773,6 +51788,7 @@ MonoBehaviour:
   itemContainer: {fileID: 1913245338}
   itemWidgetPrefab: {fileID: 2735324980058406995, guid: f3a1679c5e1e718418caf2d6c3992dec, type: 3}
   nextRoundButton: {fileID: 0}
+  nextRoundConfirmDialog: {fileID: 0}
   shopTabButton: {fileID: 832156193}
   checkTabButton: {fileID: 1771184725}
   rerollButton: {fileID: 447890567}
@@ -52312,6 +52328,7 @@ MonoBehaviour:
   entityWidgetPrefab: {fileID: 4231242768522798906, guid: 2699d6f39268b3e44841f23557a026aa, type: 3}
   defaultWidget: {fileID: 1171345834}
   totalGoldText: {fileID: 835370170}
+  scrollRect: {fileID: 0}
   initialDelay: 1
   revealInterval: 1
 --- !u!114 &8254255602850869749

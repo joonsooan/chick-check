@@ -67,7 +67,10 @@ public class HUDController : MonoBehaviour
 
     private void HandleRoundStarted(int roundNumber)
     {
-        roundText.text = $"Day {roundNumber}";
+        if (roundText != null)
+        {
+            roundText.text = $"Day {roundNumber}";
+        }
 
         if (infoPanel != null)
         {
@@ -87,8 +90,11 @@ public class HUDController : MonoBehaviour
 
     private void HandlePhaseTimerTick(float remaining, float total)
     {
-        int totalSeconds = Mathf.CeilToInt(remaining);
-        timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+        if (timerText != null)
+        {
+            int totalSeconds = Mathf.CeilToInt(remaining);
+            timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+        }
     }
 
     private void HandleEggCountChanged(int count)
@@ -123,7 +129,10 @@ public class HUDController : MonoBehaviour
 
     private void HandleGoldChanged(int gold)
     {
-        goldText.text = gold.ToString();
+        if (goldText != null)
+        {
+            goldText.text = gold.ToString();
+        }
 
         UILayoutUtil.Rebuild(infoPanel);
     }

@@ -220,6 +220,7 @@ MonoBehaviour:
   shopItemsResourcePath: Shop Items
   shopItemsPerRound: 3
   mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}
+  roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
 --- !u!4 &45256426
 Transform:
   m_ObjectHideFlags: 0
@@ -2487,7 +2488,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -3392,7 +3393,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -3500,7 +3501,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -12348,7 +12349,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -12764,8 +12765,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
-  chickSpawnCenter: {x: 0, y: 0, z: 0}
-  enterKeyEndsRoundForTest: 0
   tutorialMode: 0
 --- !u!4 &619461839
 Transform:
@@ -14951,7 +14950,7 @@ PrefabInstance:
     - target: {fileID: 162057306493337465, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 7296837775173302086, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -16022,7 +16021,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -44456,6 +44455,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   chickPrefab: {fileID: 2220129118985389323, guid: 763194d141ed13741acd54fa57f43dbf, type: 3}
+  roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
+  chickSpawnCenter: {x: 0, y: 0, z: 0}
 --- !u!4 &1469212773
 Transform:
   m_ObjectHideFlags: 0
@@ -53652,7 +53653,7 @@ PrefabInstance:
     - target: {fileID: 162057306493337465, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 162057306493337465, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -54216,7 +54217,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 315430279135307413, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -54312,7 +54313,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -54402,6 +54403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DebugStatsPanel
   label: {fileID: 0}
   toggleKey: 3
+  endRoundKey: 0
   show: 1
 --- !u!114 &8254255602850869752
 MonoBehaviour:
@@ -54453,7 +54455,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0

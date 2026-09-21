@@ -16,16 +16,17 @@ MonoBehaviour:
   description: "\uB2ED \uACE8\uB4DC\n\uD53D\uC5C5 +30"
   icon: {fileID: -6931339683150358059, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 300
-  effectKind: 5
-  oneTimeOnly: 1
-  targetStat: 4
-  op: 0
-  value: 0
   priceMultiplier: 2
-  mirrorReplacementPrefab: {fileID: 0}
-  goldMineInterval: 5
-  goldMineChance: 0.5
-  goldMineBaseGold: 0
-  goldMineGoldPerPurchase: 10
-  multiLayChance: 0.2
-  multiLayCountPerPurchase: 1
+  oneTimeOnly: 1
+  effect:
+    rid: 4621364399429386326
+  references:
+    version: 2
+    RefIds:
+    - rid: 4621364399429386326
+      type: {class: GoldMineEffect, ns: , asm: ChickColony.Runtime}
+      data:
+        interval: 5
+        chance: 0.5
+        baseGold: 0
+        goldPerPurchase: 10
