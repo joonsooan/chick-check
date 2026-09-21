@@ -13,17 +13,19 @@ public class EntityWalker
     private readonly SpriteRenderer spriteRenderer;
     private readonly SpriteFlipbook flipbook;
     private readonly Func<Vector3, bool> isWalkable;
+    private readonly Action onMoved;
 
     private WalkState state;
     private float timer;
     private Vector3 target;
 
-    public EntityWalker(Transform transform, SpriteRenderer spriteRenderer, SpriteFlipbook flipbook, Func<Vector3, bool> isWalkable)
+    public EntityWalker(Transform transform, SpriteRenderer spriteRenderer, SpriteFlipbook flipbook, Func<Vector3, bool> isWalkable, Action onMoved = null)
     {
         this.transform = transform;
         this.spriteRenderer = spriteRenderer;
         this.flipbook = flipbook;
         this.isWalkable = isWalkable;
+        this.onMoved = onMoved;
     }
 
     public void Reset(EconomyEntityData data)
@@ -60,7 +62,8 @@ public class EntityWalker
         }
 
         float moveSpeed = data.MoveSpeed;
-        Vector3 next = Vector3.MoveTowards(transform.position, target, moveSpeed * dt);
+        Vector3 current = transform.position;
+        Vector3 next = Vector3.MoveTowards(current, target, moveSpeed * dt);
 
         if (isWalkable != null && !isWalkable(next))
         {
@@ -69,8 +72,9 @@ public class EntityWalker
         }
 
         transform.position = next;
+        onMoved?.Invoke();
 
-        if ((target - transform.position).sqrMagnitude <= 0.0001f)
+        if ((target - next).sqrMagnitude <= 0.0001f)
         {
             Reset(data);
         }

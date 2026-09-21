@@ -155,9 +155,11 @@ public class Chick : PlaceableEntity
     {
         if (exitPhase == ExitPhase.Forced)
         {
-            transform.position = Vector3.MoveTowards(transform.position, exitTarget, exitMoveSpeed * dt);
+            Vector3 next = Vector3.MoveTowards(transform.position, exitTarget, exitMoveSpeed * dt);
+            transform.position = next;
+            SyncSpatialCell();
 
-            if ((exitTarget - transform.position).sqrMagnitude <= 0.0001f)
+            if ((exitTarget - next).sqrMagnitude <= 0.0001f)
             {
                 float randomAngle = Random.Range(-exitRandomAngleRange, exitRandomAngleRange);
                 exitDir = Quaternion.Euler(0f, 0f, randomAngle) * exitDir;
@@ -170,6 +172,7 @@ public class Chick : PlaceableEntity
         }
 
         transform.position += (Vector3)(exitDir * exitMoveSpeed * dt);
+        SyncSpatialCell();
         exitRandomElapsed += dt;
 
         if (exitRandomElapsed >= exitRandomDuration)

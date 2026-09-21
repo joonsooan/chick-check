@@ -75,6 +75,44 @@ public class SpatialHashTests
     }
 
     [Test]
+    public void Move_WithKnownCell_UpdatesCell_OldCellNoLongerReturnsItem()
+    {
+        SpatialHash<string> hash = new SpatialHash<string>(1f);
+        hash.Insert("item", new Vector3(0f, 0f, 0f));
+        Vector2Int oldCell = hash.CellOf(new Vector3(0f, 0f, 0f));
+
+        bool moved = hash.Move("item", oldCell, new Vector3(10f, 10f, 0f), out Vector2Int newCell);
+
+        Assert.IsTrue(moved);
+        Assert.AreEqual(hash.CellOf(new Vector3(10f, 10f, 0f)), newCell);
+
+        List<string> oldResults = new List<string>();
+        hash.Query(new Vector3(0f, 0f, 0f), 0.5f, oldResults);
+        Assert.IsFalse(oldResults.Contains("item"));
+
+        List<string> newResults = new List<string>();
+        hash.Query(new Vector3(10f, 10f, 0f), 0.5f, newResults);
+        Assert.IsTrue(newResults.Contains("item"));
+    }
+
+    [Test]
+    public void Move_WithKnownCell_SameCell_ReturnsFalseAndDoesNotDuplicate()
+    {
+        SpatialHash<string> hash = new SpatialHash<string>(1f);
+        hash.Insert("item", new Vector3(0f, 0f, 0f));
+        Vector2Int oldCell = hash.CellOf(new Vector3(0f, 0f, 0f));
+
+        bool moved = hash.Move("item", oldCell, new Vector3(0.1f, 0.1f, 0f), out Vector2Int newCell);
+
+        Assert.IsFalse(moved);
+        Assert.AreEqual(oldCell, newCell);
+
+        List<string> results = new List<string>();
+        hash.Query(new Vector3(0f, 0f, 0f), 0.5f, results);
+        Assert.AreEqual(1, results.Count);
+    }
+
+    [Test]
     public void Move_UnregisteredItem_IsIgnored()
     {
         SpatialHash<string> hash = new SpatialHash<string>(1f);

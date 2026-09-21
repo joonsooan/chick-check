@@ -26,6 +26,9 @@ public class AudioManager : Singleton<AudioManager>
     private Coroutine bgmFadeRoutine;
     private float lastAmbientTime = -999f;
     private readonly Dictionary<AudioClip, int> bgmResumeSamples = new Dictionary<AudioClip, int>();
+    private readonly Dictionary<AudioClip, float> lastThrottledTime = new Dictionary<AudioClip, float>();
+    private int budgetFrame = -1;
+    private int budgetUsed;
 
     protected override void Awake()
     {
@@ -115,6 +118,35 @@ public class AudioManager : Singleton<AudioManager>
         float variance = library.SfxPitchVariance;
         sfxSource.pitch = variance > 0f ? 1f + Random.Range(-variance, variance) : 1f;
         sfxSource.PlayOneShot(clip, sfxVolume * library.SfxVolume);
+    }
+
+    private void PlaySfxThrottled(AudioClip clip)
+    {
+        if (clip == null || library == null)
+        {
+            return;
+        }
+
+        if (lastThrottledTime.TryGetValue(clip, out float last) &&
+            Time.unscaledTime - last < library.EntitySfxCooldown)
+        {
+            return;
+        }
+
+        if (budgetFrame != Time.frameCount)
+        {
+            budgetFrame = Time.frameCount;
+            budgetUsed = 0;
+        }
+
+        if (budgetUsed >= library.SfxFrameBudget)
+        {
+            return;
+        }
+
+        budgetUsed++;
+        lastThrottledTime[clip] = Time.unscaledTime;
+        PlaySfx(clip);
     }
 
     public void PlayAmbient(AmbientSoundKind kind)
@@ -207,7 +239,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (library != null)
         {
-            PlaySfx(library.EggLaid);
+            PlaySfxThrottled(library.EggLaid);
         }
     }
 
@@ -215,7 +247,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (library != null)
         {
-            PlaySfx(library.ChickDuplicated);
+            PlaySfxThrottled(library.ChickDuplicated);
         }
     }
 

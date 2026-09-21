@@ -24,6 +24,7 @@ public abstract class PlaceableEntity : MonoBehaviour
     private int defaultSortingOrder;
 
     private int activeIndex = -1;
+    private Vector2Int currentCell;
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsCarried { get; private set; }
@@ -40,7 +41,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         flipbook = new SpriteFlipbook(spriteRenderer);
         defaultSortingOrder = spriteRenderer.sortingOrder;
-        walker = new EntityWalker(transform, spriteRenderer, flipbook, IsWalkable);
+        walker = new EntityWalker(transform, spriteRenderer, flipbook, IsWalkable, SyncSpatialCell);
         ambientVoice = new AmbientVoice();
         pooledObject = GetComponent<PooledObject>();
     }
@@ -51,6 +52,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         activeEntities.Add(this);
 
         Spatial.Insert(this, transform.position);
+        currentCell = Spatial.CellOf(transform.position);
 
         ResetGrowthTimer();
         RefreshStats();
@@ -83,7 +85,10 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     public void SyncSpatialCell()
     {
-        Spatial.Move(this, transform.position);
+        if (Spatial.Move(this, currentCell, transform.position, out Vector2Int newCell))
+        {
+            currentCell = newCell;
+        }
     }
 
     private void RemoveFromActive()

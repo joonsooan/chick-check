@@ -36,6 +36,8 @@ public class AudioLibrary : ScriptableObject
     [Header("SFX - Entity")]
     [SerializeField] private AudioClip eggLaid;
     [SerializeField] private AudioClip chickDuplicated;
+    [SerializeField, Min(0)] private float entitySfxCooldown = 0.06f;
+    [SerializeField, Min(0)] private int sfxFrameBudget = 6;
 
     [Header("SFX - Round")]
     [SerializeField] private AudioClip roundEnd;
@@ -76,6 +78,8 @@ public class AudioLibrary : ScriptableObject
 
     public AudioClip EggLaid => eggLaid;
     public AudioClip ChickDuplicated => chickDuplicated;
+    public float EntitySfxCooldown => entitySfxCooldown;
+    public int SfxFrameBudget => sfxFrameBudget;
 
     public AudioClip RoundEnd => roundEnd;
     public AudioClip GameOver => gameOver;

@@ -62,6 +62,7 @@ public class PlayerCarry : MonoBehaviour
         }
 
         carriedEntity.transform.position = (Vector2)transform.position + data.CarryOffset;
+        carriedEntity.SyncSpatialCell();
 
         if (playerAnimator.IsFacingHorizontal)
         {
@@ -126,6 +127,7 @@ public class PlayerCarry : MonoBehaviour
             }
 
             target.transform.position = dropPosition;
+            target.SyncSpatialCell();
             target.SetCarried(false);
             OnDropped?.Invoke(target);
         });

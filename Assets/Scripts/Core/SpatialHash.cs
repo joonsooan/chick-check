@@ -63,10 +63,15 @@ public class SpatialHash<T> where T : class
             return;
         }
 
-        Vector2Int newCell = CellOf(position);
+        Move(item, oldCell, position, out _);
+    }
+
+    public bool Move(T item, Vector2Int oldCell, Vector3 position, out Vector2Int newCell)
+    {
+        newCell = CellOf(position);
         if (newCell == oldCell)
         {
-            return;
+            return false;
         }
 
         if (buckets.TryGetValue(oldCell, out List<T> oldBucket))
@@ -76,6 +81,7 @@ public class SpatialHash<T> where T : class
 
         GetOrCreateBucket(newCell).Add(item);
         cellByItem[item] = newCell;
+        return true;
     }
 
     public void Query(Vector3 center, float radius, List<T> results)
