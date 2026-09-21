@@ -15,7 +15,7 @@ public class ShopCatalogPickerTests
             ShopItemData.CreateForTest(itemName: "A"),
             ShopItemData.CreateForTest(itemName: "B"),
             ShopItemData.CreateForTest(itemName: "C"),
-            ShopItemData.CreateForTest(itemName: "D", effectKind: ShopEffectKind.EnableContagion),
+            ShopItemData.CreateForTest(itemName: "D", effect: new EnableContagionEffect()),
         };
     }
 
@@ -41,7 +41,7 @@ public class ShopCatalogPickerTests
     public void Pick_ExcludesFilteredItems()
     {
         List<ShopItemData> result = ShopCatalogPicker.Pick(
-            items, 4, candidate => candidate.EffectKind != ShopEffectKind.EnableContagion, new System.Random(1));
+            items, 4, candidate => !(candidate.Effect is EnableContagionEffect), new System.Random(1));
 
         Assert.AreEqual(3, result.Count);
         Assert.IsFalse(result.Contains(items[3]));

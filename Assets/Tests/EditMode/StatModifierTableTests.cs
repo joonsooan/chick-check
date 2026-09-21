@@ -34,6 +34,17 @@ public class StatModifierTableTests
     }
 
     [Test]
+    public void AddMultiplier_AccumulatedZeroIsNotTreatedAsUnset()
+    {
+        StatModifierTable table = new StatModifierTable();
+        table.AddMultiplier(ShopStatType.GrowthChance, 0.5f);
+        table.AddMultiplier(ShopStatType.GrowthChance, 0.5f);
+        table.AddMultiplier(ShopStatType.GrowthChance, 1.1f);
+
+        Assert.AreEqual(0.1f, table.GetMultiplier(ShopStatType.GrowthChance), 0.0001f);
+    }
+
+    [Test]
     public void Apply_UnregisteredStat_ReturnsBaseValue()
     {
         StatModifierTable table = new StatModifierTable();

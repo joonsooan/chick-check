@@ -13,8 +13,8 @@ public class StatModifierTable
 
     public void AddMultiplier(ShopStatType stat, float value)
     {
-        multiplier.TryGetValue(stat, out float current);
-        multiplier[stat] = (current == 0f ? 1f : current) + (value - 1f);
+        bool found = multiplier.TryGetValue(stat, out float current);
+        multiplier[stat] = (found ? current : 1f) + (value - 1f);
     }
 
     public float GetAdditive(ShopStatType stat)

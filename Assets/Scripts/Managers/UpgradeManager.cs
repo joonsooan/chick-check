@@ -15,24 +15,24 @@ public class UpgradeManager : Singleton<UpgradeManager>
     public event Action<GameObject> OnMirrorUpgrade;
 
     private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
-    private readonly StatModifierTable modifiers = new StatModifierTable();
+    private readonly UpgradeState state = new UpgradeState();
     private readonly PurchaseLedger ledger = new PurchaseLedger();
     private readonly System.Random rng = new System.Random();
 
+    public UpgradeState State => state;
+
     public MutationData MutationData => mutationData;
-    public int MutantSpawnCount { get; private set; }
-    public bool ContagionEnabled { get; private set; }
-    public bool SprintEnabled { get; private set; }
+    public int MutantSpawnCount => state.MutantSpawnCount;
+    public bool ContagionEnabled => state.ContagionEnabled;
+    public bool SprintEnabled => state.SprintEnabled;
 
-    public int GoldMineLevel { get; private set; }
-    public float GoldMineInterval { get; private set; }
-    public float GoldMineChance { get; private set; }
-    private int goldMineBaseGold;
-    private int goldMineGoldPerPurchase;
-    public int GoldMineGoldAmount => GoldMineLevel <= 0 ? 0 : goldMineBaseGold + goldMineGoldPerPurchase * (GoldMineLevel - 1);
+    public int GoldMineLevel => state.GoldMineLevel;
+    public float GoldMineInterval => state.GoldMineInterval;
+    public float GoldMineChance => state.GoldMineChance;
+    public int GoldMineGoldAmount => state.GoldMineGoldAmount;
 
-    public float MultiLayChance { get; private set; }
-    public int MultiLayBonusCount { get; private set; }
+    public float MultiLayChance => state.MultiLayChance;
+    public int MultiLayBonusCount => state.MultiLayBonusCount;
 
     protected override void Awake()
     {
@@ -64,16 +64,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
     private void HandleGameOver(GameOverReason reason)
     {
         ledger.Clear();
-        MutantSpawnCount = 0;
-        ContagionEnabled = false;
-        SprintEnabled = false;
-        GoldMineLevel = 0;
-        GoldMineInterval = 0f;
-        GoldMineChance = 0f;
-        goldMineBaseGold = 0;
-        goldMineGoldPerPurchase = 0;
-        MultiLayChance = 0f;
-        MultiLayBonusCount = 0;
+        state.Reset();
     }
 
     private void HandlePhaseChanged(GamePhase phase)
@@ -105,51 +96,28 @@ public class UpgradeManager : Singleton<UpgradeManager>
     private bool IsAvailable(ShopItemData item)
     {
         return !ledger.IsRetired(item)
-            && (item.EffectKind != ShopEffectKind.EnableContagion || MutantSpawnCount > 0);
+            && item.Effect != null
+            && item.Effect.IsAvailable(state);
     }
 
     public bool TryPurchase(ShopItemData item)
     {
+        if (item.Effect == null)
+        {
+            return false;
+        }
+
         if (!EconomyManager.Instance.TrySpendGold(GetCurrentCost(item)))
         {
             return false;
         }
 
-        switch (item.EffectKind)
+        item.Effect.Apply(state);
+
+        GameObject mirrorPrefab = state.ConsumePendingMirrorPrefab();
+        if (mirrorPrefab != null)
         {
-            case ShopEffectKind.StatModifier:
-                if (item.Op == ShopModifierOp.Add)
-                {
-                    modifiers.AddAdditive(item.TargetStat, item.Value);
-                }
-                else
-                {
-                    modifiers.AddMultiplier(item.TargetStat, item.Value);
-                }
-                break;
-            case ShopEffectKind.EnableMutation:
-                MutantSpawnCount++;
-                break;
-            case ShopEffectKind.EnableContagion:
-                ContagionEnabled = true;
-                break;
-            case ShopEffectKind.MirrorUpgrade:
-                OnMirrorUpgrade?.Invoke(item.MirrorReplacementPrefab);
-                break;
-            case ShopEffectKind.EnableSprint:
-                SprintEnabled = true;
-                break;
-            case ShopEffectKind.GoldMine:
-                GoldMineInterval = item.GoldMineInterval;
-                GoldMineChance = item.GoldMineChance;
-                goldMineBaseGold = item.GoldMineBaseGold;
-                goldMineGoldPerPurchase = item.GoldMineGoldPerPurchase;
-                GoldMineLevel++;
-                break;
-            case ShopEffectKind.MultiLay:
-                MultiLayChance = item.MultiLayChance;
-                MultiLayBonusCount += item.MultiLayCountPerPurchase;
-                break;
+            OnMirrorUpgrade?.Invoke(mirrorPrefab);
         }
 
         ledger.RecordPurchase(item);
@@ -166,16 +134,16 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     public float GetAdditive(ShopStatType stat)
     {
-        return modifiers.GetAdditive(stat);
+        return state.Modifiers.GetAdditive(stat);
     }
 
     public float GetMultiplier(ShopStatType stat)
     {
-        return modifiers.GetMultiplier(stat);
+        return state.Modifiers.GetMultiplier(stat);
     }
 
     public float ApplyModifiers(ShopStatType stat, float baseValue)
     {
-        return modifiers.Apply(stat, baseValue);
+        return state.Modifiers.Apply(stat, baseValue);
     }
 }

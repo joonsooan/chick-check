@@ -44,6 +44,7 @@ public class ScriptableObjectValidationTests
             Assert.Greater(item.Cost, 0, $"{path} has non-positive Cost");
             Assert.Greater(item.PriceMultiplier, 0f, $"{path} has non-positive PriceMultiplier");
             Assert.IsFalse(string.IsNullOrEmpty(item.ItemName), $"{path} has empty ItemName");
+            Assert.IsNotNull(item.Effect, $"{path} has no Effect assigned");
         }
     }
 
