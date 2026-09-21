@@ -15,9 +15,6 @@ public class Chick : PlaceableEntity
     [SerializeField] private ChickData data;
     [SerializeField] private MutationData mutationData;
 
-    private Collider2D col;
-    private bool colliderWasTrigger;
-
     private float contagionTimer;
     private bool contagionActive;
 
@@ -36,8 +33,6 @@ public class Chick : PlaceableEntity
     protected override void Awake()
     {
         base.Awake();
-
-        col = GetComponent<Collider2D>();
     }
 
     protected override void OnEnable()
@@ -71,11 +66,7 @@ public class Chick : PlaceableEntity
     {
         base.OnDisable();
 
-        if (exitPhase != ExitPhase.None)
-        {
-            RestoreCollider();
-            exitPhase = ExitPhase.None;
-        }
+        exitPhase = ExitPhase.None;
     }
 
     public override void RefreshStats()
@@ -124,14 +115,6 @@ public class Chick : PlaceableEntity
         }
     }
 
-    private void RestoreCollider()
-    {
-        if (col != null)
-        {
-            col.isTrigger = colliderWasTrigger;
-        }
-    }
-
     protected override bool CanGrowNow()
     {
         return SpawnManager.Instance == null || SpawnManager.Instance.ChickCount > 1;
@@ -148,12 +131,6 @@ public class Chick : PlaceableEntity
         if (masked)
         {
             spriteRenderer.sortingLayerName = "Reflection";
-        }
-
-        if (col != null)
-        {
-            colliderWasTrigger = col.isTrigger;
-            col.isTrigger = true;
         }
 
         flipbook.Play(data.WalkAnimation);
@@ -209,7 +186,6 @@ public class Chick : PlaceableEntity
             spriteRenderer.sortingLayerName = "Objects";
         }
 
-        RestoreCollider();
         exitPhase = ExitPhase.None;
         ResetLifeState();
     }

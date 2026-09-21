@@ -9,9 +9,13 @@ public class Mirror : MonoBehaviour
     [SerializeField] private MirrorData data;
     [SerializeField] private bool duplicationEnabled = true;
     [SerializeField] private Transform chickSpawnParent;
+    [SerializeField] private Vector2 zoneHalfExtents = new Vector2(0.5f, 0.25f);
+    [SerializeField] private Vector2 zoneOffset = Vector2.zero;
 
     private readonly List<Chick> chicksInZone = new List<Chick>();
     private readonly Dictionary<Chick, float> dwell = new Dictionary<Chick, float>();
+    private static readonly List<PlaceableEntity> candidateBuffer = new List<PlaceableEntity>();
+    private readonly List<Chick> chicksNowInZone = new List<Chick>();
     private MirrorReflection reflection;
 
     private Chick revealingSource;
@@ -77,6 +81,8 @@ public class Mirror : MonoBehaviour
         {
             return;
         }
+
+        UpdateZoneMembership();
 
         for (int i = chicksInZone.Count - 1; i >= 0; i--)
         {
@@ -148,37 +154,58 @@ public class Mirror : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private Vector3 ZoneCenter => transform.position + (Vector3)zoneOffset;
+
+    private void UpdateZoneMembership()
     {
-        if (!other.CompareTag("Chick"))
+        candidateBuffer.Clear();
+        chicksNowInZone.Clear();
+
+        Vector3 zoneCenter = ZoneCenter;
+        PlaceableEntity.Spatial.QueryBox(zoneCenter, zoneHalfExtents, candidateBuffer);
+
+        for (int i = 0; i < candidateBuffer.Count; i++)
         {
-            return;
+            if (!(candidateBuffer[i] is Chick chick))
+            {
+                continue;
+            }
+
+            if (Mathf.Abs(chick.transform.position.x - zoneCenter.x) <= zoneHalfExtents.x &&
+                Mathf.Abs(chick.transform.position.y - zoneCenter.y) <= zoneHalfExtents.y)
+            {
+                chicksNowInZone.Add(chick);
+            }
         }
 
-        Chick chick = other.GetComponent<Chick>();
-        if (chick != null && !chicksInZone.Contains(chick))
+        for (int i = 0; i < chicksNowInZone.Count; i++)
         {
-            chicksInZone.Add(chick);
-            dwell[chick] = 0f;
+            Chick chick = chicksNowInZone[i];
+            if (!chicksInZone.Contains(chick))
+            {
+                chicksInZone.Add(chick);
+                dwell[chick] = 0f;
+            }
+        }
+
+        for (int i = chicksInZone.Count - 1; i >= 0; i--)
+        {
+            Chick chick = chicksInZone[i];
+            if (!chicksNowInZone.Contains(chick))
+            {
+                chicksInZone.RemoveAt(i);
+                dwell.Remove(chick);
+                if (chick == revealingSource)
+                {
+                    revealingSource = null;
+                }
+            }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnDrawGizmos()
     {
-        if (!other.CompareTag("Chick"))
-        {
-            return;
-        }
-
-        Chick chick = other.GetComponent<Chick>();
-        if (chick != null)
-        {
-            chicksInZone.Remove(chick);
-            dwell.Remove(chick);
-            if (chick == revealingSource)
-            {
-                revealingSource = null;
-            }
-        }
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(ZoneCenter, new Vector3(zoneHalfExtents.x * 2f, zoneHalfExtents.y * 2f, 0f));
     }
 }

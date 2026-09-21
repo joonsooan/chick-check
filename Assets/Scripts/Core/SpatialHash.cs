@@ -98,6 +98,26 @@ public class SpatialHash<T> where T : class
         }
     }
 
+    public void QueryBox(Vector3 center, Vector2 halfExtents, List<T> results)
+    {
+        Vector2Int min = CellOf(center - new Vector3(halfExtents.x, halfExtents.y, 0f));
+        Vector2Int max = CellOf(center + new Vector3(halfExtents.x, halfExtents.y, 0f));
+
+        for (int x = min.x; x <= max.x; x++)
+        {
+            for (int y = min.y; y <= max.y; y++)
+            {
+                if (buckets.TryGetValue(new Vector2Int(x, y), out List<T> bucket))
+                {
+                    for (int i = 0; i < bucket.Count; i++)
+                    {
+                        results.Add(bucket[i]);
+                    }
+                }
+            }
+        }
+    }
+
     private List<T> GetOrCreateBucket(Vector2Int cell)
     {
         if (!buckets.TryGetValue(cell, out List<T> bucket))

@@ -89,4 +89,60 @@ public class SpatialHashTests
     {
         Assert.Throws<System.ArgumentOutOfRangeException>(() => new SpatialHash<string>(0f));
     }
+
+    [Test]
+    public void QueryBox_ReturnsItemInsideBox()
+    {
+        SpatialHash<string> hash = new SpatialHash<string>(1f);
+        hash.Insert("inside", new Vector3(0.3f, 0.1f, 0f));
+
+        List<string> results = new List<string>();
+        hash.QueryBox(new Vector3(0f, 0f, 0f), new Vector2(0.5f, 0.25f), results);
+
+        Assert.IsTrue(results.Contains("inside"));
+    }
+
+    [Test]
+    public void QueryBox_DoesNotReturnItemOutsideCellRange()
+    {
+        SpatialHash<string> hash = new SpatialHash<string>(1f);
+        hash.Insert("far", new Vector3(50f, 50f, 0f));
+
+        List<string> results = new List<string>();
+        hash.QueryBox(new Vector3(0f, 0f, 0f), new Vector2(0.5f, 0.25f), results);
+
+        Assert.IsFalse(results.Contains("far"));
+    }
+
+    [Test]
+    public void QueryBox_AtCellBoundary_IncludesAdjacentCellItems()
+    {
+        SpatialHash<string> hash = new SpatialHash<string>(1f);
+        hash.Insert("neighbor", new Vector3(1.1f, 0f, 0f));
+
+        List<string> results = new List<string>();
+        hash.QueryBox(new Vector3(0.9f, 0f, 0f), new Vector2(0.5f, 0.5f), results);
+
+        Assert.IsTrue(results.Contains("neighbor"));
+    }
+
+    [Test]
+    public void QueryBox_SpanningMultipleCells_DoesNotMissCandidates()
+    {
+        SpatialHash<string> hash = new SpatialHash<string>(1f);
+        hash.Insert("topLeft", new Vector3(-2.4f, 2.4f, 0f));
+        hash.Insert("topRight", new Vector3(2.4f, 2.4f, 0f));
+        hash.Insert("bottomLeft", new Vector3(-2.4f, -2.4f, 0f));
+        hash.Insert("bottomRight", new Vector3(2.4f, -2.4f, 0f));
+        hash.Insert("center", new Vector3(0f, 0f, 0f));
+
+        List<string> results = new List<string>();
+        hash.QueryBox(new Vector3(0f, 0f, 0f), new Vector2(2.5f, 2.5f), results);
+
+        Assert.IsTrue(results.Contains("topLeft"));
+        Assert.IsTrue(results.Contains("topRight"));
+        Assert.IsTrue(results.Contains("bottomLeft"));
+        Assert.IsTrue(results.Contains("bottomRight"));
+        Assert.IsTrue(results.Contains("center"));
+    }
 }

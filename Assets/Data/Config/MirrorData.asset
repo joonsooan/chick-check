@@ -18,3 +18,4 @@ MonoBehaviour:
   randomExitAngle: 60
   exitSpeedMultiplier: 3
   mutantExitSpeedMultiplier: 1.5
+  zoneHalfExtents: {x: 0.5, y: 0.25}
