@@ -178,8 +178,8 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: df19a3ba1b416ee40a2147b0f86780b6, type: 2}
   duplicationEnabled: 1
   chickSpawnParent: {fileID: 334104849703576770}
-  zoneHalfExtents: {x: 0.875, y: 0.5}
-  zoneOffset: {x: 0, y: -1}
+  zoneHalfExtents: {x: 0.825, y: 0.4}
+  zoneOffset: {x: 0, y: -0.9}
 --- !u!114 &6536511851265000324
 MonoBehaviour:
   m_ObjectHideFlags: 0
