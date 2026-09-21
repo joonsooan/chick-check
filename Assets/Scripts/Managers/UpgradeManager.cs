@@ -7,6 +7,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
     [SerializeField] private string shopItemsResourcePath = "Shop Items";
     [SerializeField] private int shopItemsPerRound = 3;
     [SerializeField] private MutationData mutationData;
+    [SerializeField] private RoundConfigData roundConfig;
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
 
@@ -22,21 +23,15 @@ public class UpgradeManager : Singleton<UpgradeManager>
     public UpgradeState State => state;
 
     public MutationData MutationData => mutationData;
-    public int MutantSpawnCount => state.MutantSpawnCount;
-    public bool ContagionEnabled => state.ContagionEnabled;
-    public bool SprintEnabled => state.SprintEnabled;
-
-    public int GoldMineLevel => state.GoldMineLevel;
-    public float GoldMineInterval => state.GoldMineInterval;
-    public float GoldMineChance => state.GoldMineChance;
-    public int GoldMineGoldAmount => state.GoldMineGoldAmount;
-
-    public float MultiLayChance => state.MultiLayChance;
-    public int MultiLayBonusCount => state.MultiLayBonusCount;
 
     protected override void Awake()
     {
         base.Awake();
+
+        if (roundConfig == null)
+        {
+            Debug.LogError("UpgradeManager.roundConfig is not assigned.", this);
+        }
 
         allShopItems.AddRange(Resources.LoadAll<ShopItemData>(shopItemsResourcePath));
     }
@@ -75,7 +70,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
         }
     }
 
-    public int RerollCost => GameManager.Instance != null ? GameManager.Instance.RerollCost : 0;
+    public int RerollCost => roundConfig != null ? roundConfig.RerollCost : 0;
 
     public bool TryReroll()
     {

@@ -16,14 +16,4 @@ public class Egg : PlaceableEntity
 
         spriteRenderer.sprite = data.Sprite;
     }
-
-    public override void NotifySpawnCount()
-    {
-        SpawnManager.Instance?.RegisterEggSpawned();
-    }
-
-    public override void NotifyDespawnCount()
-    {
-        SpawnManager.Instance?.RegisterEggDespawned();
-    }
 }

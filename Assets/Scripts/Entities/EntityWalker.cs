@@ -1,0 +1,118 @@
+using System;
+using UnityEngine;
+
+public class EntityWalker
+{
+    private enum WalkState
+    {
+        Waiting,
+        Moving
+    }
+
+    private const int WalkTargetAttempts = 10;
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+
+    private readonly Transform transform;
+    private readonly SpriteRenderer spriteRenderer;
+    private readonly Animator animator;
+    private readonly Func<Vector3, bool> isWalkable;
+
+    private WalkState state;
+    private float timer;
+    private Vector3 target;
+
+    public EntityWalker(Transform transform, SpriteRenderer spriteRenderer, Animator animator, Func<Vector3, bool> isWalkable)
+    {
+        this.transform = transform;
+        this.spriteRenderer = spriteRenderer;
+        this.animator = animator;
+        this.isWalkable = isWalkable;
+    }
+
+    public void Reset(EconomyEntityData data)
+    {
+        if (animator != null)
+        {
+            animator.SetBool(IsWalkingHash, false);
+        }
+
+        state = WalkState.Waiting;
+        Vector2 interval = data.WalkIntervalRange;
+        timer = UnityEngine.Random.Range(interval.x, interval.y);
+    }
+
+    public void Tick(EconomyEntityData data, float dt)
+    {
+        if (state == WalkState.Waiting)
+        {
+            timer -= dt;
+            if (timer > 0f)
+            {
+                return;
+            }
+
+            if (!TryPickWalkTarget(data, out target))
+            {
+                Vector2 interval = data.WalkIntervalRange;
+                timer = UnityEngine.Random.Range(interval.x, interval.y);
+                return;
+            }
+
+            spriteRenderer.flipX = target.x > transform.position.x;
+            if (animator != null)
+            {
+                animator.SetBool(IsWalkingHash, true);
+            }
+
+            state = WalkState.Moving;
+            return;
+        }
+
+        float moveSpeed = data.MoveSpeed;
+        Vector3 next = Vector3.MoveTowards(transform.position, target, moveSpeed * dt);
+
+        if (isWalkable != null && !isWalkable(next))
+        {
+            Reset(data);
+            return;
+        }
+
+        transform.position = next;
+
+        if ((target - transform.position).sqrMagnitude <= 0.0001f)
+        {
+            Reset(data);
+        }
+    }
+
+    private bool TryPickWalkTarget(EconomyEntityData data, out Vector3 result)
+    {
+        Vector2 distance = data.WalkDistanceRange;
+        Vector3 origin = transform.position;
+
+        Vector3 RandomCandidate()
+        {
+            Vector2 dir = UnityEngine.Random.insideUnitCircle.normalized;
+            return origin + (Vector3)(dir * UnityEngine.Random.Range(distance.x, distance.y));
+        }
+
+        if (isWalkable == null)
+        {
+            result = RandomCandidate();
+            return true;
+        }
+
+        for (int attempt = 0; attempt < WalkTargetAttempts; attempt++)
+        {
+            Vector3 candidate = RandomCandidate();
+            if (isWalkable(candidate))
+            {
+                result = candidate;
+                return true;
+            }
+        }
+
+        result = origin;
+        return false;
+    }
+}

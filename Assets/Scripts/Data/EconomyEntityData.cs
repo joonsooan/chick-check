@@ -21,6 +21,8 @@ public abstract class EconomyEntityData : ScriptableObject
     [SerializeField] private Vector2 walkIntervalRange = new Vector2(1.5f, 4f);
     [SerializeField] private Vector2 walkDistanceRange = new Vector2(0.3f, 1f);
 
+    public abstract EntityKind Kind { get; }
+
     public Sprite Sprite => sprite;
     public int SellPrice => sellPrice;
     public int DisplayOrder => displayOrder;

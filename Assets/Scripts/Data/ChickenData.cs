@@ -10,6 +10,7 @@ public class ChickenData : EconomyEntityData
     [SerializeField] private Vector3 layOffset;
     [SerializeField] private int layCount = 1;
 
+    public override EntityKind Kind => EntityKind.Chicken;
     public Egg EggPrefab => eggPrefab;
     public float LayInterval => layInterval;
     public float LayChance => layChance;

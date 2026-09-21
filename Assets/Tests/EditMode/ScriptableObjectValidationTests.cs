@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEditor;
-using UnityEngine;
 
 [TestFixture]
 public class ScriptableObjectValidationTests

@@ -1,15 +1,11 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private RoundConfigData roundConfig;
-    [SerializeField] private Vector3 chickSpawnCenter;
-    [SerializeField] private bool enterKeyEndsRoundForTest = true;
     [SerializeField] private bool tutorialMode;
 
-    private readonly System.Random rng = new System.Random();
     private DebtLedger debtLedger;
 
     public int CurrentRound { get; private set; }
@@ -19,9 +15,9 @@ public class GameManager : Singleton<GameManager>
     public int NextDebtDueRound => debtLedger?.NextDebtDueRound ?? 0;
     public int MaxPayableDebt =>
         debtLedger != null && EconomyManager.Instance != null ? debtLedger.MaxPayable(EconomyManager.Instance.Gold) : 0;
-    public int RerollCost => roundConfig.RerollCost;
 
     public event Action<int> OnRoundStarted;
+    public event Action<int> OnRoundSpawnRequested;
     public event Action<float, float> OnPhaseTimerTick;
     public event Action<int> OnRoundEnding;
     public event Action<int> OnRoundEnded;
@@ -73,13 +69,6 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        if (enterKeyEndsRoundForTest && CurrentPhase == GamePhase.Playing
-            && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
-        {
-            EndRound();
-            return;
-        }
-
         if (!phaseHasTimer)
         {
             return;
@@ -100,45 +89,26 @@ public class GameManager : Singleton<GameManager>
         SetPhase(GamePhase.Playing);
 
         OnRoundStarted?.Invoke(CurrentRound);
+        OnRoundSpawnRequested?.Invoke(CurrentRound);
 
-        int spawnCount = roundConfig.ChickSpawnCountPerRound;
         float roundDuration = roundConfig.RoundDuration;
         if (UpgradeManager.Instance != null)
         {
-            spawnCount = Mathf.RoundToInt(
-                UpgradeManager.Instance.ApplyModifiers(ShopStatType.ChickSpawnCountPerRound, spawnCount));
             roundDuration = UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration);
-        }
-
-        int mutantCount = 0;
-        Chick mutantPrefab = null;
-        if (UpgradeManager.Instance != null && UpgradeManager.Instance.MutationData != null)
-        {
-            mutantPrefab = UpgradeManager.Instance.MutationData.MutatedChickPrefab;
-            mutantCount = Mathf.Min(UpgradeManager.Instance.MutantSpawnCount, spawnCount);
-        }
-
-        for (int i = 0; i < spawnCount; i++)
-        {
-            Vector3 spawnPosition = SpawnPointSampler.Sample(
-                chickSpawnCenter,
-                roundConfig.ChickSpawnOuterRadius,
-                roundConfig.ChickSpawnInnerRadius,
-                roundConfig.ChickSpawnJitter,
-                rng);
-
-            if (i < mutantCount && mutantPrefab != null)
-            {
-                SpawnManager.Instance.SpawnChick(mutantPrefab, spawnPosition);
-            }
-            else
-            {
-                SpawnManager.Instance.SpawnChick(spawnPosition);
-            }
         }
 
         SetPhaseTimer(roundDuration);
         NotifyDebtStatus();
+    }
+
+    public void EndRoundForDebug()
+    {
+        if (CurrentPhase != GamePhase.Playing)
+        {
+            return;
+        }
+
+        EndRound();
     }
 
     private void EndRound()
@@ -192,7 +162,6 @@ public class GameManager : Singleton<GameManager>
         }
 
         debtLedger.Pay(payable);
-
         NotifyDebtStatus();
     }
 

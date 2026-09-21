@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,15 +11,13 @@ public abstract class PlaceableEntity : MonoBehaviour
     private static readonly List<PlaceableEntity> activeEntities = new List<PlaceableEntity>();
 
     public static IReadOnlyList<PlaceableEntity> ActiveEntities => activeEntities;
-
-    protected enum WalkState
-    {
-        Waiting,
-        Moving
-    }
+    public static event Action<PlaceableEntity, bool> OnActiveChanged;
 
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
+
+    private EntityWalker walker;
+    private AmbientVoice ambientVoice;
 
     private int defaultSortingOrder;
 
@@ -34,17 +33,13 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     private float growthElapsed;
 
-    private WalkState walkState;
-    private float walkTimer;
-    private Vector3 walkTarget;
-
-    private float ambientTimer;
-
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         defaultSortingOrder = spriteRenderer.sortingOrder;
+        walker = new EntityWalker(transform, spriteRenderer, animator, IsWalkable);
+        ambientVoice = new AmbientVoice();
     }
 
     protected virtual void OnEnable()
@@ -53,12 +48,16 @@ public abstract class PlaceableEntity : MonoBehaviour
         activeEntities.Add(this);
 
         growthElapsed = 0f;
-        RefreshDebugStats();
+        RefreshStats();
+
+        OnActiveChanged?.Invoke(this, true);
     }
 
     protected virtual void OnDisable()
     {
         RemoveFromActive();
+
+        OnActiveChanged?.Invoke(this, false);
     }
 
     private void RemoveFromActive()
@@ -87,7 +86,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         TickGrowth(dt);
     }
 
-    protected virtual void RefreshDebugStats()
+    public virtual void RefreshStats()
     {
         EconomyEntityData data = EconomyData;
         if (data == null)
@@ -121,6 +120,10 @@ public abstract class PlaceableEntity : MonoBehaviour
         {
             growthElapsed = 0f;
         }
+        else
+        {
+            RefreshStats();
+        }
     }
 
     protected void TickGrowth(float dt)
@@ -131,9 +134,6 @@ public abstract class PlaceableEntity : MonoBehaviour
             return;
         }
 
-        CurrentGrowthInterval = data.GrowthInterval;
-        CurrentGrowthChance = ApplyModifier(GrowthChanceStat, data.GrowthChance);
-
         growthElapsed += dt;
         if (growthElapsed < CurrentGrowthInterval)
         {
@@ -142,7 +142,7 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         growthElapsed = 0f;
 
-        if (Random.value <= CurrentGrowthChance)
+        if (UnityEngine.Random.value <= CurrentGrowthChance)
         {
             if (!CanGrowNow())
             {
@@ -155,126 +155,37 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     private void GrowToNextStage(GameObject nextStagePrefab)
     {
-        GameObject next = PoolManager.Instance.Spawn(nextStagePrefab, transform.position, transform.rotation, transform.parent);
-        next.GetComponent<PlaceableEntity>()?.NotifySpawnCount();
-        NotifyDespawnCount();
+        PoolManager.Instance.Spawn(nextStagePrefab, transform.position, transform.rotation, transform.parent);
         PoolManager.Despawn(gameObject);
-    }
-
-    public virtual void NotifySpawnCount()
-    {
-    }
-
-    public virtual void NotifyDespawnCount()
-    {
     }
 
     public void HandleSold()
     {
-        NotifyDespawnCount();
         PoolManager.Despawn(gameObject);
+    }
+
+    private static bool IsWalkable(Vector3 position)
+    {
+        return GridManager.Instance == null || GridManager.Instance.IsWalkable(position);
     }
 
     protected void ResetWalk(EconomyEntityData data)
     {
-        if (animator != null)
-        {
-            animator.SetBool(IsWalkingHash, false);
-        }
-
-        walkState = WalkState.Waiting;
-        Vector2 interval = data.WalkIntervalRange;
-        walkTimer = Random.Range(interval.x, interval.y);
+        walker.Reset(data);
     }
 
     protected void TickWalk(EconomyEntityData data, float dt)
     {
-        if (walkState == WalkState.Waiting)
-        {
-            walkTimer -= dt;
-            if (walkTimer > 0f)
-            {
-                return;
-            }
-
-            if (!TryPickWalkTarget(data, out walkTarget))
-            {
-                Vector2 interval = data.WalkIntervalRange;
-                walkTimer = Random.Range(interval.x, interval.y);
-                return;
-            }
-
-            spriteRenderer.flipX = walkTarget.x > transform.position.x;
-            if (animator != null)
-            {
-                animator.SetBool(IsWalkingHash, true);
-            }
-
-            walkState = WalkState.Moving;
-            return;
-        }
-
-        float moveSpeed = data.MoveSpeed;
-        Vector3 next = Vector3.MoveTowards(transform.position, walkTarget, moveSpeed * dt);
-
-        if (GridManager.Instance != null && !GridManager.Instance.IsWalkable(next))
-        {
-            ResetWalk(data);
-            return;
-        }
-
-        transform.position = next;
-
-        if ((walkTarget - transform.position).sqrMagnitude <= 0.0001f)
-        {
-            ResetWalk(data);
-        }
+        walker.Tick(data, dt);
     }
 
     protected void ResetAmbient(AmbientSoundKind kind)
     {
-        Vector2 range = AudioManager.Instance != null
-            ? AudioManager.Instance.AmbientIntervalRange(kind)
-            : new Vector2(4f, 9f);
-        ambientTimer = Random.Range(range.x, range.y);
+        ambientVoice.Reset(kind);
     }
 
     protected void TickAmbient(AmbientSoundKind kind, float dt)
     {
-        ambientTimer -= dt;
-        if (ambientTimer > 0f)
-        {
-            return;
-        }
-
-        Vector2 range = AudioManager.Instance != null
-            ? AudioManager.Instance.AmbientIntervalRange(kind)
-            : new Vector2(4f, 9f);
-        ambientTimer = Random.Range(range.x, range.y);
-
-        if (!IsCarried)
-        {
-            AudioManager.Instance?.PlayAmbient(kind);
-        }
-    }
-
-    private bool TryPickWalkTarget(EconomyEntityData data, out Vector3 target)
-    {
-        Vector2 distance = data.WalkDistanceRange;
-        Vector3 origin = transform.position;
-
-        Vector3 RandomCandidate(int attempt)
-        {
-            Vector2 dir = Random.insideUnitCircle.normalized;
-            return origin + (Vector3)(dir * Random.Range(distance.x, distance.y));
-        }
-
-        if (GridManager.Instance == null)
-        {
-            target = RandomCandidate(0);
-            return true;
-        }
-
-        return GridManager.Instance.TryFindWalkable(origin, 10, RandomCandidate, out target);
+        ambientVoice.Tick(kind, dt, IsCarried);
     }
 }

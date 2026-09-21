@@ -7,6 +7,7 @@ public class DebugStatsPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Text label;
     [SerializeField] private Key toggleKey = Key.F1;
+    [SerializeField] private Key endRoundKey = Key.None;
     [SerializeField] private bool show = true;
 
     private readonly StringBuilder builder = new StringBuilder();
@@ -19,10 +20,15 @@ public class DebugStatsPanel : MonoBehaviour
     private void Update()
     {
         Keyboard keyboard = Keyboard.current;
-        if (keyboard != null && keyboard[toggleKey].wasPressedThisFrame)
+        if (keyboard != null && toggleKey != Key.None && keyboard[toggleKey].wasPressedThisFrame)
         {
             show = !show;
             ApplyVisibility();
+        }
+
+        if (keyboard != null && endRoundKey != Key.None && keyboard[endRoundKey].wasPressedThisFrame)
+        {
+            GameManager.Instance?.EndRoundForDebug();
         }
 
         if (!show || label == null)

@@ -14,12 +14,31 @@ public class Chicken : PlaceableEntity
     private float layTimer;
     private float goldMineTimer;
 
-    protected override void RefreshDebugStats()
+    private int goldMineActiveLevel;
+    private float cachedGoldMineInterval;
+    private float cachedGoldMineChance;
+    private int cachedGoldMineGoldAmount;
+
+    private float cachedMultiLayChance;
+    private int cachedMultiLayBonusCount;
+
+    public override void RefreshStats()
     {
-        base.RefreshDebugStats();
+        base.RefreshStats();
 
         CurrentLayInterval = data.LayInterval;
         CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
+
+        UpgradeManager manager = UpgradeManager.Instance;
+        UpgradeState state = manager != null ? manager.State : null;
+
+        goldMineActiveLevel = state != null ? state.GoldMineLevel : 0;
+        cachedGoldMineInterval = goldMineActiveLevel > 0 ? state.GoldMineInterval : 1f;
+        cachedGoldMineChance = state != null ? state.GoldMineChance : 0f;
+        cachedGoldMineGoldAmount = state != null ? state.GoldMineGoldAmount : 0;
+
+        cachedMultiLayChance = state != null ? state.MultiLayChance : 0f;
+        cachedMultiLayBonusCount = state != null ? state.MultiLayBonusCount : 0;
     }
 
     protected override void OnEnable()
@@ -35,7 +54,7 @@ public class Chicken : PlaceableEntity
         ResetWalk(data);
         ResetAmbient(AmbientSoundKind.Chicken);
         layTimer = data.LayInterval;
-        goldMineTimer = ResolveGoldMineInterval();
+        goldMineTimer = cachedGoldMineInterval;
     }
 
     public override void SetCarried(bool carried)
@@ -76,9 +95,6 @@ public class Chicken : PlaceableEntity
             return;
         }
 
-        CurrentLayInterval = data.LayInterval;
-        CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
-
         layTimer -= dt;
         if (layTimer > 0f)
         {
@@ -94,11 +110,9 @@ public class Chicken : PlaceableEntity
 
         int layCount = data.LayCount;
 
-        if (UpgradeManager.Instance != null
-            && UpgradeManager.Instance.MultiLayBonusCount > 0
-            && Random.value <= UpgradeManager.Instance.MultiLayChance)
+        if (cachedMultiLayBonusCount > 0 && Random.value <= cachedMultiLayChance)
         {
-            layCount += UpgradeManager.Instance.MultiLayBonusCount;
+            layCount += cachedMultiLayBonusCount;
         }
 
         for (int i = 0; i < layCount; i++)
@@ -110,15 +124,8 @@ public class Chicken : PlaceableEntity
     private void SpawnEgg()
     {
         Vector3 spawnPosition = TryPickEggPosition(out Vector3 candidate) ? candidate : transform.position + data.LayOffset;
-        GameObject egg = PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
-        egg.GetComponent<PlaceableEntity>()?.NotifySpawnCount();
+        PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
         AudioManager.Instance?.PlayEggLaid();
-    }
-
-    private float ResolveGoldMineInterval()
-    {
-        UpgradeManager manager = UpgradeManager.Instance;
-        return manager != null && manager.GoldMineLevel > 0 ? manager.GoldMineInterval : 1f;
     }
 
     private void TickGoldMine(float dt)
@@ -129,17 +136,16 @@ public class Chicken : PlaceableEntity
             return;
         }
 
-        goldMineTimer = ResolveGoldMineInterval();
+        goldMineTimer = cachedGoldMineInterval;
 
-        UpgradeManager manager = UpgradeManager.Instance;
-        if (manager == null || manager.GoldMineLevel <= 0 || EconomyManager.Instance == null)
+        if (goldMineActiveLevel <= 0 || EconomyManager.Instance == null)
         {
             return;
         }
 
-        if (Random.value <= manager.GoldMineChance)
+        if (Random.value <= cachedGoldMineChance)
         {
-            EconomyManager.Instance.AddGold(manager.GoldMineGoldAmount);
+            EconomyManager.Instance.AddGold(cachedGoldMineGoldAmount);
         }
     }
 
@@ -156,15 +162,5 @@ public class Chicken : PlaceableEntity
         return GridManager.Instance.TryFindWalkable(basePosition, 11,
             attempt => attempt == 0 ? basePosition : basePosition + (Vector3)(Random.insideUnitCircle * 0.5f),
             out position);
-    }
-
-    public override void NotifySpawnCount()
-    {
-        SpawnManager.Instance?.RegisterChickenSpawned();
-    }
-
-    public override void NotifyDespawnCount()
-    {
-        SpawnManager.Instance?.RegisterChickenDespawned();
     }
 }

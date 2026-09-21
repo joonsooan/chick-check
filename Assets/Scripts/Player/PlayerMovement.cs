@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public float SprintSpeed => BaseMoveSpeed * sprintMultiplier;
     public Vector2 MoveInput => moveInput;
     public bool IsMoving => moveInput.sqrMagnitude > 0f;
-    public bool SprintUnlocked => UpgradeManager.Instance != null && UpgradeManager.Instance.SprintEnabled;
+    public bool SprintUnlocked => UpgradeManager.Instance != null && UpgradeManager.Instance.State.SprintEnabled;
     public bool IsSprinting => SprintUnlocked && sprintAction.IsPressed();
 
     private void Awake()

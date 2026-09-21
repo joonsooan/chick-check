@@ -1,15 +1,32 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Chick : PlaceableEntity
 {
+    private enum ExitPhase
+    {
+        None,
+        Forced,
+        Random
+    }
+
     [SerializeField] private ChickData data;
 
     private Collider2D col;
     private bool colliderWasTrigger;
 
     private float contagionTimer;
+    private bool contagionActive;
+    private MutationData cachedMutationData;
+
+    private ExitPhase exitPhase = ExitPhase.None;
+    private Vector3 exitTarget;
+    private Vector2 exitDir;
+    private float exitMoveSpeed;
+    private float exitRandomAngleRange;
+    private float exitRandomDuration;
+    private float exitRandomElapsed;
+    private bool exitMasked;
 
     public override EconomyEntityData EconomyData => data;
     public override bool CanBeCarried => base.CanBeCarried && !IsExiting;
@@ -25,7 +42,7 @@ public class Chick : PlaceableEntity
     {
         base.OnEnable();
 
-        IsExiting = false;
+        exitPhase = ExitPhase.None;
         spriteRenderer.sprite = data.Sprite;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
@@ -39,8 +56,7 @@ public class Chick : PlaceableEntity
 
         if (data.IsMutant)
         {
-            MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
-            contagionTimer = mutationData != null ? mutationData.ContagionInterval : 1f;
+            contagionTimer = cachedMutationData != null ? cachedMutationData.ContagionInterval : 1f;
         }
     }
 
@@ -48,13 +64,32 @@ public class Chick : PlaceableEntity
     {
         base.OnDisable();
 
-        StopAllCoroutines();
+        if (exitPhase != ExitPhase.None)
+        {
+            RestoreCollider();
+            exitPhase = ExitPhase.None;
+        }
+    }
+
+    public override void RefreshStats()
+    {
+        base.RefreshStats();
+
+        UpgradeManager manager = UpgradeManager.Instance;
+        cachedMutationData = manager != null ? manager.MutationData : null;
+        contagionActive = manager != null && manager.State.ContagionEnabled;
     }
 
     public override void Tick(float dt)
     {
-        if (IsCarried || IsExiting)
+        if (IsCarried)
         {
+            return;
+        }
+
+        if (exitPhase != ExitPhase.None)
+        {
+            TickExit(dt);
             return;
         }
 
@@ -101,27 +136,12 @@ public class Chick : PlaceableEntity
         return SpawnManager.Instance == null || SpawnManager.Instance.ChickCount > 1;
     }
 
-    public override void NotifySpawnCount()
-    {
-        SpawnManager.Instance?.RegisterChickSpawned();
-    }
-
-    public override void NotifyDespawnCount()
-    {
-        SpawnManager.Instance?.RegisterChickDespawned();
-    }
-
-    public bool IsExiting { get; private set; }
+    public bool IsExiting => exitPhase != ExitPhase.None;
 
     public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked)
     {
-        StopAllCoroutines();
-        StartCoroutine(ForceExitRoutine(dir.normalized, mirrorData, masked));
-    }
+        Vector2 normalizedDir = dir.normalized;
 
-    private IEnumerator ForceExitRoutine(Vector2 dir, MirrorData mirrorData, bool masked)
-    {
-        IsExiting = true;
         spriteRenderer.maskInteraction =
             masked ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
         if (masked)
@@ -140,21 +160,56 @@ public class Chick : PlaceableEntity
         float exitMultiplier = data.IsMutant
             ? mirrorData.MutantExitSpeedMultiplier
             : mirrorData.ExitSpeedMultiplier;
-        float moveSpeed = data.MoveSpeed * exitMultiplier;
 
-        yield return MoveForDistance(dir, moveSpeed, mirrorData.ForcedExitDistance);
+        exitMasked = masked;
+        exitMoveSpeed = data.MoveSpeed * exitMultiplier;
+        exitDir = normalizedDir;
+        exitTarget = transform.position + (Vector3)(exitDir * mirrorData.ForcedExitDistance);
+        exitRandomAngleRange = mirrorData.RandomExitAngle;
+        exitRandomDuration = mirrorData.RandomExitDuration;
 
-        float randomAngle = Random.Range(-mirrorData.RandomExitAngle, mirrorData.RandomExitAngle);
-        Vector2 randomDir = Quaternion.Euler(0f, 0f, randomAngle) * dir;
-        yield return MoveForDuration(randomDir, moveSpeed, mirrorData.RandomExitDuration);
+        spriteRenderer.flipX = exitDir.x > 0f;
 
+        exitPhase = ExitPhase.Forced;
+    }
+
+    private void TickExit(float dt)
+    {
+        if (exitPhase == ExitPhase.Forced)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, exitTarget, exitMoveSpeed * dt);
+
+            if ((exitTarget - transform.position).sqrMagnitude <= 0.0001f)
+            {
+                float randomAngle = Random.Range(-exitRandomAngleRange, exitRandomAngleRange);
+                exitDir = Quaternion.Euler(0f, 0f, randomAngle) * exitDir;
+                spriteRenderer.flipX = exitDir.x > 0f;
+                exitRandomElapsed = 0f;
+                exitPhase = ExitPhase.Random;
+            }
+
+            return;
+        }
+
+        transform.position += (Vector3)(exitDir * exitMoveSpeed * dt);
+        exitRandomElapsed += dt;
+
+        if (exitRandomElapsed >= exitRandomDuration)
+        {
+            FinishExit();
+        }
+    }
+
+    private void FinishExit()
+    {
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
-        if (masked)
+        if (exitMasked)
         {
             spriteRenderer.sortingLayerName = "Objects";
         }
+
         RestoreCollider();
-        IsExiting = false;
+        exitPhase = ExitPhase.None;
         ResetLifeState();
     }
 
@@ -167,21 +222,18 @@ public class Chick : PlaceableEntity
             return;
         }
 
-        MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
-        if (mutationData == null || mutationData.MutatedChickPrefab == null)
+        if (cachedMutationData == null || cachedMutationData.MutatedChickPrefab == null)
         {
             return;
         }
 
-        NotifyDespawnCount();
-        SpawnManager.Instance.SpawnChick(mutationData.MutatedChickPrefab, transform.position, transform.parent);
+        SpawnManager.Instance.SpawnChick(cachedMutationData.MutatedChickPrefab, transform.position, transform.parent);
         PoolManager.Despawn(gameObject);
     }
 
     private void TickContagion(float dt)
     {
-        MutationData mutationData = UpgradeManager.Instance != null ? UpgradeManager.Instance.MutationData : null;
-        if (mutationData == null)
+        if (cachedMutationData == null)
         {
             return;
         }
@@ -192,19 +244,19 @@ public class Chick : PlaceableEntity
             return;
         }
 
-        contagionTimer = mutationData.ContagionInterval;
+        contagionTimer = cachedMutationData.ContagionInterval;
 
-        if (UpgradeManager.Instance == null || !UpgradeManager.Instance.ContagionEnabled)
+        if (!contagionActive)
         {
             return;
         }
 
-        if (Random.value > mutationData.ContagionChance)
+        if (Random.value > cachedMutationData.ContagionChance)
         {
             return;
         }
 
-        SpreadContagion(mutationData);
+        SpreadContagion(cachedMutationData);
     }
 
     private void SpreadContagion(MutationData mutationData)
@@ -233,31 +285,6 @@ public class Chick : PlaceableEntity
             {
                 other.Mutate();
             }
-        }
-    }
-
-    private IEnumerator MoveForDuration(Vector2 dir, float moveSpeed, float duration)
-    {
-        spriteRenderer.flipX = dir.x > 0f;
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            transform.position += (Vector3)(dir * moveSpeed * Time.deltaTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    private IEnumerator MoveForDistance(Vector2 dir, float moveSpeed, float distance)
-    {
-        spriteRenderer.flipX = dir.x > 0f;
-
-        Vector3 target = transform.position + (Vector3)(dir * distance);
-        while ((target - transform.position).sqrMagnitude > 0.0001f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
-            yield return null;
         }
     }
 }
