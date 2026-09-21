@@ -8,45 +8,52 @@ public class GridManager : Singleton<GridManager>
     [SerializeField] private Grid grid;
     [SerializeField] private Tilemap walkableAreaTilemap;
 
-    private readonly HashSet<Vector3Int> blocked = new HashSet<Vector3Int>();
+    private WalkableGrid walkableGrid;
 
-    public Vector3Int WorldToCell(Vector3 worldPos) => grid.WorldToCell(worldPos);
-
-    public bool IsWithinBounds(Vector3 worldPos) =>
-        walkableAreaTilemap == null || walkableAreaTilemap.HasTile(grid.WorldToCell(worldPos));
-
-    public bool IsWalkable(Vector3 worldPos) =>
-        IsWithinBounds(worldPos) && !blocked.Contains(grid.WorldToCell(worldPos));
-
-    public void SetBlocked(Vector3Int cell, bool value)
+    protected override void Awake()
     {
-        if (value)
+        base.Awake();
+        if (Instance != this)
         {
-            blocked.Add(cell);
+            return;
         }
-        else
-        {
-            blocked.Remove(cell);
-        }
+
+        walkableGrid = BuildWalkableGrid();
     }
 
-    public bool TryFindWalkable(Vector3 fallback, int attempts, Func<int, Vector3> candidateGenerator, out Vector3 result)
+    private WalkableGrid BuildWalkableGrid()
     {
-        for (int attempt = 0; attempt < attempts; attempt++)
+        if (walkableAreaTilemap == null)
         {
-            Vector3 candidate = candidateGenerator(attempt);
-            if (IsWalkable(candidate))
+            return new WalkableGrid(null);
+        }
+
+        HashSet<Vector3Int> walkable = new HashSet<Vector3Int>();
+        foreach (Vector3Int cell in walkableAreaTilemap.cellBounds.allPositionsWithin)
+        {
+            if (walkableAreaTilemap.HasTile(cell))
             {
-                result = candidate;
-                return true;
+                walkable.Add(cell);
             }
         }
 
-        result = fallback;
-        return false;
+        return new WalkableGrid(walkable);
     }
 
-    public void ForEachCellInBox(Vector2 worldCenter, Vector2 worldSize, System.Action<Vector3Int> action)
+    public Vector3Int WorldToCell(Vector3 worldPos) => grid.WorldToCell(worldPos);
+
+    public bool IsWithinBounds(Vector3 worldPos) => walkableGrid.IsWithinBounds(grid.WorldToCell(worldPos));
+
+    public bool IsWalkable(Vector3 worldPos) => walkableGrid.IsWalkable(grid.WorldToCell(worldPos));
+
+    public void SetBlocked(Vector3Int cell, bool value) => walkableGrid.SetBlocked(cell, value);
+
+    public bool TryFindWalkable(Vector3 fallback, int attempts, Func<int, Vector3> candidateGenerator, out Vector3 result)
+    {
+        return walkableGrid.TryFindWalkable(fallback, attempts, candidateGenerator, grid.WorldToCell, out result);
+    }
+
+    public void ForEachCellInBox(Vector2 worldCenter, Vector2 worldSize, Action<Vector3Int> action)
     {
         Vector3 min = new Vector3(worldCenter.x - worldSize.x * 0.5f, worldCenter.y - worldSize.y * 0.5f);
         Vector3 max = new Vector3(worldCenter.x + worldSize.x * 0.5f, worldCenter.y + worldSize.y * 0.5f);

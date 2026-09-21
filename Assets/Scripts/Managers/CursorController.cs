@@ -31,7 +31,6 @@ public class CursorController : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // Unity resets the software cursor on scene load, so re-apply each time.
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ApplyCursor();
@@ -48,7 +47,6 @@ public class CursorController : MonoBehaviour
         Cursor.SetCursor(tex, hotspot * scale, CursorMode.ForceSoftware);
     }
 
-    // Point-sample integer upscale so pixel-art cursor stays crisp when enlarged.
     private void BuildScaledTexture()
     {
         int width = cursorTexture.width * scale;

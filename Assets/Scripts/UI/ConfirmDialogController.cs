@@ -54,7 +54,6 @@ public class ConfirmDialogController : MonoBehaviour
     {
         Action confirm = pendingConfirm;
 
-        // 라운드 전환 중 버튼 연타로 콜백이 두 번 실행되는 것을 막는다.
         Hide();
 
         confirm?.Invoke();

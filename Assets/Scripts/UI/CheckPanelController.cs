@@ -174,12 +174,7 @@ public class CheckPanelController : MonoBehaviour
 
     private int GetMaxPayable()
     {
-        if (GameManager.Instance == null || EconomyManager.Instance == null)
-        {
-            return 0;
-        }
-
-        return Mathf.Max(0, Mathf.Min(GameManager.Instance.RemainingDebt, EconomyManager.Instance.Gold));
+        return GameManager.Instance != null ? GameManager.Instance.MaxPayableDebt : 0;
     }
 
     private void ClampToMaxPayable()

@@ -9,11 +9,16 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private bool enterKeyEndsRoundForTest = true;
     [SerializeField] private bool tutorialMode;
 
+    private readonly System.Random rng = new System.Random();
+    private DebtLedger debtLedger;
+
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
     public float PhaseTimeRemaining { get; private set; }
-    public int RemainingDebt { get; private set; }
-    public int NextDebtDueRound { get; private set; }
+    public int RemainingDebt => debtLedger?.RemainingDebt ?? 0;
+    public int NextDebtDueRound => debtLedger?.NextDebtDueRound ?? 0;
+    public int MaxPayableDebt =>
+        debtLedger != null && EconomyManager.Instance != null ? debtLedger.MaxPayable(EconomyManager.Instance.Gold) : 0;
     public int RerollCost => roundConfig.RerollCost;
 
     public event Action<int> OnRoundStarted;
@@ -27,13 +32,10 @@ public class GameManager : Singleton<GameManager>
 
     private float phaseTotalTime;
     private bool phaseHasTimer;
-    private float currentDebtAmount;
 
     private void Start()
     {
-        NextDebtDueRound = roundConfig.DebtCheckpointInterval;
-        currentDebtAmount = roundConfig.DebtAmount;
-        RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
+        debtLedger = new DebtLedger(roundConfig.DebtCheckpointInterval, roundConfig.DebtAmount, roundConfig.DebtMultiplier);
 
         if (tutorialMode)
         {
@@ -118,7 +120,13 @@ public class GameManager : Singleton<GameManager>
 
         for (int i = 0; i < spawnCount; i++)
         {
-            Vector3 spawnPosition = GetRandomSpawnPoint();
+            Vector3 spawnPosition = SpawnPointSampler.Sample(
+                chickSpawnCenter,
+                roundConfig.ChickSpawnOuterRadius,
+                roundConfig.ChickSpawnInnerRadius,
+                roundConfig.ChickSpawnJitter,
+                rng);
+
             if (i < mutantCount && mutantPrefab != null)
             {
                 SpawnManager.Instance.SpawnChick(mutantPrefab, spawnPosition);
@@ -153,7 +161,7 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        if (CurrentRound >= NextDebtDueRound)
+        if (debtLedger.IsDue(CurrentRound))
         {
             EnterDebtCheckpoint();
             return;
@@ -177,27 +185,20 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        int payable = Mathf.Clamp(amount, 0, Mathf.Min(RemainingDebt, EconomyManager.Instance.Gold));
+        int payable = Mathf.Clamp(amount, 0, MaxPayableDebt);
         if (payable <= 0 || !EconomyManager.Instance.TrySpendGold(payable))
         {
             return;
         }
 
-        RemainingDebt -= payable;
-        if (RemainingDebt <= 0)
-        {
-            currentDebtAmount *= roundConfig.DebtMultiplier;
-            RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
-            NextDebtDueRound += roundConfig.DebtCheckpointInterval;
-        }
+        debtLedger.Pay(payable);
 
         NotifyDebtStatus();
     }
 
     private void NotifyDebtStatus()
     {
-        int roundsUntilDue = Mathf.Max(NextDebtDueRound - CurrentRound, 0);
-        OnDebtStatusChanged?.Invoke(RemainingDebt, roundsUntilDue);
+        OnDebtStatusChanged?.Invoke(RemainingDebt, debtLedger.RoundsUntilDue(CurrentRound));
     }
 
     private void EnterGameOver(GameOverReason reason)
@@ -226,22 +227,6 @@ public class GameManager : Singleton<GameManager>
         PhaseTimeRemaining = duration;
         phaseHasTimer = duration > 0f;
         OnPhaseTimerTick?.Invoke(Mathf.Max(PhaseTimeRemaining, 0f), phaseTotalTime);
-    }
-
-    private Vector3 GetRandomSpawnPoint()
-    {
-        float outerRadius = roundConfig.ChickSpawnOuterRadius;
-        float innerRadius = roundConfig.ChickSpawnInnerRadius;
-        if (outerRadius <= 0f || innerRadius >= outerRadius)
-        {
-            return chickSpawnCenter;
-        }
-
-        float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
-        float radius = Mathf.Sqrt(UnityEngine.Random.Range(innerRadius * innerRadius, outerRadius * outerRadius));
-        Vector3 point = chickSpawnCenter + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f);
-        point += (Vector3)(UnityEngine.Random.insideUnitCircle * roundConfig.ChickSpawnJitter);
-        return point;
     }
 }
 

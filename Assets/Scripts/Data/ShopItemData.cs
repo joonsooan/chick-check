@@ -76,4 +76,28 @@ public class ShopItemData : ScriptableObject
     public int GoldMineGoldPerPurchase => goldMineGoldPerPurchase;
     public float MultiLayChance => multiLayChance;
     public int MultiLayCountPerPurchase => multiLayCountPerPurchase;
+
+#if UNITY_INCLUDE_TESTS
+    internal static ShopItemData CreateForTest(
+        string itemName = "Test Item",
+        int cost = 10,
+        float priceMultiplier = 2f,
+        bool oneTimeOnly = false,
+        ShopEffectKind effectKind = ShopEffectKind.StatModifier,
+        ShopStatType targetStat = ShopStatType.GrowthChance,
+        ShopModifierOp op = ShopModifierOp.Add,
+        float value = 1f)
+    {
+        ShopItemData instance = CreateInstance<ShopItemData>();
+        instance.itemName = itemName;
+        instance.cost = cost;
+        instance.priceMultiplier = priceMultiplier;
+        instance.oneTimeOnly = oneTimeOnly;
+        instance.effectKind = effectKind;
+        instance.targetStat = targetStat;
+        instance.op = op;
+        instance.value = value;
+        return instance;
+    }
+#endif
 }

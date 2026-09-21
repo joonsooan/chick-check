@@ -15,10 +15,9 @@ public class UpgradeManager : Singleton<UpgradeManager>
     public event Action<GameObject> OnMirrorUpgrade;
 
     private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
-    private readonly Dictionary<ShopStatType, float> additiveBonus = new Dictionary<ShopStatType, float>();
-    private readonly Dictionary<ShopStatType, float> multiplier = new Dictionary<ShopStatType, float>();
-    private readonly Dictionary<ShopItemData, int> purchaseCounts = new Dictionary<ShopItemData, int>();
-    private readonly HashSet<ShopItemData> retiredItems = new HashSet<ShopItemData>();
+    private readonly StatModifierTable modifiers = new StatModifierTable();
+    private readonly PurchaseLedger ledger = new PurchaseLedger();
+    private readonly System.Random rng = new System.Random();
 
     public MutationData MutationData => mutationData;
     public int MutantSpawnCount { get; private set; }
@@ -64,8 +63,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private void HandleGameOver(GameOverReason reason)
     {
-        purchaseCounts.Clear();
-        retiredItems.Clear();
+        ledger.Clear();
         MutantSpawnCount = 0;
         ContagionEnabled = false;
         SprintEnabled = false;
@@ -101,32 +99,13 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private List<ShopItemData> PickRandomItems()
     {
-        List<ShopItemData> pool = new List<ShopItemData>();
-        foreach (ShopItemData item in allShopItems)
-        {
-            if (retiredItems.Contains(item))
-            {
-                continue;
-            }
+        return ShopCatalogPicker.Pick(allShopItems, shopItemsPerRound, IsAvailable, rng);
+    }
 
-            if (item.EffectKind == ShopEffectKind.EnableContagion && MutantSpawnCount <= 0)
-            {
-                continue;
-            }
-
-            pool.Add(item);
-        }
-        int pickCount = Mathf.Min(shopItemsPerRound, pool.Count);
-        List<ShopItemData> result = new List<ShopItemData>(pickCount);
-
-        for (int i = 0; i < pickCount; i++)
-        {
-            int index = UnityEngine.Random.Range(0, pool.Count);
-            result.Add(pool[index]);
-            pool.RemoveAt(index);
-        }
-
-        return result;
+    private bool IsAvailable(ShopItemData item)
+    {
+        return !ledger.IsRetired(item)
+            && (item.EffectKind != ShopEffectKind.EnableContagion || MutantSpawnCount > 0);
     }
 
     public bool TryPurchase(ShopItemData item)
@@ -141,13 +120,11 @@ public class UpgradeManager : Singleton<UpgradeManager>
             case ShopEffectKind.StatModifier:
                 if (item.Op == ShopModifierOp.Add)
                 {
-                    additiveBonus.TryGetValue(item.TargetStat, out float current);
-                    additiveBonus[item.TargetStat] = current + item.Value;
+                    modifiers.AddAdditive(item.TargetStat, item.Value);
                 }
                 else
                 {
-                    multiplier.TryGetValue(item.TargetStat, out float current);
-                    multiplier[item.TargetStat] = (current == 0f ? 1f : current) + (item.Value - 1f);
+                    modifiers.AddMultiplier(item.TargetStat, item.Value);
                 }
                 break;
             case ShopEffectKind.EnableMutation:
@@ -175,13 +152,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
                 break;
         }
 
-        if (item.OneTimeOnly)
-        {
-            retiredItems.Add(item);
-        }
-
-        purchaseCounts.TryGetValue(item, out int count);
-        purchaseCounts[item] = count + 1;
+        ledger.RecordPurchase(item);
 
         OnModifiersChanged?.Invoke();
 
@@ -190,22 +161,21 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     public int GetCurrentCost(ShopItemData item)
     {
-        purchaseCounts.TryGetValue(item, out int count);
-        return Mathf.RoundToInt(item.Cost * Mathf.Pow(item.PriceMultiplier, count));
+        return ledger.GetCurrentCost(item);
     }
 
     public float GetAdditive(ShopStatType stat)
     {
-        return additiveBonus.TryGetValue(stat, out float value) ? value : 0f;
+        return modifiers.GetAdditive(stat);
     }
 
     public float GetMultiplier(ShopStatType stat)
     {
-        return multiplier.TryGetValue(stat, out float value) ? value : 1f;
+        return modifiers.GetMultiplier(stat);
     }
 
     public float ApplyModifiers(ShopStatType stat, float baseValue)
     {
-        return (baseValue + GetAdditive(stat)) * GetMultiplier(stat);
+        return modifiers.Apply(stat, baseValue);
     }
 }

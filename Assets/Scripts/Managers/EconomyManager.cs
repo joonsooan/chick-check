@@ -2,20 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public readonly struct SaleRecord
-{
-    public readonly Sprite Sprite;
-    public readonly int SellPrice;
-    public readonly int DisplayOrder;
-
-    public SaleRecord(Sprite sprite, int sellPrice, int displayOrder)
-    {
-        Sprite = sprite;
-        SellPrice = sellPrice;
-        DisplayOrder = displayOrder;
-    }
-}
-
 public class EconomyManager : Singleton<EconomyManager>
 {
     [SerializeField] private int startingGold = 10;
@@ -53,7 +39,8 @@ public class EconomyManager : Singleton<EconomyManager>
     private void HandleRoundEnded(int roundNumber)
     {
         PlaceableEntity[] entities = new List<PlaceableEntity>(PlaceableEntity.ActiveEntities).ToArray();
-        List<SaleRecord> saleRecords = new List<SaleRecord>();
+        List<PlaceableEntity> sellable = new List<PlaceableEntity>();
+        List<SaleInput> inputs = new List<SaleInput>();
 
         foreach (PlaceableEntity entity in entities)
         {
@@ -62,8 +49,18 @@ public class EconomyManager : Singleton<EconomyManager>
                 continue;
             }
 
-            saleRecords.Add(new SaleRecord(entity.EconomyData.Sprite, GetSellPrice(entity), entity.EconomyData.DisplayOrder));
-            SellEntity(entity);
+            sellable.Add(entity);
+            inputs.Add(new SaleInput(entity.EconomyData.Sprite, entity.EconomyData.SellPrice, entity.EconomyData.DisplayOrder, entity.SellPriceStat));
+        }
+
+        Func<ShopStatType, float, float> applyModifier =
+            UpgradeManager.Instance != null ? (Func<ShopStatType, float, float>)UpgradeManager.Instance.ApplyModifiers : null;
+        List<SaleRecord> saleRecords = RoundSettlement.Settle(inputs, applyModifier, out _);
+
+        for (int i = 0; i < sellable.Count; i++)
+        {
+            AddGold(saleRecords[i].SellPrice);
+            sellable[i].HandleSold();
         }
 
         LastRoundSaleRecords = saleRecords;
@@ -86,22 +83,5 @@ public class EconomyManager : Singleton<EconomyManager>
         Gold -= amount;
         OnGoldChanged?.Invoke(Gold);
         return true;
-    }
-
-    public void SellEntity(PlaceableEntity entity)
-    {
-        AddGold(GetSellPrice(entity));
-        entity.HandleSold();
-    }
-
-    private int GetSellPrice(PlaceableEntity entity)
-    {
-        int sellPrice = entity.EconomyData.SellPrice;
-        if (UpgradeManager.Instance != null)
-        {
-            sellPrice = Mathf.RoundToInt(UpgradeManager.Instance.ApplyModifiers(entity.SellPriceStat, sellPrice));
-        }
-
-        return sellPrice;
     }
 }

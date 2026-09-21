@@ -121,65 +121,53 @@ public class TutorialManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(0.3f);
 
-        // 1) 이동
         SetFreeze(true);
         popup.Show(moveText, false);
         yield return new WaitUntil(() => playerMovement != null && playerMovement.MoveInput.sqrMagnitude > 0.01f);
         SetFreeze(false);
         yield return new WaitForSecondsRealtime(0.3f);
 
-        // 2) 병아리 들기
         carried = false;
         popup.Show(carryText, false);
         yield return new WaitUntil(() => carried);
         yield return new WaitForSecondsRealtime(0.5f);
 
-        // 3) 거울 앞 복제
         duplicated = false;
         popup.Show(mirrorText, false);
         yield return new WaitUntil(() => duplicated);
 
-        // 복제된 병아리들이 도망가는 연출을 잠깐 보여준 뒤 프리즈
         yield return new WaitForSecondsRealtime(1.2f);
 
-        // 4) 타이머 / 빚 안내 + 게임 스타트
         SetFreeze(true);
         confirmClicked = false;
         popup.Show(debtText, true);
         yield return new WaitUntil(() => confirmClicked);
 
-        // confirm 후 메인 캔버스 활성화
         if (mainCanvas != null)
         {
             mainCanvas.SetActive(true);
         }
         SetFreeze(false);
 
-        // 타이머 시작
         if (GameManager.Instance != null)
         {
             GameManager.Instance.BeginTutorialRound();
         }
 
-        // 5) 1라운드 종료 → 통계창 Next 대기
         resultsNextClicked = false;
         yield return new WaitUntil(() => resultsNextClicked);
         yield return null;
 
-        // 6) 상점 안내
         yield return StepPopupWithConfirm(shopText);
 
-        // 7) 체크 버튼 클릭 유도
         SetFreeze(true);
         checkButtonClicked = false;
         popup.Show(checkText, false);
         yield return new WaitUntil(() => checkButtonClicked);
         SetFreeze(false);
 
-        // 8) 체크 안내
         yield return StepPopupWithConfirm(checkClickText);
 
-        // 9) 종료 → 게임 시작 버튼
         SetFreeze(true);
         confirmClicked = false;
         popup.Show(endText, true);
