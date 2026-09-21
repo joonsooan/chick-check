@@ -16,6 +16,7 @@ public abstract class EconomyEntityData : ScriptableObject
     [Header("Growth")]
     [SerializeField, Min(0)] private float growthInterval = 5f;
     [SerializeField, Range(0f, 1f)] private float growthChance = 0.1f;
+    [SerializeField] private Vector2 growthTimerJitterRange = new Vector2(0.1f, 0.2f);
     [SerializeField] private GameObject nextStagePrefab;
 
     [Header("Walk")]
@@ -35,6 +36,7 @@ public abstract class EconomyEntityData : ScriptableObject
     public int DisplayOrder => displayOrder;
     public float GrowthInterval => growthInterval;
     public float GrowthChance => growthChance;
+    public Vector2 GrowthTimerJitterRange => growthTimerJitterRange;
     public GameObject NextStagePrefab => nextStagePrefab;
     public bool CanGrow => nextStagePrefab != null;
     public float MoveSpeed => moveSpeed;
@@ -46,6 +48,10 @@ public abstract class EconomyEntityData : ScriptableObject
     {
         growthInterval = Mathf.Max(0f, growthInterval);
         moveSpeed = Mathf.Max(0f, moveSpeed);
+
+        growthTimerJitterRange = new Vector2(
+            Mathf.Max(0f, growthTimerJitterRange.x),
+            Mathf.Max(Mathf.Max(0f, growthTimerJitterRange.x), growthTimerJitterRange.y));
 
         walkIntervalRange = new Vector2(
             Mathf.Max(0f, walkIntervalRange.x),

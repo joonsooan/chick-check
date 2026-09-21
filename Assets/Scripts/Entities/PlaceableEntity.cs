@@ -52,7 +52,7 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         Spatial.Insert(this, transform.position);
 
-        growthElapsed = 0f;
+        ResetGrowthTimer();
         RefreshStats();
         ApplyIdleVisual();
 
@@ -151,12 +151,23 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         if (carried)
         {
-            growthElapsed = 0f;
+            ResetGrowthTimer();
         }
         else
         {
             RefreshStats();
         }
+    }
+
+    private void ResetGrowthTimer()
+    {
+        EconomyEntityData data = EconomyData;
+        growthElapsed = data != null ? -RandomJitter(data.GrowthTimerJitterRange) : 0f;
+    }
+
+    private static float RandomJitter(Vector2 range)
+    {
+        return UnityEngine.Random.Range(range.x, range.y);
     }
 
     protected void TickGrowth(float dt)
@@ -173,7 +184,7 @@ public abstract class PlaceableEntity : MonoBehaviour
             return;
         }
 
-        growthElapsed = 0f;
+        ResetGrowthTimer();
 
         if (UnityEngine.Random.value <= CurrentGrowthChance)
         {

@@ -57,8 +57,14 @@ public class Chick : PlaceableEntity
 
         if (data.IsMutant)
         {
-            contagionTimer = mutationData != null ? mutationData.ContagionInterval : 0f;
+            contagionTimer = mutationData != null ? NextContagionInterval(mutationData) : 0f;
         }
+    }
+
+    private static float NextContagionInterval(MutationData mutation)
+    {
+        return mutation.ContagionInterval +
+            Random.Range(mutation.ContagionTimerJitterRange.x, mutation.ContagionTimerJitterRange.y);
     }
 
     protected override void OnDisable()
@@ -239,7 +245,7 @@ public class Chick : PlaceableEntity
             return;
         }
 
-        contagionTimer = mutationData.ContagionInterval;
+        contagionTimer = NextContagionInterval(mutationData);
 
         if (!contagionActive)
         {
