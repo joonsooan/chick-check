@@ -57,6 +57,7 @@ public class EntityWalkerTests
         SetEconomyField(data, "moveSpeed", 1f);
         SetEconomyField(data, "walkIntervalRange", new Vector2(0f, 0f));
         SetEconomyField(data, "walkDistanceRange", new Vector2(1f, 1f));
+        SetEconomyField(data, "walkTargetAttempts", 10);
 
         return new EntityWalker(transform, spriteRenderer, null, isWalkable);
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private RoundConfigData roundConfig;
+    [SerializeField] private DebtConfigData debtConfig;
     [SerializeField] private bool tutorialMode;
 
     private DebtLedger debtLedger;
@@ -31,7 +32,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        debtLedger = new DebtLedger(roundConfig.DebtCheckpointInterval, roundConfig.DebtAmount, roundConfig.DebtMultiplier);
+        debtLedger = new DebtLedger(debtConfig.CheckpointInterval, debtConfig.Amount, debtConfig.Multiplier);
 
         if (tutorialMode)
         {
@@ -59,7 +60,7 @@ public class GameManager : Singleton<GameManager>
             roundDuration = UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration);
         }
 
-        SetPhaseTimer(roundDuration * 0.5f);
+        SetPhaseTimer(roundDuration * roundConfig.TutorialRoundDurationRatio);
     }
 
     private void Update()

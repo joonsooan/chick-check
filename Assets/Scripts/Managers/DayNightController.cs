@@ -4,7 +4,7 @@ using UnityEngine.Rendering.Universal;
 public class DayNightController : MonoBehaviour
 {
     [SerializeField] private Light2D globalLight;
-    [SerializeField] private RoundConfigData roundConfig;
+    [SerializeField] private DayNightConfigData dayNightConfig;
 
     private bool isRestoring;
     private float restoreTimer;
@@ -13,7 +13,7 @@ public class DayNightController : MonoBehaviour
 
     private void Start()
     {
-        ApplyLight(roundConfig.DayLightColor, roundConfig.DayLightIntensity);
+        ApplyLight(dayNightConfig.DayLightColor, dayNightConfig.DayLightIntensity);
 
         if (GameManager.Instance != null)
         {
@@ -39,13 +39,13 @@ public class DayNightController : MonoBehaviour
         }
 
         restoreTimer += Time.deltaTime;
-        float t = roundConfig.LightRestoreDuration > 0f
-            ? Mathf.Clamp01(restoreTimer / roundConfig.LightRestoreDuration)
+        float t = dayNightConfig.LightRestoreDuration > 0f
+            ? Mathf.Clamp01(restoreTimer / dayNightConfig.LightRestoreDuration)
             : 1f;
 
         ApplyLight(
-            Color.Lerp(restoreFromColor, roundConfig.DayLightColor, t),
-            Mathf.Lerp(restoreFromIntensity, roundConfig.DayLightIntensity, t));
+            Color.Lerp(restoreFromColor, dayNightConfig.DayLightColor, t),
+            Mathf.Lerp(restoreFromIntensity, dayNightConfig.DayLightIntensity, t));
 
         if (t >= 1f)
         {
@@ -55,8 +55,8 @@ public class DayNightController : MonoBehaviour
 
     private void HandleRoundStarted(int roundNumber)
     {
-        restoreFromColor = globalLight != null ? globalLight.color : roundConfig.DayLightColor;
-        restoreFromIntensity = globalLight != null ? globalLight.intensity : roundConfig.DayLightIntensity;
+        restoreFromColor = globalLight != null ? globalLight.color : dayNightConfig.DayLightColor;
+        restoreFromIntensity = globalLight != null ? globalLight.intensity : dayNightConfig.DayLightIntensity;
         restoreTimer = 0f;
         isRestoring = true;
     }
@@ -69,26 +69,26 @@ public class DayNightController : MonoBehaviour
         }
 
         float progress = 1f - (remaining / total);
-        if (progress < roundConfig.SunsetStartRatio)
+        if (progress < dayNightConfig.SunsetStartRatio)
         {
             return;
         }
 
         isRestoring = false;
 
-        if (progress < roundConfig.NightStartRatio)
+        if (progress < dayNightConfig.NightStartRatio)
         {
-            float t = Mathf.InverseLerp(roundConfig.SunsetStartRatio, roundConfig.NightStartRatio, progress);
+            float t = Mathf.InverseLerp(dayNightConfig.SunsetStartRatio, dayNightConfig.NightStartRatio, progress);
             ApplyLight(
-                Color.Lerp(roundConfig.DayLightColor, roundConfig.SunsetLightColor, t),
-                Mathf.Lerp(roundConfig.DayLightIntensity, roundConfig.SunsetLightIntensity, t));
+                Color.Lerp(dayNightConfig.DayLightColor, dayNightConfig.SunsetLightColor, t),
+                Mathf.Lerp(dayNightConfig.DayLightIntensity, dayNightConfig.SunsetLightIntensity, t));
         }
         else
         {
-            float t = Mathf.InverseLerp(roundConfig.NightStartRatio, 1f, progress);
+            float t = Mathf.InverseLerp(dayNightConfig.NightStartRatio, 1f, progress);
             ApplyLight(
-                Color.Lerp(roundConfig.SunsetLightColor, roundConfig.NightLightColor, t),
-                Mathf.Lerp(roundConfig.SunsetLightIntensity, roundConfig.NightLightIntensity, t));
+                Color.Lerp(dayNightConfig.SunsetLightColor, dayNightConfig.NightLightColor, t),
+                Mathf.Lerp(dayNightConfig.SunsetLightIntensity, dayNightConfig.NightLightIntensity, t));
         }
     }
 

@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float sprintMultiplier = 1.8f;
+    [SerializeField] private PlayerData data;
 
     private Rigidbody2D rb;
     private PlayerInput playerInput;
@@ -21,9 +20,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 startPosition;
 
     public float BaseMoveSpeed => UpgradeManager.Instance != null
-        ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, moveSpeed)
-        : moveSpeed;
-    public float SprintSpeed => BaseMoveSpeed * sprintMultiplier;
+        ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, data.MoveSpeed)
+        : data.MoveSpeed;
+    public float SprintSpeed => BaseMoveSpeed * data.SprintMultiplier;
     public Vector2 MoveInput => moveInput;
     public bool IsMoving => moveInput.sqrMagnitude > 0f;
     public bool SprintUnlocked => UpgradeManager.Instance != null && UpgradeManager.Instance.State.SprintEnabled;
@@ -100,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         {
             AudioManager.Instance.PlayFootstep();
             float interval = AudioManager.Instance.FootstepInterval;
-            footstepTimer = IsSprinting ? interval * 0.5f : interval;
+            footstepTimer = IsSprinting ? interval * data.SprintFootstepIntervalRatio : interval;
         }
     }
 

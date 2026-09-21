@@ -33,7 +33,7 @@ public class Chicken : PlaceableEntity
         UpgradeState state = manager != null ? manager.State : null;
 
         goldMineActiveLevel = state != null ? state.GoldMineLevel : 0;
-        cachedGoldMineInterval = goldMineActiveLevel > 0 ? state.GoldMineInterval : 1f;
+        cachedGoldMineInterval = goldMineActiveLevel > 0 ? state.GoldMineInterval : 0f;
         cachedGoldMineChance = state != null ? state.GoldMineChance : 0f;
         cachedGoldMineGoldAmount = state != null ? state.GoldMineGoldAmount : 0;
 
@@ -130,6 +130,11 @@ public class Chicken : PlaceableEntity
 
     private void TickGoldMine(float dt)
     {
+        if (goldMineActiveLevel <= 0)
+        {
+            return;
+        }
+
         goldMineTimer -= dt;
         if (goldMineTimer > 0f)
         {
@@ -138,7 +143,7 @@ public class Chicken : PlaceableEntity
 
         goldMineTimer = cachedGoldMineInterval;
 
-        if (goldMineActiveLevel <= 0 || EconomyManager.Instance == null)
+        if (EconomyManager.Instance == null)
         {
             return;
         }
@@ -159,8 +164,8 @@ public class Chicken : PlaceableEntity
             return true;
         }
 
-        return GridManager.Instance.TryFindWalkable(basePosition, 11,
-            attempt => attempt == 0 ? basePosition : basePosition + (Vector3)(Random.insideUnitCircle * 0.5f),
+        return GridManager.Instance.TryFindWalkable(basePosition, data.EggPlacementAttempts,
+            attempt => attempt == 0 ? basePosition : basePosition + (Vector3)(Random.insideUnitCircle * data.EggPlacementRadius),
             out position);
     }
 }

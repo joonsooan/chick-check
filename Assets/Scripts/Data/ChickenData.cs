@@ -1,14 +1,18 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ChickenData", menuName = "Chicken Data")]
+[CreateAssetMenu(fileName = "ChickenData", menuName = "Chick Colony/Chicken Data")]
 public class ChickenData : EconomyEntityData
 {
     [Header("Egg Laying")]
     [SerializeField] private Egg eggPrefab;
-    [SerializeField] private float layInterval = 5f;
-    [SerializeField] private float layChance = 0.5f;
+    [SerializeField, Min(0.01f)] private float layInterval = 5f;
+    [SerializeField, Range(0f, 1f)] private float layChance = 0.5f;
     [SerializeField] private Vector3 layOffset;
-    [SerializeField] private int layCount = 1;
+    [SerializeField, Min(1)] private int layCount = 1;
+
+    [Header("Egg Placement")]
+    [SerializeField, Min(1)] private int eggPlacementAttempts = 11;
+    [SerializeField, Min(0)] private float eggPlacementRadius = 0.5f;
 
     public override EntityKind Kind => EntityKind.Chicken;
     public Egg EggPrefab => eggPrefab;
@@ -16,4 +20,6 @@ public class ChickenData : EconomyEntityData
     public float LayChance => layChance;
     public Vector3 LayOffset => layOffset;
     public int LayCount => layCount;
+    public int EggPlacementAttempts => eggPlacementAttempts;
+    public float EggPlacementRadius => eggPlacementRadius;
 }

@@ -20,8 +20,8 @@ public class AudioLibrary : ScriptableObject
     [SerializeField] private AudioClip titleBgm;
     [SerializeField] private AudioClip gameBgm;
     [SerializeField] private AudioClip resultBgm;
-    [SerializeField] private float resultBgmFadeSeconds = 1.5f;
-    [SerializeField] private float bgmCrossfadeSeconds = 0.75f;
+    [SerializeField, Min(0)] private float resultBgmFadeSeconds = 1.5f;
+    [SerializeField, Min(0)] private float bgmCrossfadeSeconds = 0.75f;
 
     [Header("SFX - UI")]
     [SerializeField] private AudioClip uiClick;
@@ -45,14 +45,14 @@ public class AudioLibrary : ScriptableObject
 
     [Header("SFX - Player Footsteps")]
     [SerializeField] private AudioClip[] footsteps;
-    [SerializeField] private float footstepInterval = 0.35f;
+    [SerializeField, Min(0)] private float footstepInterval = 0.35f;
 
     [Header("SFX - Entity Ambient")]
     [SerializeField] private AudioClip[] chickAmbient;
     [SerializeField] private Vector2 chickAmbientIntervalRange = new Vector2(4f, 9f);
     [SerializeField] private AudioClip[] chickenAmbient;
     [SerializeField] private Vector2 chickenAmbientIntervalRange = new Vector2(5f, 11f);
-    [SerializeField] private float ambientGlobalCooldown = 0.2f;
+    [SerializeField, Min(0)] private float ambientGlobalCooldown = 0.2f;
 
     public float DefaultSfxVolume => defaultSfxVolume;
     public float DefaultBgmVolume => defaultBgmVolume;
@@ -101,5 +101,17 @@ public class AudioLibrary : ScriptableObject
         }
 
         return clips[Random.Range(0, clips.Length)];
+    }
+
+    private void OnValidate()
+    {
+        chickAmbientIntervalRange = ClampRange(chickAmbientIntervalRange);
+        chickenAmbientIntervalRange = ClampRange(chickenAmbientIntervalRange);
+    }
+
+    private static Vector2 ClampRange(Vector2 range)
+    {
+        float min = Mathf.Max(0f, range.x);
+        return new Vector2(min, Mathf.Max(min, range.y));
     }
 }

@@ -6,20 +6,23 @@ public abstract class EconomyEntityData : ScriptableObject
     [SerializeField] private Sprite sprite;
 
     [Header("Economy")]
-    [SerializeField] private int sellPrice;
+    [SerializeField, Min(0)] private int sellPrice;
 
     [Header("Results")]
-    [SerializeField] private int displayOrder;
+    [SerializeField, Min(0)] private int displayOrder;
 
     [Header("Growth")]
-    [SerializeField] private float growthInterval = 5f;
-    [SerializeField] private float growthChance = 0.1f;
+    [SerializeField, Min(0)] private float growthInterval = 5f;
+    [SerializeField, Range(0f, 1f)] private float growthChance = 0.1f;
     [SerializeField] private GameObject nextStagePrefab;
 
     [Header("Walk")]
-    [SerializeField] private float moveSpeed = 1f;
+    [SerializeField, Min(0)] private float moveSpeed = 1f;
     [SerializeField] private Vector2 walkIntervalRange = new Vector2(1.5f, 4f);
     [SerializeField] private Vector2 walkDistanceRange = new Vector2(0.3f, 1f);
+
+    [Header("Walk Target")]
+    [SerializeField, Min(1)] private int walkTargetAttempts = 10;
 
     public abstract EntityKind Kind { get; }
 
@@ -33,4 +36,19 @@ public abstract class EconomyEntityData : ScriptableObject
     public float MoveSpeed => moveSpeed;
     public Vector2 WalkIntervalRange => walkIntervalRange;
     public Vector2 WalkDistanceRange => walkDistanceRange;
+    public int WalkTargetAttempts => walkTargetAttempts;
+
+    private void OnValidate()
+    {
+        growthInterval = Mathf.Max(0f, growthInterval);
+        moveSpeed = Mathf.Max(0f, moveSpeed);
+
+        walkIntervalRange = new Vector2(
+            Mathf.Max(0f, walkIntervalRange.x),
+            Mathf.Max(Mathf.Max(0f, walkIntervalRange.x), walkIntervalRange.y));
+
+        walkDistanceRange = new Vector2(
+            Mathf.Max(0f, walkDistanceRange.x),
+            Mathf.Max(Mathf.Max(0f, walkDistanceRange.x), walkDistanceRange.y));
+    }
 }

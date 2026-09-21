@@ -9,7 +9,6 @@ public class EntityWalker
         Moving
     }
 
-    private const int WalkTargetAttempts = 10;
     private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
 
     private readonly Transform transform;
@@ -102,7 +101,7 @@ public class EntityWalker
             return true;
         }
 
-        for (int attempt = 0; attempt < WalkTargetAttempts; attempt++)
+        for (int attempt = 0; attempt < data.WalkTargetAttempts; attempt++)
         {
             Vector3 candidate = RandomCandidate();
             if (isWalkable(candidate))

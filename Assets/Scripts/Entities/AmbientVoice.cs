@@ -3,33 +3,45 @@ using UnityEngine;
 public class AmbientVoice
 {
     private float timer;
+    private bool scheduled;
 
     public void Reset(AmbientSoundKind kind)
     {
-        timer = Random.Range(ResolveRange(kind).x, ResolveRange(kind).y);
+        scheduled = false;
+        Schedule(kind);
     }
 
     public void Tick(AmbientSoundKind kind, float dt, bool suppressed)
     {
+        if (!scheduled)
+        {
+            Schedule(kind);
+            return;
+        }
+
         timer -= dt;
         if (timer > 0f)
         {
             return;
         }
 
-        Vector2 range = ResolveRange(kind);
-        timer = Random.Range(range.x, range.y);
+        Schedule(kind);
 
         if (!suppressed)
         {
-            AudioManager.Instance?.PlayAmbient(kind);
+            AudioManager.Instance.PlayAmbient(kind);
         }
     }
 
-    private static Vector2 ResolveRange(AmbientSoundKind kind)
+    private void Schedule(AmbientSoundKind kind)
     {
-        return AudioManager.Instance != null
-            ? AudioManager.Instance.AmbientIntervalRange(kind)
-            : new Vector2(4f, 9f);
+        if (AudioManager.Instance == null)
+        {
+            return;
+        }
+
+        Vector2 range = AudioManager.Instance.AmbientIntervalRange(kind);
+        timer = Random.Range(range.x, range.y);
+        scheduled = true;
     }
 }

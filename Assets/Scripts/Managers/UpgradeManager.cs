@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class UpgradeManager : Singleton<UpgradeManager>
 {
-    [SerializeField] private string shopItemsResourcePath = "Shop Items";
-    [SerializeField] private int shopItemsPerRound = 3;
     [SerializeField] private MutationData mutationData;
-    [SerializeField] private RoundConfigData roundConfig;
+    [SerializeField] private ShopConfigData shopConfig;
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
 
@@ -28,12 +26,20 @@ public class UpgradeManager : Singleton<UpgradeManager>
     {
         base.Awake();
 
-        if (roundConfig == null)
+        if (shopConfig == null)
         {
-            Debug.LogError("UpgradeManager.roundConfig is not assigned.", this);
+            Debug.LogError("UpgradeManager.shopConfig is not assigned.", this);
         }
-
-        allShopItems.AddRange(Resources.LoadAll<ShopItemData>(shopItemsResourcePath));
+        else
+        {
+            foreach (ShopItemData item in shopConfig.Catalog)
+            {
+                if (item != null)
+                {
+                    allShopItems.Add(item);
+                }
+            }
+        }
     }
 
     private void Start()
@@ -70,7 +76,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
         }
     }
 
-    public int RerollCost => roundConfig != null ? roundConfig.RerollCost : 0;
+    public int RerollCost => shopConfig != null ? shopConfig.RerollCost : 0;
 
     public bool TryReroll()
     {
@@ -85,7 +91,8 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private List<ShopItemData> PickRandomItems()
     {
-        return ShopCatalogPicker.Pick(allShopItems, shopItemsPerRound, IsAvailable, rng);
+        int itemsPerRound = shopConfig != null ? shopConfig.ItemsPerRound : 0;
+        return ShopCatalogPicker.Pick(allShopItems, itemsPerRound, IsAvailable, rng);
     }
 
     private bool IsAvailable(ShopItemData item)

@@ -11,13 +11,13 @@ public class Chick : PlaceableEntity
     }
 
     [SerializeField] private ChickData data;
+    [SerializeField] private MutationData mutationData;
 
     private Collider2D col;
     private bool colliderWasTrigger;
 
     private float contagionTimer;
     private bool contagionActive;
-    private MutationData cachedMutationData;
 
     private ExitPhase exitPhase = ExitPhase.None;
     private Vector3 exitTarget;
@@ -56,7 +56,7 @@ public class Chick : PlaceableEntity
 
         if (data.IsMutant)
         {
-            contagionTimer = cachedMutationData != null ? cachedMutationData.ContagionInterval : 1f;
+            contagionTimer = mutationData != null ? mutationData.ContagionInterval : 0f;
         }
     }
 
@@ -76,7 +76,6 @@ public class Chick : PlaceableEntity
         base.RefreshStats();
 
         UpgradeManager manager = UpgradeManager.Instance;
-        cachedMutationData = manager != null ? manager.MutationData : null;
         contagionActive = manager != null && manager.State.ContagionEnabled;
     }
 
@@ -222,18 +221,18 @@ public class Chick : PlaceableEntity
             return;
         }
 
-        if (cachedMutationData == null || cachedMutationData.MutatedChickPrefab == null)
+        if (mutationData == null || mutationData.MutatedChickPrefab == null)
         {
             return;
         }
 
-        SpawnManager.Instance.SpawnChick(cachedMutationData.MutatedChickPrefab, transform.position, transform.parent);
+        SpawnManager.Instance.SpawnChick(mutationData.MutatedChickPrefab, transform.position, transform.parent);
         PoolManager.Despawn(gameObject);
     }
 
     private void TickContagion(float dt)
     {
-        if (cachedMutationData == null)
+        if (mutationData == null)
         {
             return;
         }
@@ -244,24 +243,24 @@ public class Chick : PlaceableEntity
             return;
         }
 
-        contagionTimer = cachedMutationData.ContagionInterval;
+        contagionTimer = mutationData.ContagionInterval;
 
         if (!contagionActive)
         {
             return;
         }
 
-        if (Random.value > cachedMutationData.ContagionChance)
+        if (Random.value > mutationData.ContagionChance)
         {
             return;
         }
 
-        SpreadContagion(cachedMutationData);
+        SpreadContagion(mutationData);
     }
 
-    private void SpreadContagion(MutationData mutationData)
+    private void SpreadContagion(MutationData mutation)
     {
-        float radiusSqr = mutationData.ContagionRadius * mutationData.ContagionRadius;
+        float radiusSqr = mutation.ContagionRadius * mutation.ContagionRadius;
         IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
 
         for (int i = entities.Count - 1; i >= 0; i--)
@@ -281,7 +280,7 @@ public class Chick : PlaceableEntity
                 continue;
             }
 
-            if (Random.value <= mutationData.ContagionChance)
+            if (Random.value <= mutation.ContagionChance)
             {
                 other.Mutate();
             }

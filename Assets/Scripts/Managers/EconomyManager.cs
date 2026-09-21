@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EconomyManager : Singleton<EconomyManager>
 {
-    [SerializeField] private int startingGold = 10;
+    [SerializeField] private EconomyConfigData economyConfig;
 
     public int Gold { get; private set; }
     public IReadOnlyList<SaleRecord> LastRoundSaleRecords { get; private set; }
@@ -15,7 +15,12 @@ public class EconomyManager : Singleton<EconomyManager>
     {
         base.Awake();
 
-        Gold = startingGold;
+        if (economyConfig == null)
+        {
+            Debug.LogError("EconomyManager.economyConfig is not assigned.", this);
+        }
+
+        Gold = economyConfig != null ? economyConfig.StartingGold : 0;
     }
 
     private void Start()
