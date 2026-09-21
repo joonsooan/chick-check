@@ -203,3 +203,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chick
   data: {fileID: 11400000, guid: 95fb484f682dac14494ad76e9f4d6568, type: 2}
+  mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}

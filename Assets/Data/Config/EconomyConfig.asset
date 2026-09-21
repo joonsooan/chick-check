@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f07c9a26d01969489e09f95174f6183, type: 3}
-  m_Name: MirrorData
-  m_EditorClassIdentifier: Assembly-CSharp::MirrorData
-  dwellTime: 2
-  forcedExitDistance: 2
-  randomExitDuration: 2
-  randomExitAngle: 60
-  exitSpeedMultiplier: 3
+  m_Script: {fileID: 11500000, guid: 08f6ca122d734d7fb277876ce7c3cbe6, type: 3}
+  m_Name: EconomyConfig
+  m_EditorClassIdentifier: ChickColony.Runtime::EconomyConfigData
+  startingGold: 10

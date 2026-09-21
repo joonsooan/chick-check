@@ -217,10 +217,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d58fc82522ca90458d6cb95a74f11ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
-  shopItemsResourcePath: Shop Items
-  shopItemsPerRound: 3
   mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}
-  roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
+  shopConfig: {fileID: 11400000, guid: ee63de3b3030d244eb5d0a5dea38e299, type: 2}
 --- !u!4 &45256426
 Transform:
   m_ObjectHideFlags: 0
@@ -11698,6 +11696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
+  debtConfig: {fileID: 11400000, guid: f9407d573ea7d154889ac7f55a0157e1, type: 2}
   tutorialMode: 1
 --- !u!4 &619461839
 Transform:
@@ -43276,7 +43275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba98f764b8142814989f08a8ff8228bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
-  startingGold: 10
+  economyConfig: {fileID: 11400000, guid: 4bb594785775c3045a88c6f24057ecce, type: 2}
 --- !u!4 &1834556867
 Transform:
   m_ObjectHideFlags: 0
@@ -51362,7 +51361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayNightController
   globalLight: {fileID: 619394801}
-  roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
+  dayNightConfig: {fileID: 11400000, guid: 6506d102aa52fd8408806b18f03f3951, type: 2}
 --- !u!1 &2128385126
 GameObject:
   m_ObjectHideFlags: 0

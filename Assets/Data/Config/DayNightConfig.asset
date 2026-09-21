@@ -9,18 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a930fa8ec8bd2145a4e2e1d4ad5bb61, type: 3}
-  m_Name: RoundConfigData
-  m_EditorClassIdentifier: Assembly-CSharp::RoundConfigData
-  roundDuration: 60
-  chickSpawnCountPerRound: 3
-  debtCheckpointInterval: 3
-  debtAmount: 300
-  debtMultiplier: 2.2
-  rerollCost: 10
-  chickSpawnOuterRadius: 3
-  chickSpawnInnerRadius: 2
-  chickSpawnJitter: 0.25
+  m_Script: {fileID: 11500000, guid: 0f7bb3d5d26443f38a22b72344716e8e, type: 3}
+  m_Name: DayNightConfig
+  m_EditorClassIdentifier: ChickColony.Runtime::DayNightConfigData
   dayLightColor: {r: 1, g: 1, b: 1, a: 1}
   dayLightIntensity: 1
   sunsetLightColor: {r: 1, g: 0.6, b: 0.35, a: 1}
