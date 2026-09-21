@@ -19,9 +19,10 @@ MonoBehaviour:
   displayOrder: 2
   growthInterval: 5
   growthChance: 0.05
+  growthTimerJitterRange: {x: 0.1, y: 0.2}
   nextStagePrefab: {fileID: 4856076502637182611, guid: da5539b6c2489b545ad6e0f5f5d8123c, type: 3}
   moveSpeed: 2
   walkIntervalRange: {x: 1.5, y: 3}
-  walkDistanceRange: {x: 0.5, y: 1}
+  walkDistanceRange: {x: 1, y: 2}
   walkTargetAttempts: 10
   isMutant: 1

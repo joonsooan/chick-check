@@ -236,7 +236,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.75, y: 0.5}
+  m_Size: {x: 1.75, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &3142593138013890817
 MonoBehaviour:
@@ -273,7 +273,7 @@ MonoBehaviour:
   scale: 1
   axisOffset: -0.625
   glassCenter: {x: 0, y: -0.125}
-  glassSize: {x: 0.75, y: 0.75}
+  glassSize: {x: 1.5, y: 0.75}
 --- !u!114 &3158441350892922648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridObstacle
   footprintOffset: {x: 0, y: 0}
-  footprintSize: {x: 1, y: 1}
+  footprintSize: {x: 2, y: 1}
 --- !u!1 &5161976205760679014
 GameObject:
   m_ObjectHideFlags: 0

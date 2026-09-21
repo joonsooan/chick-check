@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: EggData
   m_EditorClassIdentifier: Assembly-CSharp::EggData
   sprite: {fileID: 1161201145128540330, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  idleAnimation: {fileID: 0}
+  walkAnimation: {fileID: 0}
   sellPrice: 5
   displayOrder: 0
   growthInterval: 5
   growthChance: 0.05
+  growthTimerJitterRange: {x: 0.1, y: 0.2}
   nextStagePrefab: {fileID: 3660991588947072175, guid: 763194d141ed13741acd54fa57f43dbf, type: 3}
-  moveSpeed: 1
-  walkIntervalRange: {x: 1.5, y: 4}
-  walkDistanceRange: {x: 0.3, y: 1}
-  walkTargetAttempts: 10
+  moveSpeed: 0
+  walkIntervalRange: {x: 0, y: 0}
+  walkDistanceRange: {x: 0, y: 0}
+  walkTargetAttempts: 1
