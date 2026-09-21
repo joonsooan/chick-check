@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 951a98e76d035ce44a29a4a039d5a726, type: 3}
+  m_Name: ChickenMutantWalk
+  m_EditorClassIdentifier: ChickColony.Runtime::SpriteAnimationData
+  frames:
+  - {fileID: 6661447976654968660, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: 4705319190185231255, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: 5818847874266530516, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: 5726514820006650172, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: -2457219333680410705, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: 3091224634819477652, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  framesPerSecond: 12
+  loop: 1

@@ -1,5 +1,5 @@
 ﻿<Solution>
+  <Project Path="ChickColony.Tests.EditMode.csproj" />
   <Project Path="ChickColony.Runtime.csproj" />
   <Project Path="ChickColony.Editor.csproj" />
-  <Project Path="ChickColony.Tests.EditMode.csproj" />
 </Solution>

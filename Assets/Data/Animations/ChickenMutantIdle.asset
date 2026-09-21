@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 951a98e76d035ce44a29a4a039d5a726, type: 3}
+  m_Name: ChickenMutantIdle
+  m_EditorClassIdentifier: ChickColony.Runtime::SpriteAnimationData
+  frames:
+  - {fileID: -7760270051123019610, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: -3713822916463982677, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: -3533851272710187992, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  - {fileID: 6921133043883550953, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
+  framesPerSecond: 12
+  loop: 1

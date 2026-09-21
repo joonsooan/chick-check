@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: ChickenData
   m_EditorClassIdentifier: Assembly-CSharp::ChickenData
   sprite: {fileID: -4103245812459447607, guid: e4e5ce126d257ca438a14704981c9db7, type: 3}
+  idleAnimation: {fileID: 11400000, guid: 9f839f346ba2dcb46b723fc3248b9e42, type: 2}
+  walkAnimation: {fileID: 11400000, guid: 60ed807302fe27a478932244bcaa986b, type: 2}
   sellPrice: 30
   displayOrder: 11
   growthInterval: 0
@@ -21,8 +23,11 @@ MonoBehaviour:
   moveSpeed: 1
   walkIntervalRange: {x: 1.5, y: 4}
   walkDistanceRange: {x: 0.3, y: 1}
+  walkTargetAttempts: 10
   eggPrefab: {fileID: 5182355378179198010, guid: 52c4809b507d499479dda85a99799fda, type: 3}
   layInterval: 5
   layChance: 0.05
   layOffset: {x: 0, y: -0.2, z: 0}
   layCount: 1
+  eggPlacementAttempts: 11
+  eggPlacementRadius: 0.5

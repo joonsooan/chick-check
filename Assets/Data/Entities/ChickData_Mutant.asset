@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: ChickData_Mutant
   m_EditorClassIdentifier: Assembly-CSharp::ChickData
   sprite: {fileID: -96939911167606162, guid: 7be036183c2efa947a8d851ab48ac930, type: 3}
+  idleAnimation: {fileID: 11400000, guid: 1ddc35b2b5ace4840a3392a08c952b33, type: 2}
+  walkAnimation: {fileID: 11400000, guid: 92d1c3c445662a7408003ba57f60ccfa, type: 2}
   sellPrice: 20
   displayOrder: 2
   growthInterval: 5
@@ -21,4 +23,5 @@ MonoBehaviour:
   moveSpeed: 2
   walkIntervalRange: {x: 1.5, y: 3}
   walkDistanceRange: {x: 0.5, y: 1}
+  walkTargetAttempts: 10
   isMutant: 1

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4150338188140857959}
   - component: {fileID: 4085540777775166602}
   - component: {fileID: 2200347837185764765}
-  - component: {fileID: -1021781055754956737}
   - component: {fileID: 2220129118985389323}
   m_Layer: 6
   m_Name: Chick_Mutant
@@ -168,28 +167,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.4375, y: 0.4375}
   m_EdgeRadius: 0
---- !u!95 &-1021781055754956737
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3660991588947072175}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7c9a701b0dc23e3458eb23127e1793d4, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &2220129118985389323
 MonoBehaviour:
   m_ObjectHideFlags: 0
