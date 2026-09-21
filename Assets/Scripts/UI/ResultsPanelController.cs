@@ -19,6 +19,7 @@ public class ResultsPanelController : MonoBehaviour
     [SerializeField] private float revealInterval = 0.35f;
 
     private readonly List<ResultEntityWidget> spawnedWidgets = new List<ResultEntityWidget>();
+    private int activeWidgetCount;
     private Coroutine revealRoutine;
 
     private void Awake()
@@ -66,12 +67,6 @@ public class ResultsPanelController : MonoBehaviour
             revealRoutine = null;
         }
 
-        foreach (ResultEntityWidget widget in spawnedWidgets)
-        {
-            Destroy(widget.gameObject);
-        }
-        spawnedWidgets.Clear();
-
         List<Sprite> groupOrder = new List<Sprite>();
         Dictionary<Sprite, int> groupTotalPrice = new Dictionary<Sprite, int>();
         Dictionary<Sprite, int> groupCount = new Dictionary<Sprite, int>();
@@ -96,14 +91,25 @@ public class ResultsPanelController : MonoBehaviour
 
         StableSortByDisplayOrder(groupOrder, groupDisplayOrder);
 
+        while (spawnedWidgets.Count < groupOrder.Count)
+        {
+            spawnedWidgets.Add(Instantiate(entityWidgetPrefab, entityContainer));
+        }
+
         for (int i = 0; i < groupOrder.Count; i++)
         {
             Sprite sprite = groupOrder[i];
-            ResultEntityWidget widget = Instantiate(entityWidgetPrefab, entityContainer);
+            ResultEntityWidget widget = spawnedWidgets[i];
             widget.Setup(sprite, groupTotalPrice[sprite], groupCount[sprite]);
             widget.gameObject.SetActive(false);
-            spawnedWidgets.Add(widget);
         }
+
+        for (int i = groupOrder.Count; i < spawnedWidgets.Count; i++)
+        {
+            spawnedWidgets[i].gameObject.SetActive(false);
+        }
+
+        activeWidgetCount = groupOrder.Count;
 
         if (totalGoldText != null)
         {
@@ -131,7 +137,7 @@ public class ResultsPanelController : MonoBehaviour
             yield return WaitStepOrClick(initialDelay);
         }
 
-        for (int i = 0; i < spawnedWidgets.Count; i++)
+        for (int i = 0; i < activeWidgetCount; i++)
         {
             spawnedWidgets[i].gameObject.SetActive(true);
             UILayoutUtil.Rebuild((RectTransform)entityContainer);

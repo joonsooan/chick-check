@@ -113,17 +113,21 @@ public class ShopPanelController : MonoBehaviour
 
     private void HandleShopCatalogReady(IReadOnlyList<ShopItemData> catalog)
     {
-        foreach (ShopItemWidget widget in spawnedWidgets)
+        while (spawnedWidgets.Count < catalog.Count)
         {
-            Destroy(widget.gameObject);
+            spawnedWidgets.Add(Instantiate(itemWidgetPrefab, itemContainer));
         }
-        spawnedWidgets.Clear();
 
         for (int i = 0; i < catalog.Count; i++)
         {
-            ShopItemWidget widget = Instantiate(itemWidgetPrefab, itemContainer);
+            ShopItemWidget widget = spawnedWidgets[i];
+            widget.gameObject.SetActive(true);
             widget.Setup(catalog[i]);
-            spawnedWidgets.Add(widget);
+        }
+
+        for (int i = catalog.Count; i < spawnedWidgets.Count; i++)
+        {
+            spawnedWidgets[i].gameObject.SetActive(false);
         }
 
         UILayoutUtil.Rebuild((RectTransform)itemContainer);
