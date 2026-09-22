@@ -50,9 +50,9 @@ public class CheckPanelController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (GameManager.Instance != null)
+        if (EconomyManager.Instance != null)
         {
-            GameManager.Instance.OnDebtStatusChanged += HandleDebtStatusChanged;
+            EconomyManager.Instance.OnDebtStatusChanged += HandleDebtStatusChanged;
         }
 
         if (UIManager.Instance != null)
@@ -65,9 +65,9 @@ public class CheckPanelController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (GameManager.Instance != null)
+        if (EconomyManager.Instance != null)
         {
-            GameManager.Instance.OnDebtStatusChanged -= HandleDebtStatusChanged;
+            EconomyManager.Instance.OnDebtStatusChanged -= HandleDebtStatusChanged;
         }
 
         if (UIManager.Instance != null)
@@ -174,7 +174,7 @@ public class CheckPanelController : MonoBehaviour
 
     private int GetMaxPayable()
     {
-        return GameManager.Instance != null ? GameManager.Instance.MaxPayableDebt : 0;
+        return EconomyManager.Instance != null ? EconomyManager.Instance.MaxPayableDebt : 0;
     }
 
     private void ClampToMaxPayable()
@@ -237,7 +237,7 @@ public class CheckPanelController : MonoBehaviour
             return;
         }
 
-        GameManager.Instance.PayDebt(amount);
+        EconomyManager.Instance.PayDebt(amount);
         AudioManager.Instance?.PlayPay();
         ResetInput();
     }

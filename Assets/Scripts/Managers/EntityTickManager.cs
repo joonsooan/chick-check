@@ -79,7 +79,7 @@ public class EntityTickManager : MonoBehaviour
         for (int i = 0; i < slowBuffer.Count; i++)
         {
             PlaceableEntity entity = slowBuffer[i];
-            if (entity.isActiveAndEnabled)
+            if (entity.IsActiveEntity)
             {
                 entity.SlowTick(now);
             }

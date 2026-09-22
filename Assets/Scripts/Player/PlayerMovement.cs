@@ -15,18 +15,18 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 moveInput;
     private bool isMovementLocked;
+    private bool sprintToggled;
     private Coroutine movementLockRoutine;
     private float footstepTimer;
     private Vector2 startPosition;
+    private float cachedBaseMoveSpeed;
 
-    public float BaseMoveSpeed => UpgradeManager.Instance != null
-        ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, data.MoveSpeed)
-        : data.MoveSpeed;
+    public float BaseMoveSpeed => cachedBaseMoveSpeed;
     public float SprintSpeed => BaseMoveSpeed * data.SprintMultiplier;
     public Vector2 MoveInput => moveInput;
     public bool IsMoving => moveInput.sqrMagnitude > 0f;
     public bool SprintUnlocked => UpgradeManager.Instance != null && UpgradeManager.Instance.State.SprintEnabled;
-    public bool IsSprinting => SprintUnlocked && sprintAction.IsPressed();
+    public bool IsSprinting => SprintUnlocked && sprintToggled;
 
     private void Awake()
     {
@@ -41,6 +41,21 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         startPosition = transform.position;
+
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OnModifiersChanged += HandleModifiersChanged;
+        }
+
+        RefreshBaseMoveSpeed();
+    }
+
+    private void OnDestroy()
+    {
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OnModifiersChanged -= HandleModifiersChanged;
+        }
     }
 
     private void OnEnable()
@@ -49,16 +64,19 @@ public class PlayerMovement : MonoBehaviour
         sprintAction.Enable();
         interactAction.Enable();
         interactAction.performed += HandleInteractPerformed;
+        sprintAction.performed += HandleSprintPerformed;
 
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRoundEnding += HandleRoundEnding;
         }
+
     }
 
     private void OnDisable()
     {
         interactAction.performed -= HandleInteractPerformed;
+        sprintAction.performed -= HandleSprintPerformed;
         moveAction.Disable();
         sprintAction.Disable();
         interactAction.Disable();
@@ -67,6 +85,18 @@ public class PlayerMovement : MonoBehaviour
         {
             GameManager.Instance.OnRoundEnding -= HandleRoundEnding;
         }
+    }
+
+    private void HandleModifiersChanged()
+    {
+        RefreshBaseMoveSpeed();
+    }
+
+    private void RefreshBaseMoveSpeed()
+    {
+        cachedBaseMoveSpeed = UpgradeManager.Instance != null
+            ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.PlayerMoveSpeed, data.MoveSpeed)
+            : data.MoveSpeed;
     }
 
     private void HandleRoundEnding(int roundNumber)
@@ -117,6 +147,11 @@ public class PlayerMovement : MonoBehaviour
     private void HandleInteractPerformed(InputAction.CallbackContext context)
     {
         OnInteractPressed?.Invoke();
+    }
+
+    private void HandleSprintPerformed(InputAction.CallbackContext context)
+    {
+        sprintToggled = !sprintToggled;
     }
 
     public void LockMovement(float duration)

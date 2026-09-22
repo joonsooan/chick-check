@@ -18,6 +18,22 @@ public readonly struct SaleInput
     }
 }
 
+public readonly struct SaleGroup
+{
+    public readonly Sprite Sprite;
+    public readonly int TotalPrice;
+    public readonly int Count;
+    public readonly int DisplayOrder;
+
+    public SaleGroup(Sprite sprite, int totalPrice, int count, int displayOrder)
+    {
+        Sprite = sprite;
+        TotalPrice = totalPrice;
+        Count = count;
+        DisplayOrder = displayOrder;
+    }
+}
+
 public static class RoundSettlement
 {
     public static List<SaleRecord> Settle(IReadOnlyList<SaleInput> inputs, Func<ShopStatType, float, float> applyModifier, out int totalGold)
@@ -35,5 +51,60 @@ public static class RoundSettlement
         }
 
         return records;
+    }
+
+    public static List<SaleGroup> Summarize(IReadOnlyList<SaleRecord> records, out int totalGold)
+    {
+        List<Sprite> order = new List<Sprite>();
+        Dictionary<Sprite, int> totalPriceBySprite = new Dictionary<Sprite, int>();
+        Dictionary<Sprite, int> countBySprite = new Dictionary<Sprite, int>();
+        Dictionary<Sprite, int> displayOrderBySprite = new Dictionary<Sprite, int>();
+
+        totalGold = 0;
+
+        for (int i = 0; i < records.Count; i++)
+        {
+            SaleRecord record = records[i];
+            Sprite sprite = record.Sprite;
+
+            if (!totalPriceBySprite.ContainsKey(sprite))
+            {
+                order.Add(sprite);
+                totalPriceBySprite[sprite] = 0;
+                countBySprite[sprite] = 0;
+                displayOrderBySprite[sprite] = record.DisplayOrder;
+            }
+
+            totalPriceBySprite[sprite] += record.SellPrice;
+            countBySprite[sprite]++;
+            totalGold += record.SellPrice;
+        }
+
+        StableSortByDisplayOrder(order, displayOrderBySprite);
+
+        List<SaleGroup> groups = new List<SaleGroup>(order.Count);
+        for (int i = 0; i < order.Count; i++)
+        {
+            Sprite sprite = order[i];
+            groups.Add(new SaleGroup(sprite, totalPriceBySprite[sprite], countBySprite[sprite], displayOrderBySprite[sprite]));
+        }
+
+        return groups;
+    }
+
+    private static void StableSortByDisplayOrder(List<Sprite> order, Dictionary<Sprite, int> displayOrder)
+    {
+        for (int i = 1; i < order.Count; i++)
+        {
+            Sprite current = order[i];
+            int currentKey = displayOrder[current];
+            int j = i - 1;
+            while (j >= 0 && displayOrder[order[j]] > currentKey)
+            {
+                order[j + 1] = order[j];
+                j--;
+            }
+            order[j + 1] = current;
+        }
     }
 }

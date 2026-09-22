@@ -23,6 +23,6 @@ MonoBehaviour:
   nextStagePrefab: {fileID: 4856076502637182611, guid: 97255384a9ab2a243be9134c74a50537, type: 3}
   moveSpeed: 1
   walkIntervalRange: {x: 1.5, y: 3}
-  walkDistanceRange: {x: 1, y: 2}
+  walkDistanceRange: {x: 0.75, y: 1.5}
   walkTargetAttempts: 10
   isMutant: 0

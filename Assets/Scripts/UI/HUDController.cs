@@ -13,6 +13,7 @@ public class HUDController : MonoBehaviour
     [SerializeField] private RectTransform infoPanel;
 
     private bool layoutDirty;
+    private int lastDisplayedTimerSeconds = -1;
 
     private void Start()
     {
@@ -88,6 +89,7 @@ public class HUDController : MonoBehaviour
             infoPanel.gameObject.SetActive(true);
         }
 
+        lastDisplayedTimerSeconds = -1;
         layoutDirty = true;
     }
 
@@ -101,11 +103,19 @@ public class HUDController : MonoBehaviour
 
     private void HandlePhaseTimerTick(float remaining, float total)
     {
-        if (timerText != null)
+        if (timerText == null)
         {
-            int totalSeconds = Mathf.CeilToInt(remaining);
-            timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+            return;
         }
+
+        int totalSeconds = Mathf.CeilToInt(remaining);
+        if (totalSeconds == lastDisplayedTimerSeconds)
+        {
+            return;
+        }
+
+        lastDisplayedTimerSeconds = totalSeconds;
+        timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
     }
 
     private void HandleEggCountChanged(int count)

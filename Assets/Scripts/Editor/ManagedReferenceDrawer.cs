@@ -1,30 +1,59 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(ShopEffect), true)]
-public class ShopEffectDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(TutorialCondition), true)]
+public class ManagedReferenceDrawer : PropertyDrawer
 {
-    private static Type[] effectTypes;
-    private static string[] effectTypeNames;
-
-    private static void EnsureTypeCache()
+    private class TypeCatalog
     {
-        if (effectTypes != null)
+        public Type[] Types;
+        public string[] DisplayNames;
+    }
+
+    private static readonly Dictionary<Type, TypeCatalog> catalogs = new Dictionary<Type, TypeCatalog>();
+
+    private static Type ElementType(Type fieldType)
+    {
+        if (fieldType.IsArray)
         {
-            return;
+            return fieldType.GetElementType();
         }
 
-        effectTypes = TypeCache.GetTypesDerivedFrom<ShopEffect>()
+        if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            return fieldType.GetGenericArguments()[0];
+        }
+
+        return fieldType;
+    }
+
+    private TypeCatalog Catalog()
+    {
+        Type baseType = ElementType(fieldInfo.FieldType);
+        if (catalogs.TryGetValue(baseType, out TypeCatalog catalog))
+        {
+            return catalog;
+        }
+
+        Type[] types = TypeCache.GetTypesDerivedFrom(baseType)
             .Where(type => !type.IsAbstract)
             .OrderBy(type => type.Name)
             .ToArray();
 
-        effectTypeNames = new[] { "(None)" }.Concat(effectTypes.Select(type => type.Name)).ToArray();
+        catalog = new TypeCatalog
+        {
+            Types = types,
+            DisplayNames = new[] { "(None)" }.Concat(types.Select(type => type.Name)).ToArray(),
+        };
+        catalogs[baseType] = catalog;
+        return catalog;
     }
 
-    private static int CurrentTypeIndex(SerializedProperty property)
+    private static int CurrentTypeIndex(SerializedProperty property, TypeCatalog catalog)
     {
         object value = property.managedReferenceValue;
         if (value == null)
@@ -32,33 +61,25 @@ public class ShopEffectDrawer : PropertyDrawer
             return 0;
         }
 
-        Type valueType = value.GetType();
-        for (int i = 0; i < effectTypes.Length; i++)
-        {
-            if (effectTypes[i] == valueType)
-            {
-                return i + 1;
-            }
-        }
-
-        return 0;
+        int index = Array.IndexOf(catalog.Types, value.GetType());
+        return index < 0 ? 0 : index + 1;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        EnsureTypeCache();
+        TypeCatalog catalog = Catalog();
 
         Rect popupRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-        int currentIndex = CurrentTypeIndex(property);
+        int currentIndex = CurrentTypeIndex(property, catalog);
 
         EditorGUI.BeginProperty(position, label, property);
 
-        int selectedIndex = EditorGUI.Popup(popupRect, label.text, currentIndex, effectTypeNames);
+        int selectedIndex = EditorGUI.Popup(popupRect, label.text, currentIndex, catalog.DisplayNames);
         if (selectedIndex != currentIndex)
         {
             property.managedReferenceValue = selectedIndex == 0
                 ? null
-                : Activator.CreateInstance(effectTypes[selectedIndex - 1]);
+                : Activator.CreateInstance(catalog.Types[selectedIndex - 1]);
         }
 
         if (property.managedReferenceValue != null)

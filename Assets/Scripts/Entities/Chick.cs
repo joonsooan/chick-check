@@ -3,13 +3,6 @@ using UnityEngine;
 
 public class Chick : PlaceableEntity
 {
-    private enum ExitPhase
-    {
-        None,
-        Forced,
-        Random
-    }
-
     private static readonly List<PlaceableEntity> contagionBuffer = new List<PlaceableEntity>();
 
     [SerializeField] private ChickData data;
@@ -18,14 +11,10 @@ public class Chick : PlaceableEntity
     private float contagionTimer;
     private bool contagionActive;
 
-    private ExitPhase exitPhase = ExitPhase.None;
-    private Vector3 exitTarget;
-    private Vector2 exitDir;
-    private float exitMoveSpeed;
-    private float exitRandomAngleRange;
-    private float exitRandomDuration;
-    private float exitRandomElapsed;
+    private readonly MirrorExitMotion exitMotion = new MirrorExitMotion();
     private bool exitMasked;
+    private bool exitHasMaskBounds;
+    private Bounds exitMaskBounds;
 
     public override EconomyEntityData EconomyData => data;
     public override bool CanBeCarried => base.CanBeCarried && !IsExiting;
@@ -39,7 +28,7 @@ public class Chick : PlaceableEntity
     {
         base.OnEnable();
 
-        exitPhase = ExitPhase.None;
+        exitMotion.Cancel();
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
         ResetLifeState();
@@ -66,7 +55,7 @@ public class Chick : PlaceableEntity
     {
         base.OnDisable();
 
-        exitPhase = ExitPhase.None;
+        exitMotion.Cancel();
     }
 
     public override void RefreshStats()
@@ -79,7 +68,7 @@ public class Chick : PlaceableEntity
 
     protected override void TickBehaviour(float dt)
     {
-        if (exitPhase != ExitPhase.None)
+        if (exitMotion.IsActive)
         {
             TickExit(dt);
             return;
@@ -91,7 +80,7 @@ public class Chick : PlaceableEntity
 
     protected override void SlowTickBehaviour(float dt)
     {
-        if (exitPhase != ExitPhase.None)
+        if (exitMotion.IsActive)
         {
             return;
         }
@@ -128,12 +117,20 @@ public class Chick : PlaceableEntity
         return SpawnManager.Instance == null || SpawnManager.Instance.ChickCount > 1;
     }
 
-    public bool IsExiting => exitPhase != ExitPhase.None;
+    public bool IsExiting => exitMotion.IsActive;
 
     public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked)
     {
-        Vector2 normalizedDir = dir.normalized;
+        BeginExit(dir, mirrorData, masked, false, default);
+    }
 
+    public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked, Bounds maskBounds)
+    {
+        BeginExit(dir, mirrorData, masked, true, maskBounds);
+    }
+
+    private void BeginExit(Vector2 dir, MirrorData mirrorData, bool masked, bool hasMaskBounds, Bounds maskBounds)
+    {
         spriteRenderer.maskInteraction =
             masked ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
         if (masked)
@@ -148,56 +145,57 @@ public class Chick : PlaceableEntity
             : mirrorData.ExitSpeedMultiplier;
 
         exitMasked = masked;
-        exitMoveSpeed = data.MoveSpeed * exitMultiplier;
-        exitDir = normalizedDir;
-        exitTarget = transform.position + (Vector3)(exitDir * mirrorData.ForcedExitDistance);
-        exitRandomAngleRange = mirrorData.RandomExitAngle;
-        exitRandomDuration = mirrorData.RandomExitDuration;
+        exitHasMaskBounds = hasMaskBounds;
+        exitMaskBounds = maskBounds;
+        exitMotion.Begin(
+            transform.position,
+            dir,
+            data.MoveSpeed * exitMultiplier,
+            mirrorData.ForcedExitDistance,
+            mirrorData.RandomExitAngle,
+            mirrorData.RandomExitDuration);
 
-        spriteRenderer.flipX = exitDir.x > 0f;
-
-        exitPhase = ExitPhase.Forced;
+        spriteRenderer.flipX = exitMotion.Direction.x > 0f;
     }
 
     private void TickExit(float dt)
     {
-        if (exitPhase == ExitPhase.Forced)
+        Vector3 position = transform.position;
+        bool directionChanged = exitMotion.Tick(dt, ref position);
+        transform.position = position;
+        SyncSpatialCell();
+
+        if (directionChanged)
         {
-            Vector3 next = Vector3.MoveTowards(transform.position, exitTarget, exitMoveSpeed * dt);
-            transform.position = next;
-            SyncSpatialCell();
-
-            if ((exitTarget - next).sqrMagnitude <= 0.0001f)
-            {
-                float randomAngle = Random.Range(-exitRandomAngleRange, exitRandomAngleRange);
-                exitDir = Quaternion.Euler(0f, 0f, randomAngle) * exitDir;
-                spriteRenderer.flipX = exitDir.x > 0f;
-                exitRandomElapsed = 0f;
-                exitPhase = ExitPhase.Random;
-            }
-
-            return;
+            spriteRenderer.flipX = exitMotion.Direction.x > 0f;
         }
 
-        transform.position += (Vector3)(exitDir * exitMoveSpeed * dt);
-        SyncSpatialCell();
-        exitRandomElapsed += dt;
+        if (exitMasked && exitHasMaskBounds && !exitMaskBounds.Intersects(spriteRenderer.bounds))
+        {
+            RestoreObjectsLayer();
+        }
 
-        if (exitRandomElapsed >= exitRandomDuration)
+        if (!exitMotion.IsActive)
         {
             FinishExit();
         }
     }
 
-    private void FinishExit()
+    private void RestoreObjectsLayer()
     {
-        spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
-        if (exitMasked)
+        if (!exitMasked)
         {
-            spriteRenderer.sortingLayerName = "Objects";
+            return;
         }
 
-        exitPhase = ExitPhase.None;
+        spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
+        spriteRenderer.sortingLayerName = "Objects";
+        exitMasked = false;
+    }
+
+    private void FinishExit()
+    {
+        RestoreObjectsLayer();
         ResetLifeState();
     }
 
@@ -235,11 +233,6 @@ public class Chick : PlaceableEntity
         contagionTimer = NextContagionInterval(mutationData);
 
         if (!contagionActive)
-        {
-            return;
-        }
-
-        if (Random.value > mutationData.ContagionChance)
         {
             return;
         }

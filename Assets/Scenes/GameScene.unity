@@ -3392,7 +3392,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -3500,7 +3500,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -12764,7 +12764,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
-  debtConfig: {fileID: 11400000, guid: f9407d573ea7d154889ac7f55a0157e1, type: 2}
   tutorialMode: 0
 --- !u!4 &619461839
 Transform:
@@ -45573,6 +45572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
   economyConfig: {fileID: 11400000, guid: 4bb594785775c3045a88c6f24057ecce, type: 2}
+  debtConfig: {fileID: 11400000, guid: f9407d573ea7d154889ac7f55a0157e1, type: 2}
 --- !u!4 &1834556867
 Transform:
   m_ObjectHideFlags: 0
@@ -54398,7 +54398,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 315430279135307413, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -54494,7 +54494,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -54531,7 +54531,7 @@ MonoBehaviour:
   entityWidgetPrefab: {fileID: 4231242768522798906, guid: 2699d6f39268b3e44841f23557a026aa, type: 3}
   defaultWidget: {fileID: 1171345834}
   totalGoldText: {fileID: 835370170}
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 1189286706}
   initialDelay: 1
   revealInterval: 1
 --- !u!114 &8254255602850869749

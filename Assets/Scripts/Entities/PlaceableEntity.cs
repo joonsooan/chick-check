@@ -29,6 +29,7 @@ public abstract class PlaceableEntity : MonoBehaviour
     private float lastSlowTime;
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
+    public bool IsActiveEntity => activeIndex >= 0;
     public bool IsCarried { get; private set; }
     public virtual bool CanBeCarried => true;
     public abstract EconomyEntityData EconomyData { get; }

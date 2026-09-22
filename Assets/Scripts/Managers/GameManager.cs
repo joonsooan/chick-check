@@ -4,18 +4,11 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private RoundConfigData roundConfig;
-    [SerializeField] private DebtConfigData debtConfig;
     [SerializeField] private bool tutorialMode;
-
-    private DebtLedger debtLedger;
 
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
     public float PhaseTimeRemaining { get; private set; }
-    public int RemainingDebt => debtLedger?.RemainingDebt ?? 0;
-    public int NextDebtDueRound => debtLedger?.NextDebtDueRound ?? 0;
-    public int MaxPayableDebt =>
-        debtLedger != null && EconomyManager.Instance != null ? debtLedger.MaxPayable(EconomyManager.Instance.Gold) : 0;
 
     public event Action<int> OnRoundStarted;
     public event Action<int> OnRoundSpawnRequested;
@@ -24,7 +17,6 @@ public class GameManager : Singleton<GameManager>
     public event Action<int> OnRoundEnded;
     public event Action<GamePhase> OnPhaseChanged;
     public event Action<int> OnDebtDue;
-    public event Action<int, int> OnDebtStatusChanged;
     public event Action<GameOverReason> OnGameOver;
 
     private float phaseTotalTime;
@@ -32,15 +24,12 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        debtLedger = new DebtLedger(debtConfig.CheckpointInterval, debtConfig.Amount, debtConfig.Multiplier);
-
         if (tutorialMode)
         {
             CurrentRound = 1;
             SetPhase(GamePhase.Playing);
             OnRoundStarted?.Invoke(CurrentRound);
             phaseHasTimer = false;
-            NotifyDebtStatus();
             return;
         }
 
@@ -99,7 +88,6 @@ public class GameManager : Singleton<GameManager>
         }
 
         SetPhaseTimer(roundDuration);
-        NotifyDebtStatus();
     }
 
     public void EndRoundForDebug()
@@ -132,7 +120,8 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        if (debtLedger.IsDue(CurrentRound))
+        bool debtDue = EconomyManager.Instance != null && EconomyManager.Instance.IsDebtDue(CurrentRound);
+        if (debtDue)
         {
             EnterDebtCheckpoint();
             return;
@@ -145,30 +134,9 @@ public class GameManager : Singleton<GameManager>
     {
         SetPhase(GamePhase.DebtCheckpoint);
         phaseHasTimer = false;
-        OnDebtDue?.Invoke(RemainingDebt);
+        int remainingDebt = EconomyManager.Instance != null ? EconomyManager.Instance.RemainingDebt : 0;
+        OnDebtDue?.Invoke(remainingDebt);
         EnterGameOver(GameOverReason.NotEnoughGold);
-    }
-
-    public void PayDebt(int amount)
-    {
-        if (CurrentPhase != GamePhase.Shop || EconomyManager.Instance == null)
-        {
-            return;
-        }
-
-        int payable = Mathf.Clamp(amount, 0, MaxPayableDebt);
-        if (payable <= 0 || !EconomyManager.Instance.TrySpendGold(payable))
-        {
-            return;
-        }
-
-        debtLedger.Pay(payable);
-        NotifyDebtStatus();
-    }
-
-    private void NotifyDebtStatus()
-    {
-        OnDebtStatusChanged?.Invoke(RemainingDebt, debtLedger.RoundsUntilDue(CurrentRound));
     }
 
     private void EnterGameOver(GameOverReason reason)

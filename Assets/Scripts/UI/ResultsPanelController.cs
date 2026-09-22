@@ -67,49 +67,27 @@ public class ResultsPanelController : MonoBehaviour
             revealRoutine = null;
         }
 
-        List<Sprite> groupOrder = new List<Sprite>();
-        Dictionary<Sprite, int> groupTotalPrice = new Dictionary<Sprite, int>();
-        Dictionary<Sprite, int> groupCount = new Dictionary<Sprite, int>();
-        Dictionary<Sprite, int> groupDisplayOrder = new Dictionary<Sprite, int>();
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out int totalGold);
 
-        int totalGold = 0;
-        for (int i = 0; i < records.Count; i++)
-        {
-            Sprite sprite = records[i].Sprite;
-            if (!groupTotalPrice.ContainsKey(sprite))
-            {
-                groupOrder.Add(sprite);
-                groupTotalPrice[sprite] = 0;
-                groupCount[sprite] = 0;
-                groupDisplayOrder[sprite] = records[i].DisplayOrder;
-            }
-
-            groupTotalPrice[sprite] += records[i].SellPrice;
-            groupCount[sprite]++;
-            totalGold += records[i].SellPrice;
-        }
-
-        StableSortByDisplayOrder(groupOrder, groupDisplayOrder);
-
-        while (spawnedWidgets.Count < groupOrder.Count)
+        while (spawnedWidgets.Count < groups.Count)
         {
             spawnedWidgets.Add(Instantiate(entityWidgetPrefab, entityContainer));
         }
 
-        for (int i = 0; i < groupOrder.Count; i++)
+        for (int i = 0; i < groups.Count; i++)
         {
-            Sprite sprite = groupOrder[i];
+            SaleGroup group = groups[i];
             ResultEntityWidget widget = spawnedWidgets[i];
-            widget.Setup(sprite, groupTotalPrice[sprite], groupCount[sprite]);
+            widget.Setup(group.Sprite, group.TotalPrice, group.Count);
             widget.gameObject.SetActive(false);
         }
 
-        for (int i = groupOrder.Count; i < spawnedWidgets.Count; i++)
+        for (int i = groups.Count; i < spawnedWidgets.Count; i++)
         {
             spawnedWidgets[i].gameObject.SetActive(false);
         }
 
-        activeWidgetCount = groupOrder.Count;
+        activeWidgetCount = groups.Count;
 
         if (totalGoldText != null)
         {
@@ -190,22 +168,6 @@ public class ResultsPanelController : MonoBehaviour
     {
         Mouse mouse = Mouse.current;
         return mouse != null && mouse.leftButton.wasPressedThisFrame;
-    }
-
-    private static void StableSortByDisplayOrder(List<Sprite> order, Dictionary<Sprite, int> displayOrder)
-    {
-        for (int i = 1; i < order.Count; i++)
-        {
-            Sprite current = order[i];
-            int currentKey = displayOrder[current];
-            int j = i - 1;
-            while (j >= 0 && displayOrder[order[j]] > currentKey)
-            {
-                order[j + 1] = order[j];
-                j--;
-            }
-            order[j + 1] = current;
-        }
     }
 
     private void ScrollToBottom()

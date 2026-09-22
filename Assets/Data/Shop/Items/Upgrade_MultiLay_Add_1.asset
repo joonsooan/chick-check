@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Upgrade_MultiLay_Add_1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
   itemName: "\uC30D\uB780"
-  description: "\uC54C \uC0DD\uC131\n\uAC00\uB054 +1"
+  description: "\uC54C \uCD94\uAC00\n\uD655\uB960 +20%"
   icon: {fileID: 5543941588292853863, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 150
   priceMultiplier: 2

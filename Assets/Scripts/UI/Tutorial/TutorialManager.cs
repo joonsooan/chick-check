@@ -1,110 +1,27 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
-public class TutorialManager : MonoBehaviour
+public partial class TutorialManager : MonoBehaviour
 {
     [Header("Scene refs")]
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerCarry playerCarry;
     [SerializeField] private Mirror mirror;
     [SerializeField] private GameObject mainCanvas;
-
-    [Header("Tutorial UI")]
     [SerializeField] private TutorialPopup popup;
 
-    [Header("Flow hooks")]
-    [SerializeField] private Button resultsNextButton;
-    [SerializeField] private Button checkButton;
+    [Header("Flow")]
+    [SerializeField, Min(0)] private float startDelay = 0.3f;
+    [SerializeField] private List<TutorialStep> steps = new List<TutorialStep>();
     [SerializeField] private string gameSceneName = "GameScene";
 
-    [Header("Texts")]
-    [TextArea][SerializeField] private string moveText = "W, A, S, D를 눌러 움직이세요";
-    [TextArea][SerializeField] private string carryText = "[Space]를 눌러 병아리를 들거나 내려놓으세요";
-    [TextArea][SerializeField] private string mirrorText = "병아리를 거울 앞에 내려놓으면 2마리가 됩니다.\n닭이나 달걀은 복제할 수 없습니다.";
-    [TextArea][SerializeField] private string debtText = "시간 안에 병아리를 복제해서 빚을 갚아나갑시다!";
-    [TextArea][SerializeField] private string shopText = "상점에서는 다양한 아이템을 구매하실 수 있습니다.";
-    [TextArea][SerializeField] private string checkText = "CHECK에서는 빚을 갚을 수 있습니다.\n상환 기간 내에 빚을 갚아나갑시다.";
-    [TextArea][SerializeField] private string checkClickText = "CHECK 버튼을 눌러보세요.";
-    [TextArea][SerializeField] private string endText = "튜토리얼 종료! 이제 게임을 시작해봅시다.";
+    private TutorialContext context;
 
-    private bool duplicated;
-    private bool carried;
-    private bool resultsNextClicked;
-    private bool confirmClicked;
-    private bool checkButtonClicked;
-
-    private void OnEnable()
+    private void Awake()
     {
-        if (mirror != null)
-        {
-            mirror.OnDuplicated += HandleDuplicated;
-        }
-
-        if (playerCarry != null)
-        {
-            playerCarry.OnPickedUp += HandlePickedUp;
-        }
-
-        if (popup != null)
-        {
-            popup.OnConfirm += HandleConfirm;
-        }
-
-        if (resultsNextButton != null)
-        {
-            resultsNextButton.onClick.AddListener(HandleResultsNext);
-        }
-
-        if (checkButton != null)
-        {
-            checkButton.onClick.AddListener(HandleCheckButton);
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (mirror != null)
-        {
-            mirror.OnDuplicated -= HandleDuplicated;
-        }
-
-        if (playerCarry != null)
-        {
-            playerCarry.OnPickedUp -= HandlePickedUp;
-        }
-
-        if (popup != null)
-        {
-            popup.OnConfirm -= HandleConfirm;
-        }
-
-        if (resultsNextButton != null)
-        {
-            resultsNextButton.onClick.RemoveListener(HandleResultsNext);
-        }
-
-        if (checkButton != null)
-        {
-            checkButton.onClick.RemoveListener(HandleCheckButton);
-        }
-
-        Time.timeScale = 1f;
-    }
-
-    private void HandleDuplicated() => duplicated = true;
-    private void HandlePickedUp(PlaceableEntity entity) => carried = true;
-    private void HandleResultsNext() => resultsNextClicked = true;
-    private void HandleCheckButton() => checkButtonClicked = true;
-    private void HandleConfirm()
-    {
-        confirmClicked = true;
-
-        if (popup != null)
-        {
-            popup.Hide();
-        }
+        context = new TutorialContext(playerMovement, playerCarry, mirror, popup);
     }
 
     private void Start()
@@ -117,79 +34,112 @@ public class TutorialManager : MonoBehaviour
         StartCoroutine(RunTutorial());
     }
 
+    private void OnDisable()
+    {
+        Time.timeScale = 1f;
+    }
+
     private IEnumerator RunTutorial()
     {
-        yield return new WaitForSecondsRealtime(0.3f);
+        yield return new WaitForSecondsRealtime(startDelay);
 
-        SetFreeze(true);
-        popup.Show(moveText, false);
-        yield return new WaitUntil(() => playerMovement != null && playerMovement.MoveInput.sqrMagnitude > 0.01f);
-        SetFreeze(false);
-        yield return new WaitForSecondsRealtime(0.3f);
-
-        carried = false;
-        popup.Show(carryText, false);
-        yield return new WaitUntil(() => carried);
-        yield return new WaitForSecondsRealtime(0.5f);
-
-        duplicated = false;
-        popup.Show(mirrorText, false);
-        yield return new WaitUntil(() => duplicated);
-
-        yield return new WaitForSecondsRealtime(1.2f);
-
-        SetFreeze(true);
-        confirmClicked = false;
-        popup.Show(debtText, true);
-        yield return new WaitUntil(() => confirmClicked);
-
-        if (mainCanvas != null)
+        foreach (TutorialStep step in steps)
         {
-            mainCanvas.SetActive(true);
-        }
-        SetFreeze(false);
-
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.BeginTutorialRound();
+            yield return RunStep(step);
         }
 
-        resultsNextClicked = false;
-        yield return new WaitUntil(() => resultsNextClicked);
-        yield return null;
-
-        yield return StepPopupWithConfirm(shopText);
-
-        SetFreeze(true);
-        checkButtonClicked = false;
-        popup.Show(checkText, false);
-        yield return new WaitUntil(() => checkButtonClicked);
-        SetFreeze(false);
-
-        yield return StepPopupWithConfirm(checkClickText);
-
-        SetFreeze(true);
-        confirmClicked = false;
-        popup.Show(endText, true);
-        yield return new WaitUntil(() => confirmClicked);
-
-        SetFreeze(false);
         SceneManager.LoadScene(gameSceneName);
     }
 
-    private IEnumerator StepPopupWithConfirm(string text)
+    private IEnumerator RunStep(TutorialStep step)
     {
-        SetFreeze(true);
-        confirmClicked = false;
-        popup.Show(text, true);
+        if (step.delayBefore > 0f)
+        {
+            yield return new WaitForSecondsRealtime(step.delayBefore);
+        }
 
-        yield return new WaitUntil(() => confirmClicked);
+        TutorialCondition condition = step.condition;
+        bool showConfirm = condition != null && condition.RequiresConfirmButton;
+
+        SetFreeze(step.freezeTime);
+        if (step.HasMessage)
+        {
+            popup.Show(step.message, showConfirm);
+        }
+        else
+        {
+            popup.Hide();
+        }
+
+        if (condition != null)
+        {
+            condition.Begin(context);
+            yield return new WaitUntil(() => condition.IsMet(context));
+            condition.End(context);
+        }
+
+        if (showConfirm)
+        {
+            popup.Hide();
+        }
 
         SetFreeze(false);
+        step.onCompleted?.Invoke();
     }
 
-    private void SetFreeze(bool frozen)
+    private static void SetFreeze(bool frozen)
     {
         Time.timeScale = frozen ? 0f : 1f;
     }
 }
+
+#if UNITY_EDITOR
+public partial class TutorialManager
+{
+    [ContextMenu("Build Default Steps")]
+    private void BuildDefaultSteps()
+    {
+        UnityEditor.Undo.RecordObject(this, "Build Default Tutorial Steps");
+
+        steps = new List<TutorialStep>
+        {
+            Step("W, A, S, D 키를 눌러 움직이세요", new MoveInputCondition(), freeze: true),
+            Step("스페이스 바를 눌러 병아리를 들거나 내려놓으세요", new PickUpCondition(), delay: 0.3f),
+            Step("병아리를 거울 앞에 내려놓으면 2마리가 됩니다\n닭이나 달걀은 복제할 수 없습니다", new DuplicateCondition(), delay: 0.5f),
+            Step("제한 시간 안에 병아리를 최대한 많이 복제해봅시다!", new ConfirmClickCondition(), freeze: true, delay: 1.2f),
+            Step(string.Empty, new ButtonClickCondition()),
+            Step("상점에서는 다양한 아이템을 구매하실 수 있습니다", new ConfirmClickCondition(), freeze: true),
+            Step("CHECK에서는 갚을 빚을 확인하고 빚을 갚을 수 있습니다\nCHECK 버튼을 눌러보세요", new ButtonClickCondition(), freeze: true),
+            Step("A, D 키로 단위 조절,\nW, S 키로 숫자를 조절할 수 있습니다\nPay 버튼을 눌러 지불하세요", new ConfirmClickCondition(), freeze: true),
+            Step("튜토리얼 종료!\n이제 본격적으로 게임을 시작합시다", new ConfirmClickCondition(), freeze: true),
+        };
+
+        TutorialStep debtStep = steps[3];
+        if (mainCanvas != null)
+        {
+            UnityEditor.Events.UnityEventTools.AddBoolPersistentListener(debtStep.onCompleted, mainCanvas.SetActive, true);
+        }
+
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            UnityEditor.Events.UnityEventTools.AddVoidPersistentListener(debtStep.onCompleted, gameManager.BeginTutorialRound);
+        }
+
+        UnityEditor.EditorUtility.SetDirty(this);
+        Debug.Log("Tutorial steps built. Assign buttons on the two ButtonClickCondition steps (results Next, CHECK).", this);
+    }
+
+    private static TutorialStep Step(string message, TutorialCondition condition, bool freeze = false, float delay = 0f)
+    {
+        return new TutorialStep
+        {
+            message = message,
+            condition = condition,
+            freezeTime = freeze,
+            delayBefore = delay,
+            onCompleted = new UnityEngine.Events.UnityEvent(),
+        };
+    }
+}
+#endif

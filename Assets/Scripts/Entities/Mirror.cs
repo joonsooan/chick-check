@@ -17,6 +17,7 @@ public class Mirror : MonoBehaviour
     private static readonly List<PlaceableEntity> candidateBuffer = new List<PlaceableEntity>();
     private readonly List<Chick> chicksNowInZone = new List<Chick>();
     private MirrorReflection reflection;
+    private SpriteMask glassMask;
 
     private Chick revealingSource;
 
@@ -39,6 +40,7 @@ public class Mirror : MonoBehaviour
     private void Awake()
     {
         reflection = GetComponent<MirrorReflection>();
+        glassMask = GetComponentInChildren<SpriteMask>();
     }
 
     private void Start()
@@ -123,7 +125,14 @@ public class Mirror : MonoBehaviour
 
         Vector2 exitDir = transform.right * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
         source.ForceExit(exitDir, data, masked: false);
-        copy.ForceExit(exitDir, data, masked: true);
+        if (glassMask != null)
+        {
+            copy.ForceExit(exitDir, data, masked: true, glassMask.bounds);
+        }
+        else
+        {
+            copy.ForceExit(exitDir, data, masked: true);
+        }
 
         AudioManager.Instance?.PlayChickDuplicated();
 

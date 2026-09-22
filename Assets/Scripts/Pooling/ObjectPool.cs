@@ -43,13 +43,11 @@ public class ObjectPool
         t.SetPositionAndRotation(position, rotation);
         pooled.gameObject.SetActive(true);
 
-        pooled.InvokeSpawn();
         return pooled;
     }
 
     public void Release(PooledObject pooled)
     {
-        pooled.InvokeDespawn();
         pooled.gameObject.SetActive(false);
         pooled.transform.SetParent(root, false);
         inactive.Enqueue(pooled);

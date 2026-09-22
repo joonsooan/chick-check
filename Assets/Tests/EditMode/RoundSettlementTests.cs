@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEngine;
 
 [TestFixture]
 public class RoundSettlementTests
@@ -50,5 +51,61 @@ public class RoundSettlementTests
         RoundSettlement.Settle(inputs, modifiers.Apply, out int totalGold);
 
         Assert.AreEqual(8, totalGold);
+    }
+
+    private static Sprite CreateSprite()
+    {
+        return Sprite.Create(new Texture2D(1, 1), new Rect(0f, 0f, 1f, 1f), Vector2.zero);
+    }
+
+    [Test]
+    public void Summarize_GroupsRecordsBySpriteAndSumsPriceAndCount()
+    {
+        Sprite spriteA = CreateSprite();
+        Sprite spriteB = CreateSprite();
+
+        List<SaleRecord> records = new List<SaleRecord>
+        {
+            new SaleRecord(spriteA, 5, 0),
+            new SaleRecord(spriteA, 3, 0),
+            new SaleRecord(spriteB, 10, 1),
+        };
+
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out int totalGold);
+
+        Assert.AreEqual(2, groups.Count);
+        Assert.AreEqual(8, groups[0].TotalPrice);
+        Assert.AreEqual(2, groups[0].Count);
+        Assert.AreEqual(10, groups[1].TotalPrice);
+        Assert.AreEqual(1, groups[1].Count);
+        Assert.AreEqual(18, totalGold);
+    }
+
+    [Test]
+    public void Summarize_StableSortsByDisplayOrder_PreservesFirstAppearanceOnTies()
+    {
+        Sprite spriteFirst = CreateSprite();
+
+        List<SaleRecord> records = new List<SaleRecord>
+        {
+            new SaleRecord(spriteFirst, 1, 5),
+            new SaleRecord(spriteFirst, 1, 5),
+        };
+
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out _);
+
+        Assert.AreEqual(1, groups.Count);
+        Assert.AreEqual(5, groups[0].DisplayOrder);
+    }
+
+    [Test]
+    public void Summarize_EmptyInput_ReturnsEmptyGroupsAndZeroGold()
+    {
+        List<SaleRecord> records = new List<SaleRecord>();
+
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out int totalGold);
+
+        Assert.AreEqual(0, groups.Count);
+        Assert.AreEqual(0, totalGold);
     }
 }
