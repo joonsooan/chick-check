@@ -14,6 +14,7 @@ public class EconomyManager : Singleton<EconomyManager>
     public int RemainingDebt => debtLedger?.RemainingDebt ?? 0;
     public int NextDebtDueRound => debtLedger?.NextDebtDueRound ?? 0;
     public int MaxPayableDebt => debtLedger != null ? debtLedger.MaxPayable(Gold) : 0;
+    public bool IsDebtDueNow => GameManager.Instance != null && IsDebtDue(GameManager.Instance.CurrentRound);
 
     public event Action<int> OnGoldChanged;
     public event Action<IReadOnlyList<SaleRecord>> OnRoundResultsReady;

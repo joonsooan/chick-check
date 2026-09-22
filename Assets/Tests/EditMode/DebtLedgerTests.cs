@@ -69,4 +69,18 @@ public class DebtLedgerTests
         Assert.IsFalse(ledger.IsDue(2));
         Assert.IsTrue(ledger.IsDue(3));
     }
+
+    [Test]
+    public void IsDue_OnDueRound_StaysTrueUntilFullyPaid()
+    {
+        DebtLedger ledger = new DebtLedger(3, 30, 2.2f);
+
+        Assert.IsTrue(ledger.IsDue(3));
+
+        ledger.Pay(10);
+        Assert.IsTrue(ledger.IsDue(3));
+
+        ledger.Pay(20);
+        Assert.IsFalse(ledger.IsDue(3));
+    }
 }

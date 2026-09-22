@@ -7,6 +7,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject resultsPanel;
     [SerializeField] private GameObject checkPanel;
     [SerializeField] private GameObject tabButtonGroup;
+    [SerializeField] private GameObject shopTabButton;
     [SerializeField] private GameObject hudPanelRoot;
 
     public event Action<bool> OnShopUiVisibilityChanged;
@@ -24,6 +25,11 @@ public class UIManager : Singleton<UIManager>
             GameManager.Instance.OnRoundEnded += HandleRoundEnded;
             GameManager.Instance.OnRoundStarted += HandleRoundStarted;
         }
+
+        if (EconomyManager.Instance != null)
+        {
+            EconomyManager.Instance.OnDebtStatusChanged += HandleDebtStatusChanged;
+        }
     }
 
     protected override void OnDestroy()
@@ -34,6 +40,29 @@ public class UIManager : Singleton<UIManager>
         {
             GameManager.Instance.OnRoundEnded -= HandleRoundEnded;
             GameManager.Instance.OnRoundStarted -= HandleRoundStarted;
+        }
+
+        if (EconomyManager.Instance != null)
+        {
+            EconomyManager.Instance.OnDebtStatusChanged -= HandleDebtStatusChanged;
+        }
+    }
+
+    private void HandleDebtStatusChanged(int remainingDebt, int roundsUntilDue)
+    {
+        RefreshShopTabButton();
+    }
+
+    private bool IsShopLocked()
+    {
+        return EconomyManager.Instance != null && EconomyManager.Instance.IsDebtDueNow;
+    }
+
+    private void RefreshShopTabButton()
+    {
+        if (shopTabButton != null)
+        {
+            shopTabButton.SetActive(!IsShopLocked());
         }
     }
 
@@ -49,7 +78,7 @@ public class UIManager : Singleton<UIManager>
 
     public void ShowShop()
     {
-        SetActivePanel(shopPanel);
+        SetActivePanel(IsShopLocked() ? checkPanel : shopPanel);
     }
 
     public void ShowResults()
@@ -72,6 +101,7 @@ public class UIManager : Singleton<UIManager>
         resultsPanel.SetActive(showResults);
         checkPanel.SetActive(target == checkPanel);
         tabButtonGroup.SetActive(target == shopPanel || target == checkPanel);
+        RefreshShopTabButton();
 
         if (showResults)
         {

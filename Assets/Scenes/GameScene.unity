@@ -2488,7 +2488,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -2597,6 +2597,11 @@ PrefabInstance:
 --- !u!224 &109512561 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4689259073098354908, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
+  m_PrefabInstance: {fileID: 109512560}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &109512562 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4869934862550096718, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
   m_PrefabInstance: {fileID: 109512560}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &109666433
@@ -11014,7 +11019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7306392370801578630, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8.005
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7306392370801578630, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -12348,7 +12353,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -14949,7 +14954,7 @@ PrefabInstance:
     - target: {fileID: 162057306493337465, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 7296837775173302086, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -15277,7 +15282,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1899368103906285962, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
   m_PrefabInstance: {fileID: 109512560}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 109512562}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d1dc88ff5424e67a1771c3259136aaa, type: 3}
@@ -16020,7 +16025,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -53835,7 +53840,7 @@ PrefabInstance:
     - target: {fileID: 162057306493337465, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 162057306493337465, guid: 5982cc9180faad14e9994a58160c8de8, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -54217,6 +54222,7 @@ MonoBehaviour:
   resultsPanel: {fileID: 868692024}
   checkPanel: {fileID: 231313236}
   tabButtonGroup: {fileID: 441802123}
+  shopTabButton: {fileID: 109512562}
   hudPanelRoot: {fileID: 436905571}
 --- !u!1001 &7084729544250988443
 PrefabInstance:
@@ -54620,7 +54626,7 @@ PrefabInstance:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
