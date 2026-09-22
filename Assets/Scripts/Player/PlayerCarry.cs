@@ -16,6 +16,7 @@ public class PlayerCarry : MonoBehaviour
 
     private PlaceableEntity carriedEntity;
     private bool isPickingUp;
+    private int roundGeneration;
 
     private void Awake()
     {
@@ -26,7 +27,10 @@ public class PlayerCarry : MonoBehaviour
     private void OnEnable()
     {
         playerMovement.OnInteractPressed += HandleInteractPressed;
+    }
 
+    private void Start()
+    {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRoundEnding += HandleRoundEnding;
@@ -36,7 +40,10 @@ public class PlayerCarry : MonoBehaviour
     private void OnDisable()
     {
         playerMovement.OnInteractPressed -= HandleInteractPressed;
+    }
 
+    private void OnDestroy()
+    {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRoundEnding -= HandleRoundEnding;
@@ -45,13 +52,17 @@ public class PlayerCarry : MonoBehaviour
 
     private void HandleRoundEnding(int roundNumber)
     {
-        if (carriedEntity == null)
-        {
-            return;
-        }
+        roundGeneration++;
+        isPickingUp = false;
+        playerAnimator.CancelPendingActions();
 
-        carriedEntity.SetCarried(false);
+        PlaceableEntity released = carriedEntity;
         carriedEntity = null;
+
+        if (released != null && released.gameObject.activeInHierarchy)
+        {
+            released.SetCarried(false);
+        }
     }
 
     private void Update()
@@ -94,9 +105,15 @@ public class PlayerCarry : MonoBehaviour
             return;
         }
 
+        int generation = roundGeneration;
         isPickingUp = true;
         playerAnimator.PlayPickUp(data.PickUpGraspFrameIndex, () =>
         {
+            if (generation != roundGeneration)
+            {
+                return;
+            }
+
             isPickingUp = false;
 
             if (target == null || !target.gameObject.activeInHierarchy
@@ -116,12 +133,18 @@ public class PlayerCarry : MonoBehaviour
     {
         PlaceableEntity target = carriedEntity;
         Vector3 dropPosition = transform.position + (Vector3)GetFacingDropOffset();
+        int generation = roundGeneration;
 
         playerAnimator.PlayDropReversed(data.PickUpLockDuration, data.DropMoveFrameIndex, () =>
         {
+            if (generation != roundGeneration)
+            {
+                return;
+            }
+
             carriedEntity = null;
 
-            if (target == null || !target.gameObject.activeInHierarchy)
+            if (target == null || !target.gameObject.activeInHierarchy || !target.IsCarried)
             {
                 return;
             }

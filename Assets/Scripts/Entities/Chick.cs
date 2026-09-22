@@ -114,7 +114,8 @@ public class Chick : PlaceableEntity
 
     protected override bool CanGrowNow()
     {
-        return SpawnManager.Instance == null || SpawnManager.Instance.ChickCount > 1;
+        SpawnManager spawn = SpawnManager.Instance;
+        return spawn == null || ChickGrowthRule.CanGrow(data.IsMutant, spawn.ChickCount, spawn.MutantChickCount);
     }
 
     public bool IsExiting => exitMotion.IsActive;

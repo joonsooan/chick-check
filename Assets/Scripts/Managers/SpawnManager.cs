@@ -13,6 +13,9 @@ public class SpawnManager : Singleton<SpawnManager>
     public int ChickCount { get; private set; }
     public event Action<int> OnChickCountChanged;
 
+    public int MutantChickCount { get; private set; }
+    public event Action<int> OnMutantChickCountChanged;
+
     public int EggCount { get; private set; }
     public event Action<int> OnEggCountChanged;
 
@@ -148,6 +151,11 @@ public class SpawnManager : Singleton<SpawnManager>
             case EntityKind.Chick:
                 ChickCount += active ? 1 : -1;
                 OnChickCountChanged?.Invoke(ChickCount);
+                if (entity is Chick chick && chick.IsMutant)
+                {
+                    MutantChickCount += active ? 1 : -1;
+                    OnMutantChickCountChanged?.Invoke(MutantChickCount);
+                }
                 break;
             case EntityKind.Egg:
                 EggCount += active ? 1 : -1;

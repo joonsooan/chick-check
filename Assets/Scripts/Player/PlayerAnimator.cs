@@ -109,6 +109,25 @@ public class PlayerAnimator : MonoBehaviour
         pickUpGraspRoutine = null;
     }
 
+    public void CancelPendingActions()
+    {
+        if (reversePlaybackRoutine != null)
+        {
+            StopCoroutine(reversePlaybackRoutine);
+            reversePlaybackRoutine = null;
+        }
+
+        if (pickUpGraspRoutine != null)
+        {
+            StopCoroutine(pickUpGraspRoutine);
+            pickUpGraspRoutine = null;
+        }
+
+        animator.speed = 1f;
+        animator.ResetTrigger(PickUpParam);
+        animator.Play(IdleStateName, 0, 0f);
+    }
+
     public void PlayDropReversed(float duration, int dropFrameIndex, Action onFrameReached)
     {
         if (reversePlaybackRoutine != null)
