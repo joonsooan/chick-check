@@ -30,6 +30,7 @@ MonoBehaviour:
   shopReroll: {fileID: 8300000, guid: 5d09f17ee875627489e7e990ca502a34, type: 3}
   eggLaid: {fileID: 8300000, guid: be6057fac55c0fc4eabfdee35d216fd8, type: 3}
   chickDuplicated: {fileID: 8300000, guid: 5f1f07615f7cb9d43bcf88eb9d914d1b, type: 3}
+  goldMine: {fileID: 8300000, guid: 4c38121001362934bb090a661d309e01, type: 3}
   entitySfxCooldown: 0.3
   sfxFrameBudget: 6
   roundEnd: {fileID: 8300000, guid: d7873688c569c1c4390ad03c374d942a, type: 3}

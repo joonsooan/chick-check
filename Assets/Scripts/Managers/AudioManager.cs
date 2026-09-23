@@ -251,6 +251,14 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+    public void PlayGoldMine()
+    {
+        if (library != null)
+        {
+            PlaySfxThrottled(library.GoldMine);
+        }
+    }
+
     public void PlaySettingsToggle()
     {
         if (library != null)
