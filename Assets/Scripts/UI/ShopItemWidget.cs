@@ -13,13 +13,7 @@ public class ShopItemWidget : MonoBehaviour
     [SerializeField] private Color normalCostColor = Color.white;
     [SerializeField] private Color insufficientCostColor = Color.red;
 
-    private RectTransform rectTransform;
     private ShopItemData boundItem;
-
-    private void Awake()
-    {
-        rectTransform = (RectTransform)transform;
-    }
 
     private void OnEnable()
     {
@@ -28,8 +22,6 @@ public class ShopItemWidget : MonoBehaviour
             EconomyManager.Instance.OnGoldChanged += HandleGoldChanged;
             UpdateCostColor(EconomyManager.Instance.Gold);
         }
-
-        UILayoutUtil.Rebuild(rectTransform);
     }
 
     private void OnDisable()
@@ -42,11 +34,6 @@ public class ShopItemWidget : MonoBehaviour
 
     public void Setup(ShopItemData item)
     {
-        if (rectTransform == null)
-        {
-            rectTransform = (RectTransform)transform;
-        }
-
         boundItem = item;
 
         if (icon != null)
@@ -71,8 +58,6 @@ public class ShopItemWidget : MonoBehaviour
         {
             UpdateCostColor(EconomyManager.Instance.Gold);
         }
-
-        UILayoutUtil.Rebuild(rectTransform);
     }
 
     private void HandleGoldChanged(int gold)

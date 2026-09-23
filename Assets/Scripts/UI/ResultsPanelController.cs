@@ -19,7 +19,7 @@ public class ResultsPanelController : MonoBehaviour
     [SerializeField] private float revealInterval = 0.35f;
 
     private readonly List<ResultEntityWidget> spawnedWidgets = new List<ResultEntityWidget>();
-    private int activeWidgetCount;
+    private List<SaleGroup> pendingGroups = new List<SaleGroup>();
     private Coroutine revealRoutine;
 
     private void Awake()
@@ -67,27 +67,12 @@ public class ResultsPanelController : MonoBehaviour
             revealRoutine = null;
         }
 
-        List<SaleGroup> groups = RoundSettlement.Summarize(records, out int totalGold);
+        pendingGroups = RoundSettlement.Summarize(records, out int totalGold);
 
-        while (spawnedWidgets.Count < groups.Count)
-        {
-            spawnedWidgets.Add(Instantiate(entityWidgetPrefab, entityContainer));
-        }
-
-        for (int i = 0; i < groups.Count; i++)
-        {
-            SaleGroup group = groups[i];
-            ResultEntityWidget widget = spawnedWidgets[i];
-            widget.Setup(group.Sprite, group.TotalPrice, group.Count);
-            widget.gameObject.SetActive(false);
-        }
-
-        for (int i = groups.Count; i < spawnedWidgets.Count; i++)
+        for (int i = 0; i < spawnedWidgets.Count; i++)
         {
             spawnedWidgets[i].gameObject.SetActive(false);
         }
-
-        activeWidgetCount = groups.Count;
 
         if (totalGoldText != null)
         {
@@ -115,9 +100,9 @@ public class ResultsPanelController : MonoBehaviour
             yield return WaitStepOrClick(initialDelay);
         }
 
-        for (int i = 0; i < activeWidgetCount; i++)
+        for (int i = 0; i < pendingGroups.Count; i++)
         {
-            spawnedWidgets[i].gameObject.SetActive(true);
+            RevealWidget(i, pendingGroups[i]);
             UILayoutUtil.Rebuild((RectTransform)entityContainer);
             ScrollToBottom();
 
@@ -147,6 +132,19 @@ public class ResultsPanelController : MonoBehaviour
         }
 
         revealRoutine = null;
+    }
+
+    private void RevealWidget(int index, SaleGroup group)
+    {
+        if (index >= spawnedWidgets.Count)
+        {
+            spawnedWidgets.Add(Instantiate(entityWidgetPrefab, entityContainer));
+        }
+
+        ResultEntityWidget widget = spawnedWidgets[index];
+        widget.Setup(group.Sprite, group.TotalPrice, group.Count);
+        widget.transform.SetSiblingIndex(index);
+        widget.gameObject.SetActive(true);
     }
 
     private IEnumerator WaitStepOrClick(float duration)
