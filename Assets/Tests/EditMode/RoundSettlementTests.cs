@@ -108,4 +108,56 @@ public class RoundSettlementTests
         Assert.AreEqual(0, groups.Count);
         Assert.AreEqual(0, totalGold);
     }
+
+    [Test]
+    public void Summarize_PropagatesShowCountFromFirstRecordOfSprite()
+    {
+        Sprite spriteA = CreateSprite();
+        Sprite spriteB = CreateSprite();
+
+        List<SaleRecord> records = new List<SaleRecord>
+        {
+            new SaleRecord(spriteA, 5, 0),
+            new SaleRecord(spriteB, 10, 1, showCount: false),
+        };
+
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out _);
+
+        Assert.IsTrue(groups[0].ShowCount);
+        Assert.IsFalse(groups[1].ShowCount);
+    }
+
+    [Test]
+    public void AppendMinedGold_AddsRecordSortedAfterEntitiesByDisplayOrder()
+    {
+        Sprite entitySprite = CreateSprite();
+        Sprite goldIcon = CreateSprite();
+
+        List<SaleRecord> records = new List<SaleRecord>
+        {
+            new SaleRecord(entitySprite, 5, 1),
+        };
+
+        RoundSettlement.AppendMinedGold(records, goldIcon, 25, 100);
+
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out int totalGold);
+
+        Assert.AreEqual(2, groups.Count);
+        Assert.AreEqual(goldIcon, groups[1].Sprite);
+        Assert.AreEqual(25, groups[1].TotalPrice);
+        Assert.IsFalse(groups[1].ShowCount);
+        Assert.AreEqual(30, totalGold);
+    }
+
+    [Test]
+    public void AppendMinedGold_NoOpsWhenAmountIsZeroOrIconIsNull()
+    {
+        Sprite goldIcon = CreateSprite();
+        List<SaleRecord> records = new List<SaleRecord>();
+
+        RoundSettlement.AppendMinedGold(records, goldIcon, 0, 100);
+        RoundSettlement.AppendMinedGold(records, null, 25, 100);
+
+        Assert.AreEqual(0, records.Count);
+    }
 }

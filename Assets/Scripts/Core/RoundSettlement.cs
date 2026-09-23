@@ -24,13 +24,15 @@ public readonly struct SaleGroup
     public readonly int TotalPrice;
     public readonly int Count;
     public readonly int DisplayOrder;
+    public readonly bool ShowCount;
 
-    public SaleGroup(Sprite sprite, int totalPrice, int count, int displayOrder)
+    public SaleGroup(Sprite sprite, int totalPrice, int count, int displayOrder, bool showCount = true)
     {
         Sprite = sprite;
         TotalPrice = totalPrice;
         Count = count;
         DisplayOrder = displayOrder;
+        ShowCount = showCount;
     }
 }
 
@@ -59,6 +61,7 @@ public static class RoundSettlement
         Dictionary<Sprite, int> totalPriceBySprite = new Dictionary<Sprite, int>();
         Dictionary<Sprite, int> countBySprite = new Dictionary<Sprite, int>();
         Dictionary<Sprite, int> displayOrderBySprite = new Dictionary<Sprite, int>();
+        Dictionary<Sprite, bool> showCountBySprite = new Dictionary<Sprite, bool>();
 
         totalGold = 0;
 
@@ -73,6 +76,7 @@ public static class RoundSettlement
                 totalPriceBySprite[sprite] = 0;
                 countBySprite[sprite] = 0;
                 displayOrderBySprite[sprite] = record.DisplayOrder;
+                showCountBySprite[sprite] = record.ShowCount;
             }
 
             totalPriceBySprite[sprite] += record.SellPrice;
@@ -86,10 +90,20 @@ public static class RoundSettlement
         for (int i = 0; i < order.Count; i++)
         {
             Sprite sprite = order[i];
-            groups.Add(new SaleGroup(sprite, totalPriceBySprite[sprite], countBySprite[sprite], displayOrderBySprite[sprite]));
+            groups.Add(new SaleGroup(sprite, totalPriceBySprite[sprite], countBySprite[sprite], displayOrderBySprite[sprite], showCountBySprite[sprite]));
         }
 
         return groups;
+    }
+
+    public static void AppendMinedGold(List<SaleRecord> records, Sprite icon, int amount, int displayOrder)
+    {
+        if (records == null || amount <= 0 || icon == null)
+        {
+            return;
+        }
+
+        records.Add(new SaleRecord(icon, amount, displayOrder, showCount: false));
     }
 
     private static void StableSortByDisplayOrder(List<Sprite> order, Dictionary<Sprite, int> displayOrder)

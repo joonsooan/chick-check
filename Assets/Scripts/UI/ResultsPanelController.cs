@@ -142,7 +142,7 @@ public class ResultsPanelController : MonoBehaviour
         }
 
         ResultEntityWidget widget = spawnedWidgets[index];
-        widget.Setup(group.Sprite, group.TotalPrice, group.Count);
+        widget.Setup(group.Sprite, group.TotalPrice, group.Count, group.ShowCount);
         widget.transform.SetSiblingIndex(index);
         widget.gameObject.SetActive(true);
     }

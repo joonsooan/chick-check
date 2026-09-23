@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: EconomyConfig
   m_EditorClassIdentifier: ChickColony.Runtime::EconomyConfigData
   startingGold: 0
+  minedGoldIcon: {fileID: -1773947666, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  minedGoldDisplayOrder: 100

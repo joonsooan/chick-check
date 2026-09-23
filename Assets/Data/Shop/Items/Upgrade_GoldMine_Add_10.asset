@@ -28,5 +28,5 @@ MonoBehaviour:
       data:
         interval: 5
         chance: 0.5
-        baseGold: 0
+        baseGold: 10
         goldPerPurchase: 10

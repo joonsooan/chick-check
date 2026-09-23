@@ -152,7 +152,7 @@ public class Chicken : PlaceableEntity
 
         if (Random.value <= cachedGoldMineChance)
         {
-            EconomyManager.Instance.AddGold(cachedGoldMineGoldAmount);
+            EconomyManager.Instance.AddMinedGold(cachedGoldMineGoldAmount);
             AudioManager.Instance?.PlayGoldMine();
         }
     }

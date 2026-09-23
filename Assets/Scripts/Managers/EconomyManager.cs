@@ -8,6 +8,7 @@ public class EconomyManager : Singleton<EconomyManager>
     [SerializeField] private DebtConfigData debtConfig;
 
     private DebtLedger debtLedger;
+    private int minedGoldThisRound;
 
     public int Gold { get; private set; }
     public IReadOnlyList<SaleRecord> LastRoundSaleRecords { get; private set; }
@@ -64,6 +65,7 @@ public class EconomyManager : Singleton<EconomyManager>
 
     private void HandleRoundStarted(int roundNumber)
     {
+        minedGoldThisRound = 0;
         NotifyDebtStatus();
     }
 
@@ -94,6 +96,13 @@ public class EconomyManager : Singleton<EconomyManager>
         }
 
         AddGold(totalGold);
+
+        if (economyConfig != null)
+        {
+            RoundSettlement.AppendMinedGold(saleRecords, economyConfig.MinedGoldIcon, minedGoldThisRound, economyConfig.MinedGoldDisplayOrder);
+        }
+
+        minedGoldThisRound = 0;
 
         LastRoundSaleRecords = saleRecords;
         OnRoundResultsReady?.Invoke(saleRecords);
@@ -132,6 +141,17 @@ public class EconomyManager : Singleton<EconomyManager>
     {
         Gold += amount;
         OnGoldChanged?.Invoke(Gold);
+    }
+
+    public void AddMinedGold(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        minedGoldThisRound += amount;
+        AddGold(amount);
     }
 
     public bool TrySpendGold(int amount)

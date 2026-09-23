@@ -8,7 +8,7 @@ public class ResultEntityWidget : MonoBehaviour
     [SerializeField] private TMP_Text priceText;
     [SerializeField] private TMP_Text numText;
 
-    public void Setup(Sprite sprite, int totalPrice, int count)
+    public void Setup(Sprite sprite, int totalPrice, int count, bool showCount)
     {
         if (icon != null)
         {
@@ -24,6 +24,7 @@ public class ResultEntityWidget : MonoBehaviour
         if (numText != null)
         {
             numText.text = $"x {count}";
+            numText.gameObject.SetActive(showCount);
         }
     }
 }
