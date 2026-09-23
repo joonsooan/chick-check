@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public abstract class PlaceableEntity : MonoBehaviour
@@ -22,11 +23,14 @@ public abstract class PlaceableEntity : MonoBehaviour
     private PooledObject pooledObject;
 
     private int defaultSortingOrder;
+    private Vector3 defaultScale;
 
     private int activeIndex = -1;
     private Vector2Int currentCell;
 
     private float lastSlowTime;
+
+    protected Vector3 DefaultScale => defaultScale;
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsActiveEntity => activeIndex >= 0;
@@ -44,6 +48,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         flipbook = new SpriteFlipbook(spriteRenderer);
         defaultSortingOrder = spriteRenderer.sortingOrder;
+        defaultScale = transform.localScale;
         walker = new EntityWalker(transform, spriteRenderer, flipbook, IsWalkable, SyncSpatialCell);
         ambientVoice = new AmbientVoice();
         pooledObject = GetComponent<PooledObject>();
@@ -56,6 +61,8 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         Spatial.Insert(this, transform.position);
         currentCell = Spatial.CellOf(transform.position);
+
+        transform.localScale = defaultScale;
 
         ResetGrowthTimer();
         RefreshStats();
@@ -81,6 +88,8 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        transform.DOKill();
+
         RemoveFromActive();
 
         Spatial.Remove(this);
@@ -231,15 +240,54 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     protected virtual GameObject PickNextStagePrefab(EconomyEntityData data) => data.NextStagePrefab;
 
-    private void GrowToNextStage(GameObject nextStagePrefab)
+    protected virtual void GrowToNextStage(GameObject nextStagePrefab)
     {
         if (nextStagePrefab == null)
         {
             return;
         }
 
-        PoolManager.Instance.Spawn(nextStagePrefab, transform.position, transform.rotation, transform.parent);
+        SpawnNextStage(nextStagePrefab);
         DespawnSelf();
+    }
+
+    protected GameObject SpawnNextStage(GameObject nextStagePrefab)
+    {
+        GameObject spawned = PoolManager.Instance.Spawn(
+            nextStagePrefab, transform.position, transform.rotation, transform.parent);
+
+        if (spawned != null && spawned.TryGetComponent(out PlaceableEntity entity))
+        {
+            entity.PlayGrowthPop();
+        }
+
+        return spawned;
+    }
+
+    public void PlayPunchScale(Vector3 punch, float duration)
+    {
+        if (duration <= 0f)
+        {
+            return;
+        }
+
+        transform.DOKill();
+        transform.localScale = defaultScale;
+        transform.DOPunchScale(punch, duration);
+    }
+
+    public void PlayGrowthPop()
+    {
+        EconomyEntityData data = EconomyData;
+        if (data == null || data.GrowthPopDuration <= 0f)
+        {
+            return;
+        }
+
+        transform.DOKill();
+        transform.localScale = defaultScale;
+        transform.DOPunchScale(
+            data.GrowthPopPunch, data.GrowthPopDuration, data.GrowthPopVibrato, data.GrowthPopElasticity);
     }
 
     public void HandleSold()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,10 +18,12 @@ public class ResultsPanelController : MonoBehaviour
     [Header("Reveal")]
     [SerializeField] private float initialDelay = 0.5f;
     [SerializeField] private float revealInterval = 0.35f;
+    [SerializeField, Min(0)] private float totalCountUpDuration = 0.5f;
 
     private readonly List<ResultEntityWidget> spawnedWidgets = new List<ResultEntityWidget>();
     private List<SaleGroup> pendingGroups = new List<SaleGroup>();
     private Coroutine revealRoutine;
+    private Tween totalCountUpTween;
 
     private void Awake()
     {
@@ -57,6 +60,9 @@ public class ResultsPanelController : MonoBehaviour
             StopCoroutine(revealRoutine);
             revealRoutine = null;
         }
+
+        totalCountUpTween?.Kill();
+        totalCountUpTween = null;
     }
 
     private void HandleRoundResultsReady(IReadOnlyList<SaleRecord> records)
@@ -74,10 +80,7 @@ public class ResultsPanelController : MonoBehaviour
             spawnedWidgets[i].gameObject.SetActive(false);
         }
 
-        if (totalGoldText != null)
-        {
-            totalGoldText.text = $"{totalGold}";
-        }
+        PlayTotalCountUp(totalGold);
 
         if (defaultWidget != null)
         {
@@ -86,6 +89,36 @@ public class ResultsPanelController : MonoBehaviour
         }
 
         revealRoutine = StartCoroutine(RevealRoutine());
+    }
+
+    private void PlayTotalCountUp(int totalGold)
+    {
+        if (totalGoldText == null)
+        {
+            return;
+        }
+
+        totalCountUpTween?.Kill();
+
+        if (totalCountUpDuration <= 0f || totalGold <= 0)
+        {
+            totalGoldText.text = $"{totalGold}";
+            return;
+        }
+
+        int lastShown = -1;
+        totalGoldText.text = "0";
+        totalCountUpTween = DOTween.To(() => 0f, value =>
+        {
+            int shown = Mathf.RoundToInt(value);
+            if (shown == lastShown)
+            {
+                return;
+            }
+
+            lastShown = shown;
+            totalGoldText.text = $"{shown}";
+        }, totalGold, totalCountUpDuration).SetEase(Ease.OutCubic).SetUpdate(true);
     }
 
     private IEnumerator RevealRoutine()

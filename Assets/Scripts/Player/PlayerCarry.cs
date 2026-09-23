@@ -124,6 +124,7 @@ public class PlayerCarry : MonoBehaviour
 
             target.SetCarried(true);
             carriedEntity = target;
+            PunchEntity(target, data.PickUpPunch, data.PickUpPunchDuration);
             OnPickedUp?.Invoke(target);
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
@@ -152,9 +153,20 @@ public class PlayerCarry : MonoBehaviour
             target.transform.position = dropPosition;
             target.SyncSpatialCell();
             target.SetCarried(false);
+            PunchEntity(target, data.DropPunch, data.DropPunchDuration);
             OnDropped?.Invoke(target);
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
+    }
+
+    private static void PunchEntity(PlaceableEntity entity, Vector3 punch, float duration)
+    {
+        if (entity == null)
+        {
+            return;
+        }
+
+        entity.PlayPunchScale(punch, duration);
     }
 
     private Vector2 GetFacingDropOffset()

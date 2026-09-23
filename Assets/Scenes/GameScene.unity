@@ -3233,6 +3233,8 @@ MonoBehaviour:
   chickCountText: {fileID: 1350501774}
   chickenCountText: {fileID: 1653325248}
   infoPanel: {fileID: 2058324684}
+  goldPunch: {x: 0.3, y: 0.3, z: 0}
+  goldPunchDuration: 0.3
 --- !u!1 &175246015
 GameObject:
   m_ObjectHideFlags: 0
@@ -3397,7 +3399,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -3505,7 +3507,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -45354,8 +45356,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -118, y: 44.795013}
-  m_SizeDelta: {x: 200, y: -222.40999}
+  m_AnchoredPosition: {x: -118, y: 63.000004}
+  m_SizeDelta: {x: 200, y: -258}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1822792779
 MonoBehaviour:
@@ -54400,7 +54402,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 315430279135307413, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -54496,7 +54498,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -54536,6 +54538,7 @@ MonoBehaviour:
   scrollRect: {fileID: 1189286706}
   initialDelay: 1
   revealInterval: 1
+  totalCountUpDuration: 0.5
 --- !u!114 &8254255602850869749
 MonoBehaviour:
   m_ObjectHideFlags: 0

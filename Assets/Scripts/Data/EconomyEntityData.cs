@@ -27,6 +27,12 @@ public abstract class EconomyEntityData : ScriptableObject
     [Header("Walk Target")]
     [SerializeField, Min(1)] private int walkTargetAttempts = 10;
 
+    [Header("Growth Pop VFX")]
+    [SerializeField] private Vector3 growthPopPunch = new Vector3(0.3f, 0.3f, 0f);
+    [SerializeField, Min(0)] private float growthPopDuration = 0.4f;
+    [SerializeField, Min(0)] private int growthPopVibrato = 8;
+    [SerializeField, Range(0f, 1f)] private float growthPopElasticity = 0.8f;
+
     public abstract EntityKind Kind { get; }
 
     public Sprite Sprite => sprite;
@@ -43,6 +49,10 @@ public abstract class EconomyEntityData : ScriptableObject
     public Vector2 WalkIntervalRange => walkIntervalRange;
     public Vector2 WalkDistanceRange => walkDistanceRange;
     public int WalkTargetAttempts => walkTargetAttempts;
+    public Vector3 GrowthPopPunch => growthPopPunch;
+    public float GrowthPopDuration => growthPopDuration;
+    public int GrowthPopVibrato => growthPopVibrato;
+    public float GrowthPopElasticity => growthPopElasticity;
 
     private void OnValidate()
     {

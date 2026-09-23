@@ -1,6 +1,6 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
@@ -12,7 +12,12 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TMP_Text chickenCountText;
     [SerializeField] private RectTransform infoPanel;
 
+    [Header("Gold VFX")]
+    [SerializeField] private Vector3 goldPunch = new Vector3(0.3f, 0.3f, 0f);
+    [SerializeField, Min(0)] private float goldPunchDuration = 0.3f;
+
     private bool layoutDirty;
+    private bool goldInitialized;
     private int lastDisplayedTimerSeconds = -1;
 
     private void Start()
@@ -57,6 +62,11 @@ public class HUDController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (goldText != null)
+        {
+            goldText.transform.DOKill();
+        }
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnRoundStarted -= HandleRoundStarted;
@@ -153,8 +163,16 @@ public class HUDController : MonoBehaviour
         if (goldText != null)
         {
             goldText.text = gold.ToString();
+
+            if (goldInitialized && goldPunchDuration > 0f)
+            {
+                goldText.transform.DOKill();
+                goldText.transform.localScale = Vector3.one;
+                goldText.transform.DOPunchScale(goldPunch, goldPunchDuration);
+            }
         }
 
+        goldInitialized = true;
         layoutDirty = true;
     }
 }
