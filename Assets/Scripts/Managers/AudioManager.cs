@@ -211,6 +211,14 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+    public void PlayResultTotal()
+    {
+        if (library != null)
+        {
+            PlaySfx(library.ResultTotal, varyPitch: false);
+        }
+    }
+
     public void PlayUiClick()
     {
         if (library != null)

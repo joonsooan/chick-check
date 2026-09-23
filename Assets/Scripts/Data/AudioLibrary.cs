@@ -45,6 +45,7 @@ public class AudioLibrary : ScriptableObject
     [SerializeField] private AudioClip gameOver;
     [SerializeField] private AudioClip resultReveal;
     [SerializeField] private AudioClip resultRevealFinal;
+    [SerializeField] private AudioClip resultTotal;
 
     [Header("SFX - Player Footsteps")]
     [SerializeField] private AudioClip[] footsteps;
@@ -87,6 +88,7 @@ public class AudioLibrary : ScriptableObject
     public AudioClip GameOver => gameOver;
     public AudioClip ResultReveal => resultReveal;
     public AudioClip ResultRevealFinal => resultRevealFinal;
+    public AudioClip ResultTotal => resultTotal;
 
     public float FootstepInterval => footstepInterval;
     public float AmbientGlobalCooldown => ambientGlobalCooldown;

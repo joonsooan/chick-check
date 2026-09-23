@@ -16,6 +16,7 @@ public class ShopItemWidget : MonoBehaviour
     [SerializeField] private Color insufficientCostColor = Color.red;
 
     [Header("Sold VFX")]
+    [SerializeField] private RectTransform soldPunchTarget;
     [SerializeField, Min(0)] private float soldPunchDuration = 0.35f;
     [SerializeField] private float soldPunchAngle = 20f;
     [SerializeField, Min(0)] private int soldPunchVibrato = 12;
@@ -129,14 +130,16 @@ public class ShopItemWidget : MonoBehaviour
         if (soldText != null)
         {
             soldText.gameObject.SetActive(true);
+        }
 
-            RectTransform soldRect = soldText.rectTransform;
-            soldRect.DOKill();
-            soldRect.localScale = Vector3.one;
-            soldRect.localRotation = Quaternion.identity;
-            soldRect.DOPunchRotation(new Vector3(0f, 0f, soldPunchAngle), soldPunchDuration,
+        if (soldPunchTarget != null)
+        {
+            soldPunchTarget.DOKill();
+            soldPunchTarget.localScale = Vector3.one;
+            soldPunchTarget.localRotation = Quaternion.identity;
+            soldPunchTarget.DOPunchRotation(new Vector3(0f, 0f, soldPunchAngle), soldPunchDuration,
                 soldPunchVibrato, soldPunchElasticity).SetUpdate(true);
-            soldRect.DOPunchScale(soldPunchScale, soldPunchDuration).SetUpdate(true);
+            soldPunchTarget.DOPunchScale(soldPunchScale, soldPunchDuration).SetUpdate(true);
         }
     }
 }

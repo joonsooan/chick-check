@@ -22,6 +22,7 @@ public class ResultsPanelController : MonoBehaviour
 
     private readonly List<ResultEntityWidget> spawnedWidgets = new List<ResultEntityWidget>();
     private List<SaleGroup> pendingGroups = new List<SaleGroup>();
+    private int pendingTotalGold;
     private Coroutine revealRoutine;
     private Tween totalCountUpTween;
 
@@ -74,13 +75,19 @@ public class ResultsPanelController : MonoBehaviour
         }
 
         pendingGroups = RoundSettlement.Summarize(records, out int totalGold);
+        pendingTotalGold = totalGold;
 
         for (int i = 0; i < spawnedWidgets.Count; i++)
         {
             spawnedWidgets[i].gameObject.SetActive(false);
         }
 
-        PlayTotalCountUp(totalGold);
+        totalCountUpTween?.Kill();
+        totalCountUpTween = null;
+        if (totalGoldText != null)
+        {
+            totalGoldText.text = "0";
+        }
 
         if (defaultWidget != null)
         {
@@ -103,6 +110,7 @@ public class ResultsPanelController : MonoBehaviour
         if (totalCountUpDuration <= 0f || totalGold <= 0)
         {
             totalGoldText.text = $"{totalGold}";
+            PlayTotalCountUpSfx();
             return;
         }
 
@@ -118,7 +126,16 @@ public class ResultsPanelController : MonoBehaviour
 
             lastShown = shown;
             totalGoldText.text = $"{shown}";
-        }, totalGold, totalCountUpDuration).SetEase(Ease.OutCubic).SetUpdate(true);
+        }, totalGold, totalCountUpDuration).SetEase(Ease.OutCubic).SetUpdate(true)
+            .OnComplete(PlayTotalCountUpSfx);
+    }
+
+    private void PlayTotalCountUpSfx()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayResultTotal();
+        }
     }
 
     private IEnumerator RevealRoutine()
@@ -158,6 +175,8 @@ public class ResultsPanelController : MonoBehaviour
                 AudioManager.Instance.PlayResultRevealFinal();
             }
         }
+
+        PlayTotalCountUp(pendingTotalGold);
 
         if (nextButton != null)
         {
