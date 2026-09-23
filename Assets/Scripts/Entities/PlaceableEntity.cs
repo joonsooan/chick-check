@@ -213,6 +213,11 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         ResetGrowthTimer();
 
+        if (CurrentGrowthChance <= 0f)
+        {
+            return;
+        }
+
         if (UnityEngine.Random.value <= CurrentGrowthChance)
         {
             if (!CanGrowNow())
@@ -220,12 +225,19 @@ public abstract class PlaceableEntity : MonoBehaviour
                 return;
             }
 
-            GrowToNextStage(data.NextStagePrefab);
+            GrowToNextStage(PickNextStagePrefab(data));
         }
     }
 
+    protected virtual GameObject PickNextStagePrefab(EconomyEntityData data) => data.NextStagePrefab;
+
     private void GrowToNextStage(GameObject nextStagePrefab)
     {
+        if (nextStagePrefab == null)
+        {
+            return;
+        }
+
         PoolManager.Instance.Spawn(nextStagePrefab, transform.position, transform.rotation, transform.parent);
         DespawnSelf();
     }

@@ -8,5 +8,9 @@ public enum ShopStatType
     EggLayChance,
     EggGrowthChance,
     SellPriceEgg,
-    SellPriceChicken
+    SellPriceChicken,
+    ChickenGrowthChance,
+    GoldEggChance,
+    DuckGrowthChance,
+    SellPriceFriedChicken
 }

@@ -8,8 +8,11 @@ public class Chicken : PlaceableEntity
 
     public override ShopStatType SellPriceStat => ShopStatType.SellPriceChicken;
 
+    protected override ShopStatType GrowthChanceStat => ShopStatType.ChickenGrowthChance;
+
     public float CurrentLayInterval { get; private set; }
     public float CurrentLayChance { get; private set; }
+    public float CurrentGoldEggChance { get; private set; }
 
     private float layTimer;
     private float goldMineTimer;
@@ -28,6 +31,7 @@ public class Chicken : PlaceableEntity
 
         CurrentLayInterval = data.LayInterval;
         CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
+        CurrentGoldEggChance = ApplyModifier(ShopStatType.GoldEggChance, data.GoldEggChance);
 
         UpgradeManager manager = UpgradeManager.Instance;
         UpgradeState state = manager != null ? manager.State : null;
@@ -119,7 +123,10 @@ public class Chicken : PlaceableEntity
     private void SpawnEgg()
     {
         Vector3 spawnPosition = TryPickEggPosition(out Vector3 candidate) ? candidate : transform.position + data.LayOffset;
-        PoolManager.Instance.Spawn(data.EggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
+        Egg eggPrefab = data.GoldEggPrefab != null && CurrentGoldEggChance > 0f && Random.value <= CurrentGoldEggChance
+            ? data.GoldEggPrefab
+            : data.EggPrefab;
+        PoolManager.Instance.Spawn(eggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
         AudioManager.Instance?.PlayEggLaid();
     }
 

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DebtConfig
   m_EditorClassIdentifier: ChickColony.Runtime::DebtConfigData
   checkpointInterval: 3
-  amount: 300
+  amount: 250
   multiplier: 2.2

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Upgrade_EggGrowthChance_Add_0.05
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
   itemName: "\uBB34\uB7ED\uBB34\uB7ED"
-  description: "\uC54C \uC131\uC7A5\n\uD655\uB960 +5%"
-  icon: {fileID: -8179040606652740800, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  description: "\uC54C\u2192\uBCD1\uC544\uB9AC\n\uD655\uB960 +5%"
+  icon: {fileID: 7576617242518483205, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 70
   priceMultiplier: 2
   oneTimeOnly: 0

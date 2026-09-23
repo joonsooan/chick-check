@@ -19,6 +19,8 @@ public class Chick : PlaceableEntity
     public override EconomyEntityData EconomyData => data;
     public override bool CanBeCarried => base.CanBeCarried && !IsExiting;
 
+    public float CurrentAlternateStageChance { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -64,6 +66,19 @@ public class Chick : PlaceableEntity
 
         UpgradeManager manager = UpgradeManager.Instance;
         contagionActive = manager != null && manager.State.ContagionEnabled;
+
+        CurrentAlternateStageChance = ApplyModifier(ShopStatType.DuckGrowthChance, data.AlternateStageChance);
+    }
+
+    protected override GameObject PickNextStagePrefab(EconomyEntityData economyData)
+    {
+        if (data.AlternateStagePrefab != null && CurrentAlternateStageChance > 0f &&
+            Random.value <= CurrentAlternateStageChance)
+        {
+            return data.AlternateStagePrefab;
+        }
+
+        return base.PickNextStagePrefab(economyData);
     }
 
     protected override void TickBehaviour(float dt)

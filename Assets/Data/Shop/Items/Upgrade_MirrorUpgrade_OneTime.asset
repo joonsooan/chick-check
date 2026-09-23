@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
   itemName: "\uBA85\uD488 \uAC70\uC6B8"
   description: "\uD2B9\uB300 \uC0AC\uC774\uC988\n\uAC70\uC6B8 \uD68D\uB4DD"
-  icon: {fileID: -7899933087549869777, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  icon: {fileID: 0}
   cost: 300
   priceMultiplier: 2
   oneTimeOnly: 1

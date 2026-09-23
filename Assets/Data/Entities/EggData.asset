@@ -16,7 +16,7 @@ MonoBehaviour:
   idleAnimation: {fileID: 0}
   walkAnimation: {fileID: 0}
   sellPrice: 5
-  displayOrder: 0
+  displayOrder: 1
   growthInterval: 5
   growthChance: 0.05
   growthTimerJitterRange: {x: 0.1, y: 0.2}

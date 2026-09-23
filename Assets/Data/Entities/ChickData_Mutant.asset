@@ -16,7 +16,7 @@ MonoBehaviour:
   idleAnimation: {fileID: 11400000, guid: 1ddc35b2b5ace4840a3392a08c952b33, type: 2}
   walkAnimation: {fileID: 11400000, guid: 92d1c3c445662a7408003ba57f60ccfa, type: 2}
   sellPrice: 20
-  displayOrder: 2
+  displayOrder: 12
   growthInterval: 5
   growthChance: 0.05
   growthTimerJitterRange: {x: 0.1, y: 0.2}
@@ -26,3 +26,5 @@ MonoBehaviour:
   walkDistanceRange: {x: 0.75, y: 1.5}
   walkTargetAttempts: 10
   isMutant: 1
+  alternateStagePrefab: {fileID: 4856076502637182611, guid: 4d40f53e0de546b4e89bcd9f766b56e3, type: 3}
+  alternateStageChance: 0

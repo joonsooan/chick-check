@@ -17,6 +17,18 @@ public class ShopEffectTests
     }
 
     [Test]
+    public void StatModifierEffect_Add_AppliesToDuckGrowthChance()
+    {
+        UpgradeState state = new UpgradeState();
+        ShopItemData item = ShopItemData.CreateForTest(effect: BuildStatModifier(ShopStatType.DuckGrowthChance, ShopModifierOp.Add, 0.15f));
+
+        item.Effect.Apply(state);
+
+        Assert.AreEqual(0.15f, state.Modifiers.GetAdditive(ShopStatType.DuckGrowthChance), 0.0001f);
+        Object.DestroyImmediate(item);
+    }
+
+    [Test]
     public void StatModifierEffect_Multiply_AppliesMultiplier()
     {
         UpgradeState state = new UpgradeState();

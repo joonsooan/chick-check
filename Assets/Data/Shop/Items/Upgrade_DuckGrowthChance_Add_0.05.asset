@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
+  m_Name: Upgrade_DuckGrowthChance_Add_0.05
+  m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
+  itemName: "\uBA38\uB098\uBA3C \uC0AC\uCD0C"
+  description: "\uBCD1\uC544\uB9AC\u2192\uC624\uB9AC\n\uD655\uB960 +5%"
+  icon: {fileID: -7899933087549869777, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  cost: 200
+  priceMultiplier: 2
+  oneTimeOnly: 0
+  effect:
+    rid: 4621364399429386323
+  references:
+    version: 2
+    RefIds:
+    - rid: 4621364399429386323
+      type: {class: StatModifierEffect, ns: , asm: ChickColony.Runtime}
+      data:
+        targetStat: 11
+        op: 0
+        value: 0.05

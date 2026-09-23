@@ -64,7 +64,7 @@ public class ScriptableObjectValidationTests
     }
 
     [Test]
-    public void ChickenData_AllAssetsHaveEggPrefab()
+    public void ChickenData_GoldEggConfigurationIsValid()
     {
         string[] guids = AssetDatabase.FindAssets("t:ChickenData");
         Assert.IsNotEmpty(guids, "No ChickenData assets found.");
@@ -73,7 +73,59 @@ public class ScriptableObjectValidationTests
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             ChickenData data = AssetDatabase.LoadAssetAtPath<ChickenData>(path);
-            Assert.IsTrue(data.EggPrefab != null, $"{path} has no EggPrefab assigned");
+
+            Assert.GreaterOrEqual(data.GoldEggChance, 0f, $"{path} has GoldEggChance below 0");
+            Assert.LessOrEqual(data.GoldEggChance, 1f, $"{path} has GoldEggChance above 1");
+
+            if (data.CanGrow)
+            {
+                PlaceableEntity nextStage = data.NextStagePrefab.GetComponent<PlaceableEntity>();
+                Assert.IsFalse(nextStage is Chicken, $"{path}.NextStagePrefab must not grow back into a Chicken");
+            }
+        }
+    }
+
+    [Test]
+    public void EggData_IdleAnimationsHaveFrames()
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:EggData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            EggData data = AssetDatabase.LoadAssetAtPath<EggData>(path);
+            if (data.IdleAnimation == null)
+            {
+                continue;
+            }
+
+            Assert.Greater(data.IdleAnimation.FrameCount, 0, $"{path} IdleAnimation has no frames");
+        }
+    }
+
+    [Test]
+    public void ChickData_AlternateStagePrefabHasPlaceableEntity()
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:ChickData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            ChickData data = AssetDatabase.LoadAssetAtPath<ChickData>(path);
+            if (data.AlternateStagePrefab == null)
+            {
+                continue;
+            }
+
+            Assert.IsTrue(
+                data.AlternateStagePrefab.GetComponent<PlaceableEntity>() != null,
+                $"{path}.AlternateStagePrefab is missing a PlaceableEntity component");
         }
     }
 

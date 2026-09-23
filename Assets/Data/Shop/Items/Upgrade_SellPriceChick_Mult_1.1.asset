@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_SellPriceChick_Mult_1.1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uD669\uAE08 \uBCD1\uC544\uB9AC"
-  description: "\uBCD1\uC544\uB9AC \uD310\uB9E4\n\uACE8\uB4DC +10%"
-  icon: {fileID: -4737426781762327817, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
+  itemName: "1\uB4F1\uAE09 \uBCD1\uC544\uB9AC"
+  description: "\uBCD1\uC544\uB9AC \uC815\uC0B0\n\uACE8\uB4DC +10%"
+  icon: {fileID: -35281812, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 90
   priceMultiplier: 2
   oneTimeOnly: 0

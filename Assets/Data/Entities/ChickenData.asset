@@ -16,11 +16,11 @@ MonoBehaviour:
   idleAnimation: {fileID: 11400000, guid: 9f839f346ba2dcb46b723fc3248b9e42, type: 2}
   walkAnimation: {fileID: 11400000, guid: 60ed807302fe27a478932244bcaa986b, type: 2}
   sellPrice: 30
-  displayOrder: 11
-  growthInterval: 0
+  displayOrder: 21
+  growthInterval: 5
   growthChance: 0
   growthTimerJitterRange: {x: 0.1, y: 0.2}
-  nextStagePrefab: {fileID: 0}
+  nextStagePrefab: {fileID: 2550312340642957814, guid: c27cb676e8c00d648baea4d89c3ea616, type: 3}
   moveSpeed: 1
   walkIntervalRange: {x: 1.5, y: 4}
   walkDistanceRange: {x: 0.5, y: 1}
@@ -32,3 +32,5 @@ MonoBehaviour:
   layCount: 1
   eggPlacementAttempts: 10
   eggPlacementRadius: 0.5
+  goldEggPrefab: {fileID: 5182355378179198010, guid: 8aa4841765d35424bb09f1da3f949fe9, type: 3}
+  goldEggChance: 0
