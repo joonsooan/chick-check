@@ -18,3 +18,4 @@ MonoBehaviour:
   randomExitAngle: 60
   exitSpeedMultiplier: 3
   mutantExitSpeedMultiplier: 1.5
+  assistDwellTime: 0.15

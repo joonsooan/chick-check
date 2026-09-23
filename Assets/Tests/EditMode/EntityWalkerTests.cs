@@ -101,4 +101,42 @@ public class EntityWalkerTests
 
         Assert.AreEqual(WalkState("Waiting"), GetWalkerField(walker, "state"));
     }
+
+    [Test]
+    public void WalkTo_StartingInsideBlockedCell_MovesOut()
+    {
+        EntityWalker walker = CreateWalker(out Transform transform, position => position.x > 0.5f);
+        walker.Reset(data);
+
+        walker.WalkTo(new Vector3(1f, 0f, 0f), data);
+        walker.Tick(data, 0.1f);
+
+        Assert.AreEqual(WalkState("Moving"), GetWalkerField(walker, "state"));
+        Assert.Greater(transform.position.x, 0f);
+    }
+
+    [Test]
+    public void WalkTo_EnteringBlockedCellFromWalkable_ResetsToWaiting()
+    {
+        EntityWalker walker = CreateWalker(out Transform transform, position => position.x < 0.5f);
+        walker.Reset(data);
+
+        walker.WalkTo(new Vector3(1f, 0f, 0f), data);
+        walker.Tick(data, 10f);
+
+        Assert.AreEqual(WalkState("Waiting"), GetWalkerField(walker, "state"));
+    }
+
+    [Test]
+    public void WalkTo_TargetReached_ReturnsToWaiting()
+    {
+        EntityWalker walker = CreateWalker(out Transform transform);
+        walker.Reset(data);
+
+        walker.WalkTo(new Vector3(1f, 0f, 0f), data);
+        walker.Tick(data, 10f);
+
+        Assert.AreEqual(WalkState("Waiting"), GetWalkerField(walker, "state"));
+        Assert.AreEqual(1f, transform.position.x, 0.0001f);
+    }
 }

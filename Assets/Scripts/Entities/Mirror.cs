@@ -11,11 +11,18 @@ public class Mirror : MonoBehaviour
     [SerializeField] private Transform chickSpawnParent;
     [SerializeField] private Vector2 zoneHalfExtents = new Vector2(0.5f, 0.25f);
     [SerializeField] private Vector2 zoneOffset = Vector2.zero;
+    [SerializeField] private Vector2 assistHalfExtents = new Vector2(1f, 0.75f);
+    [SerializeField] private Vector2 assistOffset = Vector2.zero;
+    [SerializeField] private Vector2 assistTargetOffset = new Vector2(0f, -0.3f);
+    [SerializeField, Min(0)] private float assistTargetJitter = 0.15f;
 
     private readonly List<Chick> chicksInZone = new List<Chick>();
     private readonly Dictionary<Chick, float> dwell = new Dictionary<Chick, float>();
     private static readonly List<PlaceableEntity> candidateBuffer = new List<PlaceableEntity>();
     private readonly List<Chick> chicksNowInZone = new List<Chick>();
+    private readonly List<Chick> chicksNowInAssistZone = new List<Chick>();
+    private readonly List<Chick> assistReachedBuffer = new List<Chick>();
+    private readonly ZoneDwellTracker<Chick> assistDwell = new ZoneDwellTracker<Chick>();
     private MirrorReflection reflection;
     private SpriteMask glassMask;
 
@@ -74,6 +81,7 @@ public class Mirror : MonoBehaviour
     {
         chicksInZone.Clear();
         dwell.Clear();
+        assistDwell.Clear();
         revealingSource = null;
     }
 
@@ -85,6 +93,7 @@ public class Mirror : MonoBehaviour
         }
 
         UpdateZoneMembership();
+        UpdateAssistZone();
 
         for (int i = chicksInZone.Count - 1; i >= 0; i--)
         {
@@ -111,6 +120,41 @@ public class Mirror : MonoBehaviour
             {
                 dwell[chick] = t;
             }
+        }
+    }
+
+    private Vector3 AssistZoneCenter => transform.position + (Vector3)assistOffset;
+
+    private Vector3 AssistTarget => transform.position + (Vector3)assistTargetOffset;
+
+    private void UpdateAssistZone()
+    {
+        chicksNowInAssistZone.Clear();
+        CollectChicksInBox(AssistZoneCenter, assistHalfExtents, chicksNowInAssistZone);
+
+        for (int i = chicksNowInAssistZone.Count - 1; i >= 0; i--)
+        {
+            Chick chick = chicksNowInAssistZone[i];
+            if (chick == null || !chick.gameObject.activeInHierarchy ||
+                chick.IsCarried || chick.IsExiting || chick.IsGuided || chicksInZone.Contains(chick))
+            {
+                chicksNowInAssistZone.RemoveAt(i);
+            }
+        }
+
+        assistReachedBuffer.Clear();
+        assistDwell.Update(chicksNowInAssistZone, Time.deltaTime, data.AssistDwellTime, assistReachedBuffer);
+
+        for (int i = 0; i < assistReachedBuffer.Count; i++)
+        {
+            Chick chick = assistReachedBuffer[i];
+            if (chick == null || !chick.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Vector3 destination = AssistTarget + (Vector3)(UnityEngine.Random.insideUnitCircle * assistTargetJitter);
+            chick.GuideTo(destination);
         }
     }
 
@@ -165,13 +209,10 @@ public class Mirror : MonoBehaviour
 
     private Vector3 ZoneCenter => transform.position + (Vector3)zoneOffset;
 
-    private void UpdateZoneMembership()
+    private static void CollectChicksInBox(Vector3 center, Vector2 halfExtents, List<Chick> result)
     {
         candidateBuffer.Clear();
-        chicksNowInZone.Clear();
-
-        Vector3 zoneCenter = ZoneCenter;
-        PlaceableEntity.Spatial.QueryBox(zoneCenter, zoneHalfExtents, candidateBuffer);
+        PlaceableEntity.Spatial.QueryBox(center, halfExtents, candidateBuffer);
 
         for (int i = 0; i < candidateBuffer.Count; i++)
         {
@@ -180,12 +221,18 @@ public class Mirror : MonoBehaviour
                 continue;
             }
 
-            if (Mathf.Abs(chick.transform.position.x - zoneCenter.x) <= zoneHalfExtents.x &&
-                Mathf.Abs(chick.transform.position.y - zoneCenter.y) <= zoneHalfExtents.y)
+            if (Mathf.Abs(chick.transform.position.x - center.x) <= halfExtents.x &&
+                Mathf.Abs(chick.transform.position.y - center.y) <= halfExtents.y)
             {
-                chicksNowInZone.Add(chick);
+                result.Add(chick);
             }
         }
+    }
+
+    private void UpdateZoneMembership()
+    {
+        chicksNowInZone.Clear();
+        CollectChicksInBox(ZoneCenter, zoneHalfExtents, chicksNowInZone);
 
         for (int i = 0; i < chicksNowInZone.Count; i++)
         {
@@ -216,5 +263,13 @@ public class Mirror : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(ZoneCenter, new Vector3(zoneHalfExtents.x * 2f, zoneHalfExtents.y * 2f, 0f));
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(AssistZoneCenter, new Vector3(assistHalfExtents.x * 2f, assistHalfExtents.y * 2f, 0f));
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(AssistTarget, assistTargetJitter);
+        Gizmos.DrawLine(AssistTarget + Vector3.left * 0.1f, AssistTarget + Vector3.right * 0.1f);
+        Gizmos.DrawLine(AssistTarget + Vector3.down * 0.1f, AssistTarget + Vector3.up * 0.1f);
     }
 }

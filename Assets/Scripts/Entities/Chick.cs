@@ -21,6 +21,8 @@ public class Chick : PlaceableEntity
 
     public float CurrentAlternateStageChance { get; private set; }
 
+    public bool IsGuided { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -31,6 +33,7 @@ public class Chick : PlaceableEntity
         base.OnEnable();
 
         exitMotion.Cancel();
+        IsGuided = false;
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
         ResetLifeState();
@@ -38,6 +41,7 @@ public class Chick : PlaceableEntity
 
     private void ResetLifeState()
     {
+        IsGuided = false;
         ResetWalk(data);
         ResetAmbient(AmbientSoundKind.Chick);
 
@@ -58,6 +62,7 @@ public class Chick : PlaceableEntity
         base.OnDisable();
 
         exitMotion.Cancel();
+        IsGuided = false;
     }
 
     public override void RefreshStats()
@@ -90,6 +95,12 @@ public class Chick : PlaceableEntity
         }
 
         TickWalk(data, dt);
+
+        if (IsGuided && !IsWalkMoving)
+        {
+            IsGuided = false;
+        }
+
         TickAmbient(AmbientSoundKind.Chick, dt);
     }
 
@@ -135,6 +146,17 @@ public class Chick : PlaceableEntity
 
     public bool IsExiting => exitMotion.IsActive;
 
+    public void GuideTo(Vector3 destination)
+    {
+        if (IsCarried || IsExiting || !gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        IsGuided = true;
+        WalkTo(destination, data);
+    }
+
     public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked)
     {
         BeginExit(dir, mirrorData, masked, false, default);
@@ -147,6 +169,7 @@ public class Chick : PlaceableEntity
 
     private void BeginExit(Vector2 dir, MirrorData mirrorData, bool masked, bool hasMaskBounds, Bounds maskBounds)
     {
+        IsGuided = false;
         spriteRenderer.maskInteraction =
             masked ? SpriteMaskInteraction.VisibleOutsideMask : SpriteMaskInteraction.None;
         if (masked)

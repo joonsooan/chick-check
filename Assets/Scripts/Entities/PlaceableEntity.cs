@@ -279,6 +279,13 @@ public abstract class PlaceableEntity : MonoBehaviour
         walker.Tick(data, dt);
     }
 
+    protected void WalkTo(Vector3 destination, EconomyEntityData data)
+    {
+        walker.WalkTo(destination, data);
+    }
+
+    protected bool IsWalkMoving => walker.IsMoving;
+
     protected void ResetAmbient(AmbientSoundKind kind)
     {
         ambientVoice.Reset(kind);

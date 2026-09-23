@@ -178,8 +178,12 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: df19a3ba1b416ee40a2147b0f86780b6, type: 2}
   duplicationEnabled: 1
   chickSpawnParent: {fileID: 334104849703576770}
-  zoneHalfExtents: {x: 0.825, y: 0.525}
-  zoneOffset: {x: 0, y: -1.025}
+  zoneHalfExtents: {x: 0.8, y: 0.4}
+  zoneOffset: {x: 0, y: -0.9}
+  assistHalfExtents: {x: 1.5, y: 0.75}
+  assistOffset: {x: 0, y: -0.75}
+  assistTargetOffset: {x: 0, y: -1}
+  assistTargetJitter: 0.15
 --- !u!114 &6536511851265000324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,7 +529,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -535,5 +539,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0

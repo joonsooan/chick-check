@@ -18,6 +18,7 @@ public class EntityWalker
     private WalkState state;
     private float timer;
     private Vector3 target;
+    private bool guided;
 
     public EntityWalker(Transform transform, SpriteRenderer spriteRenderer, SpriteFlipbook flipbook, Func<Vector3, bool> isWalkable, Action onMoved = null)
     {
@@ -28,11 +29,23 @@ public class EntityWalker
         this.onMoved = onMoved;
     }
 
+    public bool IsMoving => state == WalkState.Moving;
+
+    public void WalkTo(Vector3 destination, EconomyEntityData data)
+    {
+        target = destination;
+        spriteRenderer.flipX = target.x > transform.position.x;
+        flipbook?.Play(data.WalkAnimation);
+        state = WalkState.Moving;
+        guided = true;
+    }
+
     public void Reset(EconomyEntityData data)
     {
         flipbook?.Play(data.IdleAnimation);
 
         state = WalkState.Waiting;
+        guided = false;
         Vector2 interval = data.WalkIntervalRange;
         timer = UnityEngine.Random.Range(interval.x, interval.y);
     }
@@ -65,7 +78,7 @@ public class EntityWalker
         Vector3 current = transform.position;
         Vector3 next = Vector3.MoveTowards(current, target, moveSpeed * dt);
 
-        if (isWalkable != null && !isWalkable(next))
+        if (IsBlocked(current, next))
         {
             Reset(data);
             return;
@@ -78,6 +91,16 @@ public class EntityWalker
         {
             Reset(data);
         }
+    }
+
+    private bool IsBlocked(Vector3 current, Vector3 next)
+    {
+        if (isWalkable == null || isWalkable(next))
+        {
+            return false;
+        }
+
+        return !guided || isWalkable(current);
     }
 
     private bool TryPickWalkTarget(EconomyEntityData data, out Vector3 result)

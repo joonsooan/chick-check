@@ -11,10 +11,14 @@ public class MirrorData : ScriptableObject
     [SerializeField, Min(0)] private float exitSpeedMultiplier = 1.5f;
     [SerializeField, Min(0)] private float mutantExitSpeedMultiplier = 1.5f;
 
+    [Header("Assist")]
+    [SerializeField, Min(0)] private float assistDwellTime = 1.5f;
+
     public float DwellTime => dwellTime;
     public float ForcedExitDistance => forcedExitDistance;
     public float RandomExitDuration => randomExitDuration;
     public float RandomExitAngle => randomExitAngle;
     public float ExitSpeedMultiplier => exitSpeedMultiplier;
     public float MutantExitSpeedMultiplier => mutantExitSpeedMultiplier;
+    public float AssistDwellTime => assistDwellTime;
 }
