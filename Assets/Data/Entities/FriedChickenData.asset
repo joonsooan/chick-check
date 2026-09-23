@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52bdd0871d464c5991d592a19e850bea, type: 3}
   m_Name: FriedChickenData
-  m_EditorClassIdentifier: ChickColony.Runtime::FriedChickenData
+  m_EditorClassIdentifier: ChickCheck.Runtime::FriedChickenData
   sprite: {fileID: -6879157460212273855, guid: 5526f4135559ca64fb3e6f332c17dd2f, type: 3}
   idleAnimation: {fileID: 0}
   walkAnimation: {fileID: 0}

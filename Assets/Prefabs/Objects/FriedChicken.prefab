@@ -103,5 +103,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dec7747594f24ea4af3e9dc5f408118d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ChickColony.Runtime::FriedChicken
+  m_EditorClassIdentifier: ChickCheck.Runtime::FriedChicken
   data: {fileID: 11400000, guid: 74e94a6fa70e7984caf411a70ffda3fb, type: 2}

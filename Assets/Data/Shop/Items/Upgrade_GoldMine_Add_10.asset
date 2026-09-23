@@ -24,7 +24,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4621364399429386326
-      type: {class: GoldMineEffect, ns: , asm: ChickColony.Runtime}
+      type: {class: GoldMineEffect, ns: , asm: ChickCheck.Runtime}
       data:
         interval: 5
         chance: 0.5

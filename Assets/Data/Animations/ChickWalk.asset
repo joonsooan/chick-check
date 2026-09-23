@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 951a98e76d035ce44a29a4a039d5a726, type: 3}
   m_Name: ChickWalk
-  m_EditorClassIdentifier: ChickColony.Runtime::SpriteAnimationData
+  m_EditorClassIdentifier: ChickCheck.Runtime::SpriteAnimationData
   frames:
   - {fileID: -8305089324633120389, guid: 6b3d00ec7ce894541aadcc03817bcb3f, type: 3}
   - {fileID: 1212414364338462892, guid: 6b3d00ec7ce894541aadcc03817bcb3f, type: 3}

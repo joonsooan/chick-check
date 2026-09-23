@@ -24,6 +24,6 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4621364399429386327
-      type: {class: MirrorUpgradeEffect, ns: , asm: ChickColony.Runtime}
+      type: {class: MirrorUpgradeEffect, ns: , asm: ChickCheck.Runtime}
       data:
         replacementPrefab: {fileID: 3729750936595538712, guid: fb17951919f71774eb87d79d77784d3e, type: 3}

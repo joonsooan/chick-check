@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DayNightConfigData", menuName = "Chick Colony/Day Night Config")]
+[CreateAssetMenu(fileName = "DayNightConfigData", menuName = "Chick Check/Day Night Config")]
 public class DayNightConfigData : ScriptableObject
 {
     [Header("Day")]

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RoundConfigData", menuName = "Chick Colony/Round Config")]
+[CreateAssetMenu(fileName = "RoundConfigData", menuName = "Chick Check/Round Config")]
 public class RoundConfigData : ScriptableObject
 {
     [Header("Round")]

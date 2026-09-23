@@ -24,5 +24,5 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4621364399429386342
-      type: {class: EnableSprintEffect, ns: , asm: ChickColony.Runtime}
+      type: {class: EnableSprintEffect, ns: , asm: ChickCheck.Runtime}
       data: 

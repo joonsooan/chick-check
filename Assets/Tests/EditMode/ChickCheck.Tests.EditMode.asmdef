@@ -1,8 +1,8 @@
 {
-    "name": "ChickColony.Tests.EditMode",
+    "name": "ChickCheck.Tests.EditMode",
     "rootNamespace": "",
     "references": [
-        "ChickColony.Runtime",
+        "ChickCheck.Runtime",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

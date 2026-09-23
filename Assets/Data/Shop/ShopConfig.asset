@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ddd41d1b1184479a099ae75e8b08f86, type: 3}
   m_Name: ShopConfig
-  m_EditorClassIdentifier: ChickColony.Runtime::ShopConfigData
+  m_EditorClassIdentifier: ChickCheck.Runtime::ShopConfigData
   rerollCost: 10
   itemsPerRound: 3
   catalog:

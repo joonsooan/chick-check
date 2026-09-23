@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MirrorData", menuName = "Chick Colony/Mirror Data")]
+[CreateAssetMenu(fileName = "MirrorData", menuName = "Chick Check/Mirror Data")]
 public class MirrorData : ScriptableObject
 {
     [Header("Duplication")]

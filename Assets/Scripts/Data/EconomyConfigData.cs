@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EconomyConfigData", menuName = "Chick Colony/Economy Config")]
+[CreateAssetMenu(fileName = "EconomyConfigData", menuName = "Chick Check/Economy Config")]
 public class EconomyConfigData : ScriptableObject
 {
     [SerializeField, Min(0)] private int startingGold = 10;

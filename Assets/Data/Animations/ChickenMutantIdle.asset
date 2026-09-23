@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 951a98e76d035ce44a29a4a039d5a726, type: 3}
   m_Name: ChickenMutantIdle
-  m_EditorClassIdentifier: ChickColony.Runtime::SpriteAnimationData
+  m_EditorClassIdentifier: ChickCheck.Runtime::SpriteAnimationData
   frames:
   - {fileID: -7760270051123019610, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}
   - {fileID: -3713822916463982677, guid: 3d78f489ec17a9248a333a2ca86e1719, type: 3}

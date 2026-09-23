@@ -24,7 +24,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4621364399429386329
-      type: {class: MultiLayEffect, ns: , asm: ChickColony.Runtime}
+      type: {class: MultiLayEffect, ns: , asm: ChickCheck.Runtime}
       data:
         chance: 0.2
         countPerPurchase: 1

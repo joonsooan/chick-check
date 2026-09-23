@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MutationData", menuName = "Chick Colony/Mutation Data")]
+[CreateAssetMenu(fileName = "MutationData", menuName = "Chick Check/Mutation Data")]
 public class MutationData : ScriptableObject
 {
     [Header("Mutant Chick")]

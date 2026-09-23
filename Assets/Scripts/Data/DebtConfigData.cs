@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DebtConfigData", menuName = "Chick Colony/Debt Config")]
+[CreateAssetMenu(fileName = "DebtConfigData", menuName = "Chick Check/Debt Config")]
 public class DebtConfigData : ScriptableObject
 {
     [SerializeField, Min(1)] private int checkpointInterval = 3;

@@ -1,8 +1,8 @@
 {
-    "name": "ChickColony.Editor",
+    "name": "ChickCheck.Editor",
     "rootNamespace": "",
     "references": [
-        "ChickColony.Runtime"
+        "ChickCheck.Runtime"
     ],
     "includePlatforms": [
         "Editor"

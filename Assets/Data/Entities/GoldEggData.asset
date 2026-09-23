@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e3035f2d9d163448862ff8acd24a321, type: 3}
   m_Name: GoldEggData
-  m_EditorClassIdentifier: ChickColony.Runtime::EggData
+  m_EditorClassIdentifier: ChickCheck.Runtime::EggData
   sprite: {fileID: 315520426, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   idleAnimation: {fileID: 11400000, guid: 1a35a4a9805266d4d8db53374e261fad, type: 2}
   walkAnimation: {fileID: 0}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SpriteAnimation", menuName = "Chick Colony/Sprite Animation")]
+[CreateAssetMenu(fileName = "SpriteAnimation", menuName = "Chick Check/Sprite Animation")]
 public class SpriteAnimationData : ScriptableObject
 {
     [SerializeField] private Sprite[] frames;

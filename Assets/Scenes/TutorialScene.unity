@@ -11775,7 +11775,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3aaa1bd307b445d84eb4649d44e4953, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ChickColony.Runtime::EntityTickManager
+  m_EditorClassIdentifier: ChickCheck.Runtime::EntityTickManager
   slowTickSlices: 4
 --- !u!1001 &629599959
 PrefabInstance:
@@ -14453,7 +14453,7 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 619461838}
-          m_TargetAssemblyTypeName: GameManager, ChickColony.Runtime
+          m_TargetAssemblyTypeName: GameManager, ChickCheck.Runtime
           m_MethodName: BeginTutorialRound
           m_Mode: 1
           m_Arguments:
@@ -14515,34 +14515,34 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4621364425652699211
-      type: {class: MoveInputCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: MoveInputCondition, ns: , asm: ChickCheck.Runtime}
       data:
         threshold: 0.1
     - rid: 4621364425652699212
-      type: {class: PickUpCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: PickUpCondition, ns: , asm: ChickCheck.Runtime}
       data: 
     - rid: 4621364425652699213
-      type: {class: DuplicateCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: DuplicateCondition, ns: , asm: ChickCheck.Runtime}
       data: 
     - rid: 4621364425652699214
-      type: {class: ConfirmClickCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: ConfirmClickCondition, ns: , asm: ChickCheck.Runtime}
       data: 
     - rid: 4621364425652699216
-      type: {class: ConfirmClickCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: ConfirmClickCondition, ns: , asm: ChickCheck.Runtime}
       data: 
     - rid: 4621364425652699217
-      type: {class: ButtonClickCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: ButtonClickCondition, ns: , asm: ChickCheck.Runtime}
       data:
         button: {fileID: 1771184725}
     - rid: 4621364425652699219
-      type: {class: ConfirmClickCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: ConfirmClickCondition, ns: , asm: ChickCheck.Runtime}
       data: 
     - rid: 4621364425652699220
-      type: {class: ButtonClickCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: ButtonClickCondition, ns: , asm: ChickCheck.Runtime}
       data:
         button: {fileID: 1204167733}
     - rid: 4621364425652699221
-      type: {class: ButtonClickCondition, ns: , asm: ChickColony.Runtime}
+      type: {class: ButtonClickCondition, ns: , asm: ChickCheck.Runtime}
       data:
         button: {fileID: 1044348371}
 --- !u!1001 &1044348369

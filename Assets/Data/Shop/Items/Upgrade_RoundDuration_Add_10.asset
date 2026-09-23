@@ -24,7 +24,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4621364399429386337
-      type: {class: StatModifierEffect, ns: , asm: ChickColony.Runtime}
+      type: {class: StatModifierEffect, ns: , asm: ChickCheck.Runtime}
       data:
         targetStat: 4
         op: 0

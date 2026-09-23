@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ShopConfigData", menuName = "Chick Colony/Shop Config")]
+[CreateAssetMenu(fileName = "ShopConfigData", menuName = "Chick Check/Shop Config")]
 public class ShopConfigData : ScriptableObject
 {
     [SerializeField, Min(0)] private int rerollCost = 10;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerData", menuName = "Chick Colony/Player Data")]
+[CreateAssetMenu(fileName = "PlayerData", menuName = "Chick Check/Player Data")]
 public class PlayerData : ScriptableObject
 {
     [SerializeField, Min(0.1f)] private float moveSpeed = 4f;

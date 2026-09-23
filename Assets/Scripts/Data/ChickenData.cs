@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ChickenData", menuName = "Chick Colony/Chicken Data")]
+[CreateAssetMenu(fileName = "ChickenData", menuName = "Chick Check/Chicken Data")]
 public class ChickenData : EconomyEntityData
 {
     [Header("Egg Laying")]
