@@ -2113,6 +2113,10 @@ MonoBehaviour:
   chickCountText: {fileID: 0}
   chickenCountText: {fileID: 0}
   infoPanel: {fileID: 0}
+  goldPunch: {x: 0.3, y: 0.3, z: 0}
+  goldPunchDuration: 0.3
+  goldPunchVibrato: 1
+  goldPunchElasticity: 0.5
 --- !u!1 &225684228
 GameObject:
   m_ObjectHideFlags: 0
@@ -2240,7 +2244,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -2348,7 +2352,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -10658,37 +10662,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 487953289}
   m_CullTransparentMesh: 1
---- !u!1 &490906596
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 490906597}
-  m_Layer: 0
-  m_Name: Pool_ChickenMutant
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &490906597
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 490906596}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2047025293}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &505388044
 GameObject:
   m_ObjectHideFlags: 0
@@ -42392,37 +42365,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!1 &1390938743
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1390938744}
-  m_Layer: 0
-  m_Name: Pool_ChickMutant
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1390938744
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1390938743}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2047025293}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1393278272
 GameObject:
   m_ObjectHideFlags: 0
@@ -48240,18 +48182,12 @@ MonoBehaviour:
   - prefab: {fileID: 3660991588947072175, guid: 763194d141ed13741acd54fa57f43dbf, type: 3}
     count: 20
     parent: {fileID: 1393278273}
-  - prefab: {fileID: 3660991588947072175, guid: 1f35d633a14c2634bac169d6fcecb669, type: 3}
-    count: 20
-    parent: {fileID: 1390938744}
   - prefab: {fileID: 1112561281134678425, guid: 16891e54070e8dd439062d7858753e22, type: 3}
     count: 20
     parent: {fileID: 35241017}
   - prefab: {fileID: 4856076502637182611, guid: 97255384a9ab2a243be9134c74a50537, type: 3}
     count: 20
     parent: {fileID: 1754543893}
-  - prefab: {fileID: 4856076502637182611, guid: da5539b6c2489b545ad6e0f5f5d8123c, type: 3}
-    count: 20
-    parent: {fileID: 490906597}
   - prefab: {fileID: 2550312340642957814, guid: 52c4809b507d499479dda85a99799fda, type: 3}
     count: 20
     parent: {fileID: 225684229}
@@ -48269,10 +48205,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1393278273}
-  - {fileID: 1390938744}
   - {fileID: 35241017}
   - {fileID: 1754543893}
-  - {fileID: 490906597}
   - {fileID: 225684229}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -52078,7 +52012,7 @@ PrefabInstance:
     - target: {fileID: 31259560928755233, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     - target: {fileID: 315430279135307413, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -52174,7 +52108,7 @@ PrefabInstance:
     - target: {fileID: 9058447558538683554, guid: 314b7b0fa9d7b2a46b3bd8f2f2114fa6, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 8337842724896642532, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
+      objectReference: {fileID: -4409086891927602659, guid: f62e4e364734d00409b9a3f13d5eaa2a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -52214,6 +52148,7 @@ MonoBehaviour:
   scrollRect: {fileID: 1189286706}
   initialDelay: 1
   revealInterval: 1
+  totalCountUpDuration: 0.5
 --- !u!114 &8254255602850869749
 MonoBehaviour:
   m_ObjectHideFlags: 0

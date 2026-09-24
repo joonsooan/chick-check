@@ -98,20 +98,21 @@ public class ResultsPanelController : MonoBehaviour
         revealRoutine = StartCoroutine(RevealRoutine());
     }
 
-    private void PlayTotalCountUp(int totalGold)
+    private IEnumerator TotalCountUpRoutine(int totalGold)
     {
         if (totalGoldText == null)
         {
-            return;
+            yield break;
         }
 
         totalCountUpTween?.Kill();
+        totalCountUpTween = null;
 
         if (totalCountUpDuration <= 0f || totalGold <= 0)
         {
             totalGoldText.text = $"{totalGold}";
             PlayTotalCountUpSfx();
-            return;
+            yield break;
         }
 
         int lastShown = -1;
@@ -126,8 +127,21 @@ public class ResultsPanelController : MonoBehaviour
 
             lastShown = shown;
             totalGoldText.text = $"{shown}";
-        }, totalGold, totalCountUpDuration).SetEase(Ease.OutCubic).SetUpdate(true)
-            .OnComplete(PlayTotalCountUpSfx);
+        }, totalGold, totalCountUpDuration).SetEase(Ease.OutCubic).SetUpdate(true);
+
+        while (totalCountUpTween != null && totalCountUpTween.IsActive() && !totalCountUpTween.IsComplete())
+        {
+            if (WasAdvanceRequested())
+            {
+                totalCountUpTween.Complete();
+                break;
+            }
+
+            yield return null;
+        }
+
+        totalCountUpTween = null;
+        PlayTotalCountUpSfx();
     }
 
     private void PlayTotalCountUpSfx()
@@ -176,7 +190,7 @@ public class ResultsPanelController : MonoBehaviour
             }
         }
 
-        PlayTotalCountUp(pendingTotalGold);
+        yield return TotalCountUpRoutine(pendingTotalGold);
 
         if (nextButton != null)
         {

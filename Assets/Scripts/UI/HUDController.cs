@@ -15,6 +15,8 @@ public class HUDController : MonoBehaviour
     [Header("Gold VFX")]
     [SerializeField] private Vector3 goldPunch = new Vector3(0.3f, 0.3f, 0f);
     [SerializeField, Min(0)] private float goldPunchDuration = 0.3f;
+    [SerializeField, Min(0)] private int goldPunchVibrato = 1;
+    [SerializeField, Range(0f, 1f)] private float goldPunchElasticity = 0.5f;
 
     private bool layoutDirty;
     private bool goldInitialized;
@@ -168,7 +170,7 @@ public class HUDController : MonoBehaviour
             {
                 goldText.transform.DOKill();
                 goldText.transform.localScale = Vector3.one;
-                goldText.transform.DOPunchScale(goldPunch, goldPunchDuration);
+                goldText.transform.DOPunchScale(goldPunch, goldPunchDuration, goldPunchVibrato, goldPunchElasticity);
             }
         }
 

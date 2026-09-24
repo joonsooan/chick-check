@@ -542,7 +542,7 @@ MonoBehaviour:
   normalCostColor: {r: 1, g: 1, b: 1, a: 1}
   insufficientCostColor: {r: 0.8117648, g: 0.34117648, b: 0.23137257, a: 1}
   soldPunchTarget: {fileID: 5290184394820348600}
-  soldPunchDuration: 0.35
+  soldPunchDuration: 0.25
   soldPunchAngle: 20
   soldPunchVibrato: 12
   soldPunchElasticity: 0.6

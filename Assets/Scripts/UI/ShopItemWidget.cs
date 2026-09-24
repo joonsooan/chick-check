@@ -11,7 +11,6 @@ public class ShopItemWidget : MonoBehaviour
     [SerializeField] private TMP_Text costText;
     [SerializeField] private Button buyButton;
     [SerializeField] private GameObject soldImage;
-    [SerializeField] private TMP_Text soldText;
     [SerializeField] private Color normalCostColor = Color.white;
     [SerializeField] private Color insufficientCostColor = Color.red;
 
@@ -24,6 +23,19 @@ public class ShopItemWidget : MonoBehaviour
     [SerializeField] private Vector3 soldPunchScale = new Vector3(0.3f, 0.3f, 0f);
 
     private ShopItemData boundItem;
+    private Quaternion soldPunchBaseRotation = Quaternion.identity;
+    private Vector3 soldPunchBaseScale = Vector3.one;
+    private bool soldPunchBaseCaptured;
+
+    private void Awake()
+    {
+        if (soldPunchTarget != null)
+        {
+            soldPunchBaseRotation = soldPunchTarget.localRotation;
+            soldPunchBaseScale = soldPunchTarget.localScale;
+            soldPunchBaseCaptured = true;
+        }
+    }
 
     private void OnEnable()
     {
@@ -62,11 +74,6 @@ public class ShopItemWidget : MonoBehaviour
         if (soldImage != null)
         {
             soldImage.SetActive(false);
-        }
-
-        if (soldText != null)
-        {
-            soldText.gameObject.SetActive(false);
         }
 
         if (EconomyManager.Instance != null)
@@ -127,16 +134,11 @@ public class ShopItemWidget : MonoBehaviour
             soldImage.SetActive(true);
         }
 
-        if (soldText != null)
-        {
-            soldText.gameObject.SetActive(true);
-        }
-
         if (soldPunchTarget != null)
         {
             soldPunchTarget.DOKill();
-            soldPunchTarget.localScale = Vector3.one;
-            soldPunchTarget.localRotation = Quaternion.identity;
+            soldPunchTarget.localScale = soldPunchBaseCaptured ? soldPunchBaseScale : soldPunchTarget.localScale;
+            soldPunchTarget.localRotation = soldPunchBaseCaptured ? soldPunchBaseRotation : soldPunchTarget.localRotation;
             soldPunchTarget.DOPunchRotation(new Vector3(0f, 0f, soldPunchAngle), soldPunchDuration,
                 soldPunchVibrato, soldPunchElasticity).SetUpdate(true);
             soldPunchTarget.DOPunchScale(soldPunchScale, soldPunchDuration).SetUpdate(true);
