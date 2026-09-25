@@ -15,7 +15,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private readonly List<ShopItemData> allShopItems = new List<ShopItemData>();
     private readonly UpgradeState state = new UpgradeState();
-    private readonly PurchaseLedger ledger = new PurchaseLedger();
+    private readonly PurchaseLedger purchaseLedger = new PurchaseLedger();
     private readonly System.Random rng = new System.Random();
 
     public UpgradeState State => state;
@@ -64,7 +64,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private void HandleGameOver(GameOverReason reason)
     {
-        ledger.Clear();
+        purchaseLedger.Clear();
         state.Reset();
     }
 
@@ -97,7 +97,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private bool IsAvailable(ShopItemData item)
     {
-        return !ledger.IsRetired(item)
+        return !purchaseLedger.IsSoldOut(item)
             && item.Effect != null
             && item.Effect.IsAvailable(state);
     }
@@ -122,7 +122,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
             OnMirrorUpgrade?.Invoke(mirrorPrefab);
         }
 
-        ledger.RecordPurchase(item);
+        purchaseLedger.RecordPurchase(item);
 
         OnModifiersChanged?.Invoke();
 
@@ -131,17 +131,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     public int GetCurrentCost(ShopItemData item)
     {
-        return ledger.GetCurrentCost(item);
-    }
-
-    public float GetAdditive(ShopStatType stat)
-    {
-        return state.Modifiers.GetAdditive(stat);
-    }
-
-    public float GetMultiplier(ShopStatType stat)
-    {
-        return state.Modifiers.GetMultiplier(stat);
+        return purchaseLedger.GetCurrentCost(item);
     }
 
     public float ApplyModifiers(ShopStatType stat, float baseValue)

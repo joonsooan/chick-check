@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerCarryData", menuName = "Player Carry Data")]
+[CreateAssetMenu(fileName = "PlayerCarryData", menuName = "Chick Check/Player Carry Data")]
 public class PlayerCarryData : ScriptableObject
 {
     [Header("Pickup Range")]
@@ -26,13 +26,17 @@ public class PlayerCarryData : ScriptableObject
     [SerializeField, Min(0)] private float dropPunchDuration = 0.3f;
 
     public float CarryRadius => carryRadius;
+
     public Vector2 CarryOffset => carryOffset;
+
     public float PickUpLockDuration => pickUpLockDuration;
     public int PickUpGraspFrameIndex => pickUpGraspFrameIndex;
+
     public float DropOffsetX => dropOffsetX;
     public float DropOffsetYUp => dropOffsetYUp;
     public float DropOffsetYDown => dropOffsetYDown;
     public int DropMoveFrameIndex => dropMoveFrameIndex;
+
     public Vector3 PickUpPunch => pickUpPunch;
     public float PickUpPunchDuration => pickUpPunchDuration;
     public Vector3 DropPunch => dropPunch;

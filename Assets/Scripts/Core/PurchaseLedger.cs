@@ -4,12 +4,12 @@ using UnityEngine;
 public class PurchaseLedger
 {
     private readonly Dictionary<ShopItemData, int> purchaseCounts = new Dictionary<ShopItemData, int>();
-    private readonly HashSet<ShopItemData> retiredItems = new HashSet<ShopItemData>();
+    private readonly HashSet<ShopItemData> soldOutItems = new HashSet<ShopItemData>();
 
     public int GetCurrentCost(ShopItemData item)
     {
         purchaseCounts.TryGetValue(item, out int count);
-        return Mathf.RoundToInt(item.Cost * Mathf.Pow(item.PriceMultiplier, count));
+        return Mathf.RoundToInt(item.Cost * Mathf.Pow(item.CostGrowthPerPurchase, count));
     }
 
     public void RecordPurchase(ShopItemData item)
@@ -19,18 +19,18 @@ public class PurchaseLedger
 
         if (item.OneTimeOnly)
         {
-            retiredItems.Add(item);
+            soldOutItems.Add(item);
         }
     }
 
-    public bool IsRetired(ShopItemData item)
+    public bool IsSoldOut(ShopItemData item)
     {
-        return retiredItems.Contains(item);
+        return soldOutItems.Contains(item);
     }
 
     public void Clear()
     {
         purchaseCounts.Clear();
-        retiredItems.Clear();
+        soldOutItems.Clear();
     }
 }

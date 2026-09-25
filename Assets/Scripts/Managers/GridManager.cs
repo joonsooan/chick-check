@@ -40,10 +40,6 @@ public class GridManager : Singleton<GridManager>
         return new WalkableGrid(walkable);
     }
 
-    public Vector3Int WorldToCell(Vector3 worldPos) => grid.WorldToCell(worldPos);
-
-    public bool IsWithinBounds(Vector3 worldPos) => walkableGrid.IsWithinBounds(grid.WorldToCell(worldPos));
-
     public bool IsWalkable(Vector3 worldPos) => walkableGrid.IsWalkable(grid.WorldToCell(worldPos));
 
     public void SetBlocked(Vector3Int cell, bool value) => walkableGrid.SetBlocked(cell, value);

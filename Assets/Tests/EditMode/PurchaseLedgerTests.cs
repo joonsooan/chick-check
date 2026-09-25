@@ -9,7 +9,7 @@ public class PurchaseLedgerTests
     [SetUp]
     public void SetUp()
     {
-        item = ShopItemData.CreateForTest(cost: 10, priceMultiplier: 2f);
+        item = ShopItemData.CreateForTest(cost: 10, costGrowthPerPurchase: 2f);
     }
 
     [TearDown]
@@ -35,12 +35,12 @@ public class PurchaseLedgerTests
     [Test]
     public void RecordPurchase_OneTimeOnly_Retires()
     {
-        ShopItemData oneTime = ShopItemData.CreateForTest(cost: 10, priceMultiplier: 2f, oneTimeOnly: true);
+        ShopItemData oneTime = ShopItemData.CreateForTest(cost: 10, costGrowthPerPurchase: 2f, oneTimeOnly: true);
         PurchaseLedger ledger = new PurchaseLedger();
 
-        Assert.IsFalse(ledger.IsRetired(oneTime));
+        Assert.IsFalse(ledger.IsSoldOut(oneTime));
         ledger.RecordPurchase(oneTime);
-        Assert.IsTrue(ledger.IsRetired(oneTime));
+        Assert.IsTrue(ledger.IsSoldOut(oneTime));
 
         Object.DestroyImmediate(oneTime);
     }
@@ -54,6 +54,6 @@ public class PurchaseLedgerTests
         ledger.Clear();
 
         Assert.AreEqual(10, ledger.GetCurrentCost(item));
-        Assert.IsFalse(ledger.IsRetired(item));
+        Assert.IsFalse(ledger.IsSoldOut(item));
     }
 }

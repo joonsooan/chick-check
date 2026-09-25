@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerCarry : MonoBehaviour
 {
     public event Action<PlaceableEntity> OnPickedUp;
-    public event Action<PlaceableEntity> OnDropped;
 
     private static readonly List<PlaceableEntity> carryQueryBuffer = new List<PlaceableEntity>();
 
@@ -16,7 +15,7 @@ public class PlayerCarry : MonoBehaviour
 
     private PlaceableEntity carriedEntity;
     private bool isPickingUp;
-    private int roundGeneration;
+    private int pendingActionToken;
 
     private void Awake()
     {
@@ -52,7 +51,7 @@ public class PlayerCarry : MonoBehaviour
 
     private void HandleRoundEnding(int roundNumber)
     {
-        roundGeneration++;
+        pendingActionToken++;
         isPickingUp = false;
         playerAnimator.CancelPendingActions();
 
@@ -105,11 +104,11 @@ public class PlayerCarry : MonoBehaviour
             return;
         }
 
-        int generation = roundGeneration;
+        int token = pendingActionToken;
         isPickingUp = true;
         playerAnimator.PlayPickUp(data.PickUpGraspFrameIndex, () =>
         {
-            if (generation != roundGeneration)
+            if (token != pendingActionToken)
             {
                 return;
             }
@@ -134,11 +133,11 @@ public class PlayerCarry : MonoBehaviour
     {
         PlaceableEntity target = carriedEntity;
         Vector3 dropPosition = transform.position + (Vector3)GetFacingDropOffset();
-        int generation = roundGeneration;
+        int token = pendingActionToken;
 
         playerAnimator.PlayDropReversed(data.PickUpLockDuration, data.DropMoveFrameIndex, () =>
         {
-            if (generation != roundGeneration)
+            if (token != pendingActionToken)
             {
                 return;
             }
@@ -154,7 +153,6 @@ public class PlayerCarry : MonoBehaviour
             target.SyncSpatialCell();
             target.SetCarried(false);
             PunchEntity(target, data.DropPunch, data.DropPunchDuration);
-            OnDropped?.Invoke(target);
         });
         playerMovement.LockMovement(data.PickUpLockDuration);
     }

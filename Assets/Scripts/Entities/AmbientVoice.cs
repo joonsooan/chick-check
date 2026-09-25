@@ -35,12 +35,11 @@ public class AmbientVoice
 
     private void Schedule(AmbientSoundKind kind)
     {
-        if (AudioManager.Instance == null)
+        if (AudioManager.Instance == null || !AudioManager.Instance.TryGetAmbientIntervalRange(kind, out Vector2 range))
         {
             return;
         }
 
-        Vector2 range = AudioManager.Instance.AmbientIntervalRange(kind);
         timer = Random.Range(range.x, range.y);
         scheduled = true;
     }

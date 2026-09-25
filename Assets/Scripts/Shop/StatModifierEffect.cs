@@ -8,10 +8,6 @@ public class StatModifierEffect : ShopEffect
     [SerializeField] private ShopModifierOp op;
     [SerializeField] private float value = 1f;
 
-    public ShopStatType TargetStat => targetStat;
-    public ShopModifierOp Op => op;
-    public float Value => value;
-
     public override void Apply(UpgradeState state)
     {
         if (op == ShopModifierOp.Add)

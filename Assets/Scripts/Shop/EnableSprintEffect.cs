@@ -5,6 +5,11 @@ public class EnableSprintEffect : ShopEffect
 {
     public override void Apply(UpgradeState state)
     {
-        state.SprintEnabled = true;
+        state.Get<SprintState>().Enabled = true;
     }
+}
+
+public class SprintState
+{
+    public bool Enabled { get; internal set; }
 }

@@ -13,12 +13,9 @@ public class SettingsPanelController : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private string titleSceneName = "TitleScene";
-    [SerializeField, Range(0f, 1f)] private float defaultSfxVolume = 0.5f;
-    [SerializeField, Range(0f, 1f)] private float defaultBgmVolume = 0.5f;
 
     private void Awake()
     {
-
         if (settingsButton != null)
         {
             settingsButton.onClick.AddListener(Open);
@@ -61,16 +58,19 @@ public class SettingsPanelController : MonoBehaviour
 
     private void Start()
     {
+        if (AudioManager.Instance == null)
+        {
+            return;
+        }
+
         if (sfxSlider != null)
         {
-            float sfx = AudioManager.Instance != null ? AudioManager.Instance.SfxVolume : defaultSfxVolume;
-            sfxSlider.SetValueWithoutNotify(sfx);
+            sfxSlider.SetValueWithoutNotify(AudioManager.Instance.SfxVolume);
         }
 
         if (bgmSlider != null)
         {
-            float bgm = AudioManager.Instance != null ? AudioManager.Instance.BgmVolume : defaultBgmVolume;
-            bgmSlider.SetValueWithoutNotify(bgm);
+            bgmSlider.SetValueWithoutNotify(AudioManager.Instance.BgmVolume);
         }
     }
 
@@ -157,8 +157,7 @@ public class SettingsPanelController : MonoBehaviour
 
     private void RestorePhaseTimeScale()
     {
-        bool paused = GameManager.Instance != null && GameManager.Instance.CurrentPhase != GamePhase.Playing;
-        Time.timeScale = paused ? 0f : 1f;
+        Time.timeScale = GameManager.Instance != null ? GameManager.Instance.PhaseTimeScale : 1f;
     }
 
     private void GoToTitle()

@@ -3,7 +3,7 @@ public enum ShopStatType
     ChickSpawnCountPerRound,
     PlayerMoveSpeed,
     SellPriceChick,
-    GrowthChance,
+    ChickGrowthChance,
     RoundDuration,
     EggLayChance,
     EggGrowthChance,

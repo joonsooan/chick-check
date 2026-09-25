@@ -1,3 +1,4 @@
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -8,11 +9,11 @@ public class ShopEffectTests
     public void StatModifierEffect_Add_AppliesAdditiveBonus()
     {
         UpgradeState state = new UpgradeState();
-        ShopItemData item = ShopItemData.CreateForTest(effect: BuildStatModifier(ShopStatType.GrowthChance, ShopModifierOp.Add, 0.05f));
+        ShopItemData item = ShopItemData.CreateForTest(effect: BuildStatModifier(ShopStatType.ChickGrowthChance, ShopModifierOp.Add, 0.05f));
 
         item.Effect.Apply(state);
 
-        Assert.AreEqual(0.05f, state.Modifiers.GetAdditive(ShopStatType.GrowthChance), 0.0001f);
+        Assert.AreEqual(0.05f, state.Modifiers.GetAdditive(ShopStatType.ChickGrowthChance), 0.0001f);
         Object.DestroyImmediate(item);
     }
 
@@ -47,7 +48,7 @@ public class ShopEffectTests
         new EnableMutationEffect().Apply(state);
         new EnableMutationEffect().Apply(state);
 
-        Assert.AreEqual(2, state.MutantSpawnCount);
+        Assert.AreEqual(2, state.Get<MutationState>().MutantSpawnCountPerRound);
     }
 
     [Test]
@@ -58,11 +59,11 @@ public class ShopEffectTests
 
         Assert.IsFalse(effect.IsAvailable(state));
 
-        state.MutantSpawnCount = 1;
+        state.Get<MutationState>().MutantSpawnCountPerRound = 1;
         Assert.IsTrue(effect.IsAvailable(state));
 
         effect.Apply(state);
-        Assert.IsTrue(state.ContagionEnabled);
+        Assert.IsTrue(state.Get<ContagionState>().Enabled);
     }
 
     [Test]
@@ -71,7 +72,7 @@ public class ShopEffectTests
         UpgradeState state = new UpgradeState();
         new EnableSprintEffect().Apply(state);
 
-        Assert.IsTrue(state.SprintEnabled);
+        Assert.IsTrue(state.Get<SprintState>().Enabled);
     }
 
     [Test]
@@ -82,10 +83,10 @@ public class ShopEffectTests
         GoldMineEffect second = BuildGoldMine(5f, 0.5f, 1, 10);
 
         first.Apply(state);
-        Assert.AreEqual(1, state.GoldMineGoldAmount);
+        Assert.AreEqual(1, state.Get<GoldMineState>().GoldAmount);
 
         second.Apply(state);
-        Assert.AreEqual(11, state.GoldMineGoldAmount);
+        Assert.AreEqual(11, state.Get<GoldMineState>().GoldAmount);
     }
 
     [Test]
@@ -95,8 +96,8 @@ public class ShopEffectTests
         BuildMultiLay(0.5f, 1).Apply(state);
         BuildMultiLay(0.2f, 2).Apply(state);
 
-        Assert.AreEqual(0.2f, state.MultiLayChance, 0.0001f);
-        Assert.AreEqual(3, state.MultiLayBonusCount);
+        Assert.AreEqual(0.2f, state.Get<MultiLayState>().Chance, 0.0001f);
+        Assert.AreEqual(3, state.Get<MultiLayState>().BonusEggCount);
     }
 
     [Test]
@@ -116,10 +117,18 @@ public class ShopEffectTests
     }
 
     [Test]
+    public void Get_ReturnsSameSlotForSameType()
+    {
+        UpgradeState state = new UpgradeState();
+
+        Assert.AreSame(state.Get<GoldMineState>(), state.Get<GoldMineState>());
+    }
+
+    [Test]
     public void Reset_ClearsAllStateIncludingModifiers()
     {
         UpgradeState state = new UpgradeState();
-        state.Modifiers.AddAdditive(ShopStatType.GrowthChance, 0.5f);
+        state.Modifiers.AddAdditive(ShopStatType.ChickGrowthChance, 0.5f);
         state.Modifiers.AddMultiplier(ShopStatType.PlayerMoveSpeed, 1.5f);
         new EnableMutationEffect().Apply(state);
         new EnableContagionEffect().Apply(state);
@@ -129,15 +138,15 @@ public class ShopEffectTests
 
         state.Reset();
 
-        Assert.AreEqual(0f, state.Modifiers.GetAdditive(ShopStatType.GrowthChance));
+        Assert.AreEqual(0f, state.Modifiers.GetAdditive(ShopStatType.ChickGrowthChance));
         Assert.AreEqual(1f, state.Modifiers.GetMultiplier(ShopStatType.PlayerMoveSpeed));
-        Assert.AreEqual(0, state.MutantSpawnCount);
-        Assert.IsFalse(state.ContagionEnabled);
-        Assert.IsFalse(state.SprintEnabled);
-        Assert.AreEqual(0, state.GoldMineLevel);
-        Assert.AreEqual(0, state.GoldMineGoldAmount);
-        Assert.AreEqual(0f, state.MultiLayChance);
-        Assert.AreEqual(0, state.MultiLayBonusCount);
+        Assert.AreEqual(0, state.Get<MutationState>().MutantSpawnCountPerRound);
+        Assert.IsFalse(state.Get<ContagionState>().Enabled);
+        Assert.IsFalse(state.Get<SprintState>().Enabled);
+        Assert.AreEqual(0, state.Get<GoldMineState>().Level);
+        Assert.AreEqual(0, state.Get<GoldMineState>().GoldAmount);
+        Assert.AreEqual(0f, state.Get<MultiLayState>().Chance);
+        Assert.AreEqual(0, state.Get<MultiLayState>().BonusEggCount);
     }
 
     private static StatModifierEffect BuildStatModifier(ShopStatType stat, ShopModifierOp op, float value)
@@ -169,9 +178,9 @@ public class ShopEffectTests
 
     private static void SetPrivateField(object target, string fieldName, object value)
     {
-        var field = target.GetType().GetField(
+        FieldInfo field = target.GetType().GetField(
             fieldName,
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic);
         field?.SetValue(target, value);
     }
 }

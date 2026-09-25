@@ -86,22 +86,7 @@ public class SpatialHash<T> where T : class
 
     public void Query(Vector3 center, float radius, List<T> results)
     {
-        Vector2Int min = CellOf(center - new Vector3(radius, radius, 0f));
-        Vector2Int max = CellOf(center + new Vector3(radius, radius, 0f));
-
-        for (int x = min.x; x <= max.x; x++)
-        {
-            for (int y = min.y; y <= max.y; y++)
-            {
-                if (buckets.TryGetValue(new Vector2Int(x, y), out List<T> bucket))
-                {
-                    for (int i = 0; i < bucket.Count; i++)
-                    {
-                        results.Add(bucket[i]);
-                    }
-                }
-            }
-        }
+        QueryBox(center, new Vector2(radius, radius), results);
     }
 
     public void QueryBox(Vector3 center, Vector2 halfExtents, List<T> results)

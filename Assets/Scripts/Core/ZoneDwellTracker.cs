@@ -3,14 +3,14 @@ using System.Collections.Generic;
 public class ZoneDwellTracker<T> where T : class
 {
     private readonly List<T> members = new List<T>();
-    private readonly Dictionary<T, float> dwell = new Dictionary<T, float>();
+    private readonly Dictionary<T, float> dwellTimeByItem = new Dictionary<T, float>();
     private readonly HashSet<T> nowInZoneSet = new HashSet<T>();
 
     public int Count => members.Count;
 
-    public bool Contains(T item) => dwell.ContainsKey(item);
+    public bool Contains(T item) => dwellTimeByItem.ContainsKey(item);
 
-    public void Update(IReadOnlyList<T> nowInZone, float dt, float threshold, List<T> reached)
+    public void Tick(IReadOnlyList<T> nowInZone, float dt, float dwellThreshold, List<T> completed)
     {
         nowInZoneSet.Clear();
         for (int i = 0; i < nowInZone.Count; i++)
@@ -21,10 +21,10 @@ public class ZoneDwellTracker<T> where T : class
         for (int i = 0; i < nowInZone.Count; i++)
         {
             T item = nowInZone[i];
-            if (!dwell.ContainsKey(item))
+            if (!dwellTimeByItem.ContainsKey(item))
             {
                 members.Add(item);
-                dwell[item] = 0f;
+                dwellTimeByItem[item] = 0f;
             }
         }
 
@@ -34,37 +34,37 @@ public class ZoneDwellTracker<T> where T : class
             if (!nowInZoneSet.Contains(item))
             {
                 members.RemoveAt(i);
-                dwell.Remove(item);
+                dwellTimeByItem.Remove(item);
             }
         }
 
         for (int i = members.Count - 1; i >= 0; i--)
         {
             T item = members[i];
-            float t = dwell[item] + dt;
+            float t = dwellTimeByItem[item] + dt;
 
-            if (t >= threshold)
+            if (t >= dwellThreshold)
             {
                 members.RemoveAt(i);
-                dwell.Remove(item);
-                reached?.Add(item);
+                dwellTimeByItem.Remove(item);
+                completed?.Add(item);
             }
             else
             {
-                dwell[item] = t;
+                dwellTimeByItem[item] = t;
             }
         }
     }
 
     public void Remove(T item)
     {
-        dwell.Remove(item);
+        dwellTimeByItem.Remove(item);
         members.Remove(item);
     }
 
     public void Clear()
     {
         members.Clear();
-        dwell.Clear();
+        dwellTimeByItem.Clear();
     }
 }

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: RoundConfig
   m_EditorClassIdentifier: Assembly-CSharp::RoundConfigData
   roundDuration: 60
+  tutorialRoundDuration: 20
   chickSpawnCountPerRound: 3
   chickSpawnOuterRadius: 3
   chickSpawnInnerRadius: 2
   chickSpawnJitter: 0.25
-  tutorialRoundDurationRatio: 0.5

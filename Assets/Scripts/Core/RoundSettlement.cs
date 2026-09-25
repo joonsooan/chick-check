@@ -118,6 +118,7 @@ public static class RoundSettlement
                 order[j + 1] = order[j];
                 j--;
             }
+
             order[j + 1] = current;
         }
     }

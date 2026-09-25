@@ -5,9 +5,9 @@ public class EntityTickManager : MonoBehaviour
 {
     [SerializeField] private int slowTickSlices = 4;
 
-    private static readonly List<PlaceableEntity> slowBuffer = new List<PlaceableEntity>();
+    private static readonly List<PlaceableEntity> slowTickBatch = new List<PlaceableEntity>();
 
-    private int slowCursor;
+    private int slowTickCursor;
 
     private void Start()
     {
@@ -27,7 +27,7 @@ public class EntityTickManager : MonoBehaviour
 
     private void HandleModifiersChanged()
     {
-        var entities = PlaceableEntity.ActiveEntities;
+        IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].RefreshStats();
@@ -42,7 +42,7 @@ public class EntityTickManager : MonoBehaviour
             return;
         }
 
-        var entities = PlaceableEntity.ActiveEntities;
+        IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
         for (int i = entities.Count - 1; i >= 0; i--)
         {
             entities[i].Tick(dt);
@@ -56,32 +56,32 @@ public class EntityTickManager : MonoBehaviour
         int count = entities.Count;
         if (count == 0)
         {
-            slowCursor = 0;
+            slowTickCursor = 0;
             return;
         }
 
         int slices = Mathf.Max(1, slowTickSlices);
         int perFrame = Mathf.CeilToInt(count / (float)slices);
 
-        slowBuffer.Clear();
+        slowTickBatch.Clear();
         for (int n = 0; n < perFrame; n++)
         {
-            if (slowCursor >= count)
+            if (slowTickCursor >= count)
             {
-                slowCursor = 0;
+                slowTickCursor = 0;
             }
 
-            slowBuffer.Add(entities[slowCursor]);
-            slowCursor++;
+            slowTickBatch.Add(entities[slowTickCursor]);
+            slowTickCursor++;
         }
 
-        float now = Time.time;
-        for (int i = 0; i < slowBuffer.Count; i++)
+        float time = Time.time;
+        for (int i = 0; i < slowTickBatch.Count; i++)
         {
-            PlaceableEntity entity = slowBuffer[i];
-            if (entity.IsActiveEntity)
+            PlaceableEntity entity = slowTickBatch[i];
+            if (entity.IsRegistered)
             {
-                entity.SlowTick(now);
+                entity.SlowTick(time);
             }
         }
     }

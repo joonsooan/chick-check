@@ -20,6 +20,7 @@ public class EconomyManager : Singleton<EconomyManager>
     public event Action<int> OnGoldChanged;
     public event Action<IReadOnlyList<SaleRecord>> OnRoundResultsReady;
     public event Action<int, int> OnDebtStatusChanged;
+    public event Action<int> OnDebtPaid;
 
     protected override void Awake()
     {
@@ -37,7 +38,7 @@ public class EconomyManager : Singleton<EconomyManager>
 
         Gold = economyConfig != null ? economyConfig.StartingGold : 0;
         debtLedger = debtConfig != null
-            ? new DebtLedger(debtConfig.CheckpointInterval, debtConfig.Amount, debtConfig.Multiplier)
+            ? new DebtLedger(debtConfig.DueIntervalRounds, debtConfig.InitialDebt, debtConfig.DebtGrowthOnPayoff)
             : null;
     }
 
@@ -47,6 +48,7 @@ public class EconomyManager : Singleton<EconomyManager>
         {
             GameManager.Instance.OnRoundEnded += HandleRoundEnded;
             GameManager.Instance.OnRoundStarted += HandleRoundStarted;
+            GameManager.Instance.OnShopPhaseEnding += HandleShopPhaseEnding;
         }
 
         NotifyDebtStatus();
@@ -60,6 +62,15 @@ public class EconomyManager : Singleton<EconomyManager>
         {
             GameManager.Instance.OnRoundEnded -= HandleRoundEnded;
             GameManager.Instance.OnRoundStarted -= HandleRoundStarted;
+            GameManager.Instance.OnShopPhaseEnding -= HandleShopPhaseEnding;
+        }
+    }
+
+    private void HandleShopPhaseEnding(int roundNumber)
+    {
+        if (IsDebtDue(roundNumber))
+        {
+            GameManager.Instance.TriggerGameOver(GameOverReason.NotEnoughGold);
         }
     }
 
@@ -92,7 +103,7 @@ public class EconomyManager : Singleton<EconomyManager>
 
         for (int i = 0; i < sellable.Count; i++)
         {
-            sellable[i].HandleSold();
+            sellable[i].Sell();
         }
 
         AddGold(totalGold);
@@ -127,6 +138,7 @@ public class EconomyManager : Singleton<EconomyManager>
         }
 
         debtLedger.Pay(payable);
+        OnDebtPaid?.Invoke(payable);
         NotifyDebtStatus();
     }
 

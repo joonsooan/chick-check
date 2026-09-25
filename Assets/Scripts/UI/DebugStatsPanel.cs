@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -77,7 +78,7 @@ public class DebugStatsPanel : MonoBehaviour
     {
         builder.Clear();
 
-        var entities = PlaceableEntity.ActiveEntities;
+        IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
 
         int chickCount = SpawnManager.Instance != null ? SpawnManager.Instance.ChickCount : 0;
         int eggCount = SpawnManager.Instance != null ? SpawnManager.Instance.EggCount : 0;

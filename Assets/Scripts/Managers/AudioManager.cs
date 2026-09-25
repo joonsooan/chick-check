@@ -18,7 +18,7 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private SceneBgm sceneBgm = SceneBgm.Game;
 
     private AudioSource sfxSource;
-    private AudioSource fixedSfxSource;
+    private AudioSource fixedPitchSfxSource;
     private AudioSource bgmSource;
     private float sfxVolume = 1f;
     private float bgmVolume = 1f;
@@ -27,8 +27,8 @@ public class AudioManager : Singleton<AudioManager>
     private float lastAmbientTime = -999f;
     private readonly Dictionary<AudioClip, int> bgmResumeSamples = new Dictionary<AudioClip, int>();
     private readonly Dictionary<AudioClip, float> lastThrottledTime = new Dictionary<AudioClip, float>();
-    private int budgetFrame = -1;
-    private int budgetUsed;
+    private int sfxBudgetFrame = -1;
+    private int sfxPlayedThisFrame;
 
     protected override void Awake()
     {
@@ -46,8 +46,8 @@ public class AudioManager : Singleton<AudioManager>
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.playOnAwake = false;
 
-        fixedSfxSource = gameObject.AddComponent<AudioSource>();
-        fixedSfxSource.playOnAwake = false;
+        fixedPitchSfxSource = gameObject.AddComponent<AudioSource>();
+        fixedPitchSfxSource.playOnAwake = false;
 
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.playOnAwake = false;
@@ -110,8 +110,8 @@ public class AudioManager : Singleton<AudioManager>
 
         if (!varyPitch)
         {
-            fixedSfxSource.pitch = 1f;
-            fixedSfxSource.PlayOneShot(clip, sfxVolume * library.SfxVolume);
+            fixedPitchSfxSource.pitch = 1f;
+            fixedPitchSfxSource.PlayOneShot(clip, sfxVolume * library.SfxVolume);
             return;
         }
 
@@ -133,18 +133,18 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (budgetFrame != Time.frameCount)
+        if (sfxBudgetFrame != Time.frameCount)
         {
-            budgetFrame = Time.frameCount;
-            budgetUsed = 0;
+            sfxBudgetFrame = Time.frameCount;
+            sfxPlayedThisFrame = 0;
         }
 
-        if (budgetUsed >= library.SfxFrameBudget)
+        if (sfxPlayedThisFrame >= library.SfxFrameBudget)
         {
             return;
         }
 
-        budgetUsed++;
+        sfxPlayedThisFrame++;
         lastThrottledTime[clip] = Time.unscaledTime;
         PlaySfx(clip);
     }
@@ -166,10 +166,13 @@ public class AudioManager : Singleton<AudioManager>
         PlaySfx(clip);
     }
 
-    public Vector2 AmbientIntervalRange(AmbientSoundKind kind) =>
-        library != null ? library.AmbientIntervalRange(kind) : new Vector2(4f, 9f);
+    public bool TryGetAmbientIntervalRange(AmbientSoundKind kind, out Vector2 range)
+    {
+        range = library != null ? library.AmbientIntervalRange(kind) : Vector2.zero;
+        return library != null;
+    }
 
-    public float FootstepInterval => library != null ? library.FootstepInterval : 0.35f;
+    public float FootstepInterval => library != null ? library.FootstepInterval : 0f;
 
     public void PlayFootstep()
     {

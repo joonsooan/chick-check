@@ -11,7 +11,9 @@ public class ChickData : EconomyEntityData
     [SerializeField, Range(0f, 1f)] private float alternateStageChance;
 
     public override EntityKind Kind => EntityKind.Chick;
+
     public bool IsMutant => isMutant;
-    public GameObject AlternateStagePrefab => alternateStagePrefab;
-    public float AlternateStageChance => alternateStageChance;
+
+    public GameObject DuckStagePrefab => alternateStagePrefab;
+    public float DuckGrowthChance => alternateStageChance;
 }

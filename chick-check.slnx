@@ -1,8 +1,0 @@
-﻿<Solution>
-  <Project Path="ChickCheck.Tests.EditMode.csproj" />
-  <Project Path="ChickCheck.Runtime.csproj" />
-  <Project Path="DOTween.Modules.csproj" />
-  <Project Path="ChickCheck.Editor.csproj" />
-  <Project Path="DOTweenPro.EditorScripts.csproj" />
-  <Project Path="DOTweenPro.Scripts.csproj" />
-</Solution>

@@ -16,8 +16,8 @@ public class ZoneDwellTrackerTests
         List<Dummy> nowInZone = new List<Dummy> { item };
         List<Dummy> reached = new List<Dummy>();
 
-        tracker.Update(nowInZone, 0.4f, 1f, reached);
-        tracker.Update(nowInZone, 0.4f, 1f, reached);
+        tracker.Tick(nowInZone, 0.4f, 1f, reached);
+        tracker.Tick(nowInZone, 0.4f, 1f, reached);
 
         Assert.AreEqual(0, reached.Count);
         Assert.IsTrue(tracker.Contains(item));
@@ -31,9 +31,9 @@ public class ZoneDwellTrackerTests
         List<Dummy> nowInZone = new List<Dummy> { item };
         List<Dummy> reached = new List<Dummy>();
 
-        tracker.Update(nowInZone, 0.9f, 1f, reached);
-        tracker.Update(new List<Dummy>(), 0.9f, 1f, reached);
-        tracker.Update(nowInZone, 0.9f, 1f, reached);
+        tracker.Tick(nowInZone, 0.9f, 1f, reached);
+        tracker.Tick(new List<Dummy>(), 0.9f, 1f, reached);
+        tracker.Tick(nowInZone, 0.9f, 1f, reached);
 
         Assert.AreEqual(0, reached.Count);
         Assert.IsTrue(tracker.Contains(item));
@@ -47,14 +47,14 @@ public class ZoneDwellTrackerTests
         List<Dummy> nowInZone = new List<Dummy> { item };
         List<Dummy> reached = new List<Dummy>();
 
-        tracker.Update(nowInZone, 1.5f, 1f, reached);
+        tracker.Tick(nowInZone, 1.5f, 1f, reached);
 
         Assert.AreEqual(1, reached.Count);
         Assert.AreSame(item, reached[0]);
         Assert.IsFalse(tracker.Contains(item));
 
         reached.Clear();
-        tracker.Update(nowInZone, 1.5f, 1f, reached);
+        tracker.Tick(nowInZone, 1.5f, 1f, reached);
 
         Assert.AreEqual(1, reached.Count);
     }
@@ -67,7 +67,7 @@ public class ZoneDwellTrackerTests
         List<Dummy> nowInZone = new List<Dummy> { item };
         List<Dummy> reached = new List<Dummy>();
 
-        tracker.Update(nowInZone, 0.1f, 1f, reached);
+        tracker.Tick(nowInZone, 0.1f, 1f, reached);
         tracker.Clear();
 
         Assert.AreEqual(0, tracker.Count);

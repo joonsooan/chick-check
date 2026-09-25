@@ -33,7 +33,7 @@ public abstract class PlaceableEntity : MonoBehaviour
     protected Vector3 DefaultScale => defaultScale;
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
-    public bool IsActiveEntity => activeIndex >= 0;
+    public bool IsRegistered => activeIndex >= 0;
     public bool IsCarried { get; private set; }
     public virtual bool CanBeCarried => true;
     public abstract EconomyEntityData EconomyData { get; }
@@ -137,10 +137,10 @@ public abstract class PlaceableEntity : MonoBehaviour
     {
     }
 
-    public void SlowTick(float now)
+    public void SlowTick(float time)
     {
-        float dt = now - lastSlowTime;
-        lastSlowTime = now;
+        float dt = time - lastSlowTime;
+        lastSlowTime = time;
 
         if (IsCarried)
         {
@@ -167,7 +167,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         CurrentGrowthChance = ApplyModifier(GrowthChanceStat, data.GrowthChance);
     }
 
-    protected virtual ShopStatType GrowthChanceStat => ShopStatType.GrowthChance;
+    protected virtual ShopStatType GrowthChanceStat => ShopStatType.ChickGrowthChance;
 
     protected virtual bool CanGrowNow() => true;
 
@@ -209,7 +209,7 @@ public abstract class PlaceableEntity : MonoBehaviour
     protected void TickGrowth(float dt)
     {
         EconomyEntityData data = EconomyData;
-        if (data == null || !data.CanGrow)
+        if (data == null || !data.HasNextStage)
         {
             return;
         }
@@ -290,7 +290,7 @@ public abstract class PlaceableEntity : MonoBehaviour
             data.GrowthPopPunch, data.GrowthPopDuration, data.GrowthPopVibrato, data.GrowthPopElasticity);
     }
 
-    public void HandleSold()
+    public void Sell()
     {
         DespawnSelf();
     }

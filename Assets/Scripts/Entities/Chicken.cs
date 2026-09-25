@@ -17,13 +17,13 @@ public class Chicken : PlaceableEntity
     private float layTimer;
     private float goldMineTimer;
 
-    private int goldMineActiveLevel;
+    private int goldMineLevel;
     private float cachedGoldMineInterval;
     private float cachedGoldMineChance;
     private int cachedGoldMineGoldAmount;
 
     private float cachedMultiLayChance;
-    private int cachedMultiLayBonusCount;
+    private int cachedMultiLayBonusEggCount;
 
     public override void RefreshStats()
     {
@@ -34,15 +34,16 @@ public class Chicken : PlaceableEntity
         CurrentGoldEggChance = ApplyModifier(ShopStatType.GoldEggChance, data.GoldEggChance);
 
         UpgradeManager manager = UpgradeManager.Instance;
-        UpgradeState state = manager != null ? manager.State : null;
+        GoldMineState goldMine = manager != null ? manager.State.Get<GoldMineState>() : null;
+        MultiLayState multiLay = manager != null ? manager.State.Get<MultiLayState>() : null;
 
-        goldMineActiveLevel = state != null ? state.GoldMineLevel : 0;
-        cachedGoldMineInterval = goldMineActiveLevel > 0 ? state.GoldMineInterval : 0f;
-        cachedGoldMineChance = state != null ? state.GoldMineChance : 0f;
-        cachedGoldMineGoldAmount = state != null ? state.GoldMineGoldAmount : 0;
+        goldMineLevel = goldMine != null ? goldMine.Level : 0;
+        cachedGoldMineInterval = goldMineLevel > 0 ? goldMine.Interval : 0f;
+        cachedGoldMineChance = goldMine != null ? goldMine.Chance : 0f;
+        cachedGoldMineGoldAmount = goldMine != null ? goldMine.GoldAmount : 0;
 
-        cachedMultiLayChance = state != null ? state.MultiLayChance : 0f;
-        cachedMultiLayBonusCount = state != null ? state.MultiLayBonusCount : 0;
+        cachedMultiLayChance = multiLay != null ? multiLay.Chance : 0f;
+        cachedMultiLayBonusEggCount = multiLay != null ? multiLay.BonusEggCount : 0;
     }
 
     protected override void OnEnable()
@@ -109,9 +110,9 @@ public class Chicken : PlaceableEntity
 
         int layCount = data.LayCount;
 
-        if (cachedMultiLayBonusCount > 0 && Random.value <= cachedMultiLayChance)
+        if (cachedMultiLayBonusEggCount > 0 && Random.value <= cachedMultiLayChance)
         {
-            layCount += cachedMultiLayBonusCount;
+            layCount += cachedMultiLayBonusEggCount;
         }
 
         for (int i = 0; i < layCount; i++)
@@ -132,7 +133,7 @@ public class Chicken : PlaceableEntity
 
     private void TickGoldMine(float dt)
     {
-        if (goldMineActiveLevel <= 0)
+        if (goldMineLevel <= 0)
         {
             return;
         }

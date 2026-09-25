@@ -11,29 +11,22 @@ public class Chick : PlaceableEntity
     private float contagionTimer;
     private bool contagionActive;
 
-    private readonly MirrorExitMotion exitMotion = new MirrorExitMotion();
-    private bool exitMasked;
-    private bool exitHasMaskBounds;
-    private Bounds exitMaskBounds;
+    private readonly MirrorExitMotion mirrorExitMotion = new MirrorExitMotion();
+    private bool mirrorExitMasked;
+    private Bounds? mirrorExitMaskBounds;
 
     public override EconomyEntityData EconomyData => data;
-    public override bool CanBeCarried => base.CanBeCarried && !IsExiting;
+    public override bool CanBeCarried => base.CanBeCarried && !IsMirrorExiting;
 
-    public float CurrentAlternateStageChance { get; private set; }
+    public float CurrentDuckGrowthChance { get; private set; }
 
     public bool IsGuided { get; private set; }
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        exitMotion.Cancel();
-        IsGuided = false;
+        mirrorExitMotion.Cancel();
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
         ResetLifeState();
@@ -61,7 +54,7 @@ public class Chick : PlaceableEntity
     {
         base.OnDisable();
 
-        exitMotion.Cancel();
+        mirrorExitMotion.Cancel();
         IsGuided = false;
     }
 
@@ -70,17 +63,17 @@ public class Chick : PlaceableEntity
         base.RefreshStats();
 
         UpgradeManager manager = UpgradeManager.Instance;
-        contagionActive = manager != null && manager.State.ContagionEnabled;
+        contagionActive = manager != null && manager.State.Get<ContagionState>().Enabled;
 
-        CurrentAlternateStageChance = ApplyModifier(ShopStatType.DuckGrowthChance, data.AlternateStageChance);
+        CurrentDuckGrowthChance = ApplyModifier(ShopStatType.DuckGrowthChance, data.DuckGrowthChance);
     }
 
     protected override GameObject PickNextStagePrefab(EconomyEntityData economyData)
     {
-        if (data.AlternateStagePrefab != null && CurrentAlternateStageChance > 0f &&
-            Random.value <= CurrentAlternateStageChance)
+        if (data.DuckStagePrefab != null && CurrentDuckGrowthChance > 0f &&
+            Random.value <= CurrentDuckGrowthChance)
         {
-            return data.AlternateStagePrefab;
+            return data.DuckStagePrefab;
         }
 
         return base.PickNextStagePrefab(economyData);
@@ -88,9 +81,9 @@ public class Chick : PlaceableEntity
 
     protected override void TickBehaviour(float dt)
     {
-        if (exitMotion.IsActive)
+        if (mirrorExitMotion.IsActive)
         {
-            TickExit(dt);
+            TickMirrorExit(dt);
             return;
         }
 
@@ -106,7 +99,7 @@ public class Chick : PlaceableEntity
 
     protected override void SlowTickBehaviour(float dt)
     {
-        if (exitMotion.IsActive)
+        if (mirrorExitMotion.IsActive)
         {
             return;
         }
@@ -141,14 +134,14 @@ public class Chick : PlaceableEntity
     protected override bool CanGrowNow()
     {
         SpawnManager spawn = SpawnManager.Instance;
-        return spawn == null || ChickGrowthRule.CanGrow(data.IsMutant, spawn.ChickCount, spawn.MutantChickCount);
+        return spawn == null || ChickGrowthRule.IsNotLastOfKind(data.IsMutant, spawn.ChickCount, spawn.MutantChickCount);
     }
 
-    public bool IsExiting => exitMotion.IsActive;
+    public bool IsMirrorExiting => mirrorExitMotion.IsActive;
 
     public void GuideTo(Vector3 destination)
     {
-        if (IsCarried || IsExiting || !gameObject.activeInHierarchy)
+        if (IsCarried || IsMirrorExiting || !gameObject.activeInHierarchy)
         {
             return;
         }
@@ -157,17 +150,7 @@ public class Chick : PlaceableEntity
         WalkTo(destination, data);
     }
 
-    public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked)
-    {
-        BeginExit(dir, mirrorData, masked, false, default);
-    }
-
-    public void ForceExit(Vector2 dir, MirrorData mirrorData, bool masked, Bounds maskBounds)
-    {
-        BeginExit(dir, mirrorData, masked, true, maskBounds);
-    }
-
-    private void BeginExit(Vector2 dir, MirrorData mirrorData, bool masked, bool hasMaskBounds, Bounds maskBounds)
+    public void ForceMirrorExit(Vector2 dir, MirrorData mirrorData, bool masked, Bounds? maskBounds = null)
     {
         IsGuided = false;
         spriteRenderer.maskInteraction =
@@ -183,10 +166,9 @@ public class Chick : PlaceableEntity
             ? mirrorData.MutantExitSpeedMultiplier
             : mirrorData.ExitSpeedMultiplier;
 
-        exitMasked = masked;
-        exitHasMaskBounds = hasMaskBounds;
-        exitMaskBounds = maskBounds;
-        exitMotion.Begin(
+        mirrorExitMasked = masked;
+        mirrorExitMaskBounds = maskBounds;
+        mirrorExitMotion.Begin(
             transform.position,
             dir,
             data.MoveSpeed * exitMultiplier,
@@ -194,45 +176,45 @@ public class Chick : PlaceableEntity
             mirrorData.RandomExitAngle,
             mirrorData.RandomExitDuration);
 
-        spriteRenderer.flipX = exitMotion.Direction.x > 0f;
+        spriteRenderer.flipX = mirrorExitMotion.Direction.x > 0f;
     }
 
-    private void TickExit(float dt)
+    private void TickMirrorExit(float dt)
     {
         Vector3 position = transform.position;
-        bool directionChanged = exitMotion.Tick(dt, ref position);
+        bool directionChanged = mirrorExitMotion.Tick(dt, ref position);
         transform.position = position;
         SyncSpatialCell();
 
         if (directionChanged)
         {
-            spriteRenderer.flipX = exitMotion.Direction.x > 0f;
+            spriteRenderer.flipX = mirrorExitMotion.Direction.x > 0f;
         }
 
-        if (exitMasked && exitHasMaskBounds && !exitMaskBounds.Intersects(spriteRenderer.bounds))
+        if (mirrorExitMasked && mirrorExitMaskBounds.HasValue && !mirrorExitMaskBounds.Value.Intersects(spriteRenderer.bounds))
         {
             RestoreObjectsLayer();
         }
 
-        if (!exitMotion.IsActive)
+        if (!mirrorExitMotion.IsActive)
         {
-            FinishExit();
+            FinishMirrorExit();
         }
     }
 
     private void RestoreObjectsLayer()
     {
-        if (!exitMasked)
+        if (!mirrorExitMasked)
         {
             return;
         }
 
         spriteRenderer.maskInteraction = SpriteMaskInteraction.None;
         spriteRenderer.sortingLayerName = "Objects";
-        exitMasked = false;
+        mirrorExitMasked = false;
     }
 
-    private void FinishExit()
+    private void FinishMirrorExit()
     {
         RestoreObjectsLayer();
         ResetLifeState();
@@ -293,7 +275,7 @@ public class Chick : PlaceableEntity
                 continue;
             }
 
-            if (other.IsCarried || other.IsExiting)
+            if (other.IsCarried || other.IsMirrorExiting)
             {
                 continue;
             }

@@ -29,6 +29,7 @@ public class ObjectPool
         {
             pooled = go.AddComponent<PooledObject>();
         }
+
         pooled.Pool = this;
 
         return pooled;

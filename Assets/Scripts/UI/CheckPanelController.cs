@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,8 +18,6 @@ public class CheckPanelController : MonoBehaviour
     [SerializeField] private RectTransform digitSelectButtonPanel;
     [SerializeField] private Button digitSelectButtonUp;
     [SerializeField] private Button digitSelectButtonDown;
-
-    public event Action<int> OnSelectedDigitChanged;
 
     private readonly int[] digits = new int[DigitCount];
     private int selectedDigitIndex;
@@ -126,7 +123,6 @@ public class CheckPanelController : MonoBehaviour
     {
         selectedDigitIndex = (selectedDigitIndex + direction + DigitCount) % DigitCount;
         AudioManager.Instance?.PlayDigitMove();
-        OnSelectedDigitChanged?.Invoke(selectedDigitIndex);
         RefreshDigitDisplay();
         UpdateDigitSelectButtonPanelPosition();
     }
@@ -190,7 +186,6 @@ public class CheckPanelController : MonoBehaviour
     {
         selectedDigitIndex = DigitCount - 1;
         SetEnteredAmount(0);
-        OnSelectedDigitChanged?.Invoke(selectedDigitIndex);
         RefreshDigitDisplay();
         UpdateDigitSelectButtonPanelPosition();
     }

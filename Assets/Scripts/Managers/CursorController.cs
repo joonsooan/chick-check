@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class CursorController : MonoBehaviour
@@ -8,8 +9,10 @@ public class CursorController : MonoBehaviour
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private Vector2 hotspot = Vector2.zero;
     [SerializeField, Min(1)] private int scale = 2;
+    [SerializeField, Min(0.1f)] private float idleHideDelay = 3f;
 
     private Texture2D scaledTexture;
+    private float idleTime;
 
     private void Awake()
     {
@@ -22,7 +25,7 @@ public class CursorController : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (scale > 1)
+        if (scale > 1 && cursorTexture != null)
         {
             BuildScaledTexture();
         }
@@ -34,6 +37,54 @@ public class CursorController : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ApplyCursor();
+        ShowCursor();
+    }
+
+    private void Update()
+    {
+        if (!IsDayPlaying() || HasMouseActivity())
+        {
+            ShowCursor();
+            return;
+        }
+
+        idleTime += Time.unscaledDeltaTime;
+        if (idleTime >= idleHideDelay && Cursor.visible)
+        {
+            Cursor.visible = false;
+        }
+    }
+
+    private static bool IsDayPlaying()
+    {
+        GameManager gameManager = GameManager.Instance;
+        return gameManager != null
+            && gameManager.CurrentPhase == GamePhase.Playing
+            && Time.timeScale > 0f;
+    }
+
+    private static bool HasMouseActivity()
+    {
+        Mouse mouse = Mouse.current;
+        if (mouse == null)
+        {
+            return false;
+        }
+
+        return mouse.delta.ReadValue() != Vector2.zero
+            || mouse.scroll.ReadValue() != Vector2.zero
+            || mouse.leftButton.isPressed
+            || mouse.rightButton.isPressed
+            || mouse.middleButton.isPressed;
+    }
+
+    private void ShowCursor()
+    {
+        idleTime = 0f;
+        if (!Cursor.visible)
+        {
+            Cursor.visible = true;
+        }
     }
 
     private void ApplyCursor()
@@ -75,6 +126,7 @@ public class CursorController : MonoBehaviour
         }
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        Cursor.visible = true;
         if (scaledTexture != null)
         {
             Destroy(scaledTexture);

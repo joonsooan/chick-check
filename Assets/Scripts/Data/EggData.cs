@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EggData", menuName = "Egg Data")]
+[CreateAssetMenu(fileName = "EggData", menuName = "Chick Check/Egg Data")]
 public class EggData : EconomyEntityData
 {
     public override EntityKind Kind => EntityKind.Egg;

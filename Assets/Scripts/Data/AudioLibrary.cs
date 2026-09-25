@@ -6,15 +6,15 @@ public enum AmbientSoundKind
     Chicken
 }
 
-[CreateAssetMenu(fileName = "AudioLibrary", menuName = "Audio Library")]
+[CreateAssetMenu(fileName = "AudioLibrary", menuName = "Chick Check/Audio Library")]
 public class AudioLibrary : ScriptableObject
 {
     [Header("Master")]
-    [Range(0f, 1f)][SerializeField] private float defaultSfxVolume = 1f;
-    [Range(0f, 1f)][SerializeField] private float defaultBgmVolume = 1f;
-    [Range(0f, 1f)][SerializeField] private float sfxVolume = 1f;
-    [Range(0f, 1f)][SerializeField] private float bgmVolume = 1f;
-    [Range(0f, 0.5f)][SerializeField] private float sfxPitchVariance = 0.08f;
+    [SerializeField, Range(0f, 1f)] private float defaultSfxVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float defaultBgmVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float sfxVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float bgmVolume = 1f;
+    [SerializeField, Range(0f, 0.5f)] private float sfxPitchVariance = 0.08f;
 
     [Header("BGM")]
     [SerializeField] private AudioClip titleBgm;
@@ -91,6 +91,7 @@ public class AudioLibrary : ScriptableObject
     public AudioClip ResultTotal => resultTotal;
 
     public float FootstepInterval => footstepInterval;
+
     public float AmbientGlobalCooldown => ambientGlobalCooldown;
 
     public AudioClip RandomFootstep() => RandomFrom(footsteps);

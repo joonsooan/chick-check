@@ -14,7 +14,6 @@ public class SpawnManager : Singleton<SpawnManager>
     public event Action<int> OnChickCountChanged;
 
     public int MutantChickCount { get; private set; }
-    public event Action<int> OnMutantChickCountChanged;
 
     public int EggCount { get; private set; }
     public event Action<int> OnEggCountChanged;
@@ -83,7 +82,7 @@ public class SpawnManager : Singleton<SpawnManager>
         if (UpgradeManager.Instance != null && UpgradeManager.Instance.MutationData != null)
         {
             mutantPrefab = UpgradeManager.Instance.MutationData.MutatedChickPrefab;
-            mutantCount = Mathf.Min(UpgradeManager.Instance.State.MutantSpawnCount, spawnCount);
+            mutantCount = Mathf.Min(UpgradeManager.Instance.State.Get<MutationState>().MutantSpawnCountPerRound, spawnCount);
         }
 
         SpawnChicksInRing(spawnCount, mutantCount, mutantPrefab);
@@ -126,18 +125,6 @@ public class SpawnManager : Singleton<SpawnManager>
         return PoolManager.Instance.Spawn(prefab, position, Quaternion.identity, parent);
     }
 
-    public void DespawnChick(Chick chick)
-    {
-        if (chick.TryGetComponent(out PooledObject pooled))
-        {
-            PoolManager.Despawn(pooled);
-        }
-        else
-        {
-            PoolManager.Despawn(chick.gameObject);
-        }
-    }
-
     private void HandleActiveChanged(PlaceableEntity entity, bool active)
     {
         EconomyEntityData data = entity != null ? entity.EconomyData : null;
@@ -154,8 +141,8 @@ public class SpawnManager : Singleton<SpawnManager>
                 if (entity is Chick chick && chick.IsMutant)
                 {
                     MutantChickCount += active ? 1 : -1;
-                    OnMutantChickCountChanged?.Invoke(MutantChickCount);
                 }
+
                 break;
             case EntityKind.Egg:
                 EggCount += active ? 1 : -1;

@@ -20,5 +20,6 @@ public class MirrorData : ScriptableObject
     public float RandomExitAngle => randomExitAngle;
     public float ExitSpeedMultiplier => exitSpeedMultiplier;
     public float MutantExitSpeedMultiplier => mutantExitSpeedMultiplier;
-    public float AssistDwellTime => assistDwellTime;
+
+    public float GuideDwellTime => assistDwellTime;
 }

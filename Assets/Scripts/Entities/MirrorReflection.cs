@@ -3,29 +3,15 @@ using UnityEngine;
 
 public class MirrorReflection : MonoBehaviour
 {
-    public enum ReflectionMode
-    {
-        NextChickOnly,
-        AllChicks
-    }
-
     [SerializeField] private SpriteRenderer reflectionPrefab;
     [SerializeField] private Transform reflectionContainer;
 
-    [Header("Mode")]
-    [SerializeField] private ReflectionMode mode = ReflectionMode.NextChickOnly;
-
     [Header("Appearance")]
     [SerializeField] private Color tint = new Color(1f, 1f, 1f, 0.5f);
-    [SerializeField] private Vector2 positionOffset;
     [SerializeField] private float scale = 1f;
 
     [Header("Reflection Axis")]
     [SerializeField] private float axisOffset;
-
-    [Header("Glass Area")]
-    [SerializeField] private Vector2 glassCenter;
-    [SerializeField] private Vector2 glassSize = Vector2.one;
 
     private Mirror mirror;
     private readonly Dictionary<Chick, SpriteRenderer> active = new Dictionary<Chick, SpriteRenderer>();
@@ -47,6 +33,7 @@ public class MirrorReflection : MonoBehaviour
                 PoolManager.Despawn(sr.gameObject);
             }
         }
+
         active.Clear();
     }
 
@@ -62,18 +49,7 @@ public class MirrorReflection : MonoBehaviour
         targets.Clear();
         targetSet.Clear();
 
-        if (mode == ReflectionMode.NextChickOnly)
-        {
-            Chick source = mirror.PeekSource();
-            if (source != null)
-            {
-                targets.Add(source);
-                targetSet.Add(source);
-            }
-            return;
-        }
-
-        IReadOnlyList<Chick> inZone = mirror.ChicksInZone;
+        IReadOnlyList<Chick> inZone = mirror.ChicksInDuplicationZone;
         for (int i = 0; i < inZone.Count; i++)
         {
             Chick chick = inZone[i];
@@ -103,6 +79,7 @@ public class MirrorReflection : MonoBehaviour
             {
                 PoolManager.Despawn(sr.gameObject);
             }
+
             active.Remove(stale[i]);
         }
     }
@@ -141,24 +118,9 @@ public class MirrorReflection : MonoBehaviour
 
     public Vector3 GetReflectionPosition(Chick chick) => Reflect(chick.transform.position);
 
-    public void ReleaseReflection(Chick chick)
-    {
-        if (active.TryGetValue(chick, out SpriteRenderer sr))
-        {
-            if (sr != null)
-            {
-                PoolManager.Despawn(sr.gameObject);
-            }
-            active.Remove(chick);
-        }
-    }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.matrix = transform.localToWorldMatrix;
-        Gizmos.color = new Color(0.4f, 0.7f, 1f, 1f);
-        Gizmos.DrawWireCube(glassCenter + positionOffset, glassSize);
-
         Gizmos.color = new Color(1f, 0.6f, 0.2f, 1f);
         Gizmos.DrawLine(new Vector3(-2f, axisOffset), new Vector3(2f, axisOffset));
     }

@@ -24,6 +24,7 @@ public static class UILayoutUtil
                 LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)group.transform);
             }
         }
+
         groupBuffer.Clear();
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(root);

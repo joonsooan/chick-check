@@ -13,6 +13,7 @@ public class MutationData : ScriptableObject
     [SerializeField] private Vector2 contagionTimerJitterRange = new Vector2(0.1f, 0.2f);
 
     public Chick MutatedChickPrefab => mutatedChickPrefab;
+
     public float ContagionInterval => contagionInterval;
     public float ContagionChance => contagionChance;
     public float ContagionRadius => contagionRadius;

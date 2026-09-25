@@ -43,6 +43,7 @@ public class GridObstacle : MonoBehaviour
                 GridManager.Instance.SetBlocked(registered[i], false);
             }
         }
+
         registered.Clear();
     }
 

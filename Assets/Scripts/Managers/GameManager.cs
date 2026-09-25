@@ -9,14 +9,15 @@ public class GameManager : Singleton<GameManager>
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
     public float PhaseTimeRemaining { get; private set; }
+    public float PhaseTimeScale => CurrentPhase == GamePhase.Playing ? 1f : 0f;
 
     public event Action<int> OnRoundStarted;
     public event Action<int> OnRoundSpawnRequested;
     public event Action<float, float> OnPhaseTimerTick;
     public event Action<int> OnRoundEnding;
     public event Action<int> OnRoundEnded;
+    public event Action<int> OnShopPhaseEnding;
     public event Action<GamePhase> OnPhaseChanged;
-    public event Action<int> OnDebtDue;
     public event Action<GameOverReason> OnGameOver;
 
     private float phaseTotalTime;
@@ -43,13 +44,7 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        float roundDuration = roundConfig.RoundDuration;
-        if (UpgradeManager.Instance != null)
-        {
-            roundDuration = UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration);
-        }
-
-        SetPhaseTimer(roundDuration * roundConfig.TutorialRoundDurationRatio);
+        SetPhaseTimer(roundConfig.TutorialRoundDuration);
     }
 
     private void Update()
@@ -81,13 +76,15 @@ public class GameManager : Singleton<GameManager>
         OnRoundStarted?.Invoke(CurrentRound);
         OnRoundSpawnRequested?.Invoke(CurrentRound);
 
-        float roundDuration = roundConfig.RoundDuration;
-        if (UpgradeManager.Instance != null)
-        {
-            roundDuration = UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration);
-        }
+        SetPhaseTimer(ModifiedRoundDuration());
+    }
 
-        SetPhaseTimer(roundDuration);
+    private float ModifiedRoundDuration()
+    {
+        float roundDuration = roundConfig.RoundDuration;
+        return UpgradeManager.Instance != null
+            ? UpgradeManager.Instance.ApplyModifiers(ShopStatType.RoundDuration, roundDuration)
+            : roundDuration;
     }
 
     public void EndRoundForDebug()
@@ -120,27 +117,22 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        bool debtDue = EconomyManager.Instance != null && EconomyManager.Instance.IsDebtDue(CurrentRound);
-        if (debtDue)
+        OnShopPhaseEnding?.Invoke(CurrentRound);
+        if (CurrentPhase == GamePhase.GameOver)
         {
-            EnterDebtCheckpoint();
             return;
         }
 
         StartRound(CurrentRound + 1);
     }
 
-    private void EnterDebtCheckpoint()
+    public void TriggerGameOver(GameOverReason reason)
     {
-        SetPhase(GamePhase.DebtCheckpoint);
-        phaseHasTimer = false;
-        int remainingDebt = EconomyManager.Instance != null ? EconomyManager.Instance.RemainingDebt : 0;
-        OnDebtDue?.Invoke(remainingDebt);
-        EnterGameOver(GameOverReason.NotEnoughGold);
-    }
+        if (CurrentPhase == GamePhase.GameOver)
+        {
+            return;
+        }
 
-    private void EnterGameOver(GameOverReason reason)
-    {
         SetPhase(GamePhase.GameOver);
         phaseHasTimer = false;
         OnGameOver?.Invoke(reason);
@@ -149,7 +141,7 @@ public class GameManager : Singleton<GameManager>
     private void SetPhase(GamePhase phase)
     {
         CurrentPhase = phase;
-        Time.timeScale = phase == GamePhase.Playing ? 1f : 0f;
+        Time.timeScale = PhaseTimeScale;
         OnPhaseChanged?.Invoke(CurrentPhase);
     }
 

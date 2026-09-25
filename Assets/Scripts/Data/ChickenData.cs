@@ -19,13 +19,16 @@ public class ChickenData : EconomyEntityData
     [SerializeField, Range(0f, 1f)] private float goldEggChance;
 
     public override EntityKind Kind => EntityKind.Chicken;
+
     public Egg EggPrefab => eggPrefab;
     public float LayInterval => layInterval;
     public float LayChance => layChance;
     public Vector3 LayOffset => layOffset;
     public int LayCount => layCount;
+
     public int EggPlacementAttempts => eggPlacementAttempts;
     public float EggPlacementRadius => eggPlacementRadius;
+
     public Egg GoldEggPrefab => goldEggPrefab;
     public float GoldEggChance => goldEggChance;
 }

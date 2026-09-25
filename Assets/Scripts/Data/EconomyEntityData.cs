@@ -38,17 +38,23 @@ public abstract class EconomyEntityData : ScriptableObject
     public Sprite Sprite => sprite;
     public SpriteAnimationData IdleAnimation => idleAnimation;
     public SpriteAnimationData WalkAnimation => walkAnimation;
+
     public int SellPrice => sellPrice;
+
     public int DisplayOrder => displayOrder;
+
     public float GrowthInterval => growthInterval;
     public float GrowthChance => growthChance;
     public Vector2 GrowthTimerJitterRange => growthTimerJitterRange;
     public GameObject NextStagePrefab => nextStagePrefab;
-    public bool CanGrow => nextStagePrefab != null;
+    public bool HasNextStage => nextStagePrefab != null;
+
     public float MoveSpeed => moveSpeed;
     public Vector2 WalkIntervalRange => walkIntervalRange;
     public Vector2 WalkDistanceRange => walkDistanceRange;
+
     public int WalkTargetAttempts => walkTargetAttempts;
+
     public Vector3 GrowthPopPunch => growthPopPunch;
     public float GrowthPopDuration => growthPopDuration;
     public int GrowthPopVibrato => growthPopVibrato;

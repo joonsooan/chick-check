@@ -89,7 +89,13 @@ public partial class TutorialManager : MonoBehaviour
 
     private static void SetFreeze(bool frozen)
     {
-        Time.timeScale = frozen ? 0f : 1f;
+        if (frozen)
+        {
+            Time.timeScale = 0f;
+            return;
+        }
+
+        Time.timeScale = GameManager.Instance != null ? GameManager.Instance.PhaseTimeScale : 1f;
     }
 }
 
@@ -110,7 +116,7 @@ public partial class TutorialManager
             Step(string.Empty, new ButtonClickCondition()),
             Step("상점에서는 다양한 아이템을 구매하실 수 있습니다", new ConfirmClickCondition(), freeze: true),
             Step("CHECK에서는 갚을 빚을 확인하고 빚을 갚을 수 있습니다\nCHECK 버튼을 눌러보세요", new ButtonClickCondition(), freeze: true),
-            Step("A, D 키로 단위 조절,\nW, S 키로 숫자를 조절할 수 있습니다\nPay 버튼을 눌러 지불하세요", new ConfirmClickCondition(), freeze: true),
+            Step("A, D 키로 단위 조절,\nW, S 키로 숫자를 조절할 수 있습니다\nPay 버튼을 눌러 지불하세요", new DebtPaidCondition(), freeze: true),
             Step("튜토리얼 종료!\n이제 본격적으로 게임을 시작합시다", new ConfirmClickCondition(), freeze: true),
         };
 

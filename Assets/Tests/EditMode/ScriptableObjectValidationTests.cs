@@ -24,7 +24,7 @@ public class ScriptableObjectValidationTests
             Assert.IsNotNull(data, $"Failed to load {path}");
 
             Assert.GreaterOrEqual(data.SellPrice, 0, $"{path} has negative SellPrice");
-            if (data.CanGrow)
+            if (data.HasNextStage)
             {
                 Assert.Greater(data.GrowthInterval, 0f, $"{path} can grow but has non-positive GrowthInterval");
                 Assert.IsTrue(
@@ -77,7 +77,7 @@ public class ScriptableObjectValidationTests
             Assert.GreaterOrEqual(data.GoldEggChance, 0f, $"{path} has GoldEggChance below 0");
             Assert.LessOrEqual(data.GoldEggChance, 1f, $"{path} has GoldEggChance above 1");
 
-            if (data.CanGrow)
+            if (data.HasNextStage)
             {
                 PlaceableEntity nextStage = data.NextStagePrefab.GetComponent<PlaceableEntity>();
                 Assert.IsFalse(nextStage is Chicken, $"{path}.NextStagePrefab must not grow back into a Chicken");
@@ -107,7 +107,7 @@ public class ScriptableObjectValidationTests
     }
 
     [Test]
-    public void ChickData_AlternateStagePrefabHasPlaceableEntity()
+    public void ChickData_DuckStagePrefabHasPlaceableEntity()
     {
         foreach (string guid in AssetDatabase.FindAssets("t:ChickData"))
         {
@@ -118,14 +118,14 @@ public class ScriptableObjectValidationTests
             }
 
             ChickData data = AssetDatabase.LoadAssetAtPath<ChickData>(path);
-            if (data.AlternateStagePrefab == null)
+            if (data.DuckStagePrefab == null)
             {
                 continue;
             }
 
             Assert.IsTrue(
-                data.AlternateStagePrefab.GetComponent<PlaceableEntity>() != null,
-                $"{path}.AlternateStagePrefab is missing a PlaceableEntity component");
+                data.DuckStagePrefab.GetComponent<PlaceableEntity>() != null,
+                $"{path}.DuckStagePrefab is missing a PlaceableEntity component");
         }
     }
 
@@ -158,7 +158,7 @@ public class ScriptableObjectValidationTests
     }
 
     [Test]
-    public void DebtConfigData_MultiplierIsAtLeastOne()
+    public void DebtConfigData_DebtGrowthOnPayoffIsAtLeastOne()
     {
         string[] guids = AssetDatabase.FindAssets("t:DebtConfigData");
         Assert.IsNotEmpty(guids, "No DebtConfigData assets found.");
@@ -167,7 +167,7 @@ public class ScriptableObjectValidationTests
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             DebtConfigData data = AssetDatabase.LoadAssetAtPath<DebtConfigData>(path);
-            Assert.GreaterOrEqual(data.Multiplier, 1f, $"{path} has Multiplier below 1");
+            Assert.GreaterOrEqual(data.DebtGrowthOnPayoff, 1f, $"{path} has DebtGrowthOnPayoff below 1");
         }
     }
 
@@ -184,7 +184,7 @@ public class ScriptableObjectValidationTests
             Assert.IsNotNull(item, $"Failed to load {path}");
 
             Assert.Greater(item.Cost, 0, $"{path} has non-positive Cost");
-            Assert.Greater(item.PriceMultiplier, 0f, $"{path} has non-positive PriceMultiplier");
+            Assert.Greater(item.CostGrowthPerPurchase, 0f, $"{path} has non-positive CostGrowthPerPurchase");
             Assert.IsFalse(string.IsNullOrEmpty(item.ItemName), $"{path} has empty ItemName");
             Assert.IsTrue(item.Effect != null, $"{path} has no Effect assigned");
         }

@@ -63,6 +63,7 @@ public class ShopItemWidget : MonoBehaviour
             icon.sprite = item.Icon;
             icon.SetNativeSize();
         }
+
         nameText.text = item.ItemName;
         descriptionText.text = item.Description;
         RefreshCostText();

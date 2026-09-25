@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class DebtLedger
 {
-    private readonly int checkpointInterval;
-    private readonly float multiplier;
-    private float currentDebtAmount;
+    private readonly int dueIntervalRounds;
+    private readonly float debtGrowthOnPayoff;
+    private float currentInstallmentTotal;
 
     public int RemainingDebt { get; private set; }
     public int NextDebtDueRound { get; private set; }
 
-    public DebtLedger(int checkpointInterval, int initialAmount, float multiplier)
+    public DebtLedger(int dueIntervalRounds, int initialDebt, float debtGrowthOnPayoff)
     {
-        this.checkpointInterval = checkpointInterval;
-        this.multiplier = multiplier;
+        this.dueIntervalRounds = dueIntervalRounds;
+        this.debtGrowthOnPayoff = debtGrowthOnPayoff;
 
-        NextDebtDueRound = checkpointInterval;
-        currentDebtAmount = initialAmount;
-        RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
+        NextDebtDueRound = dueIntervalRounds;
+        currentInstallmentTotal = initialDebt;
+        RemainingDebt = Mathf.RoundToInt(currentInstallmentTotal);
     }
 
     public int Pay(int amount)
@@ -30,9 +30,9 @@ public class DebtLedger
         RemainingDebt -= payable;
         if (RemainingDebt <= 0)
         {
-            currentDebtAmount *= multiplier;
-            RemainingDebt = Mathf.RoundToInt(currentDebtAmount);
-            NextDebtDueRound += checkpointInterval;
+            currentInstallmentTotal *= debtGrowthOnPayoff;
+            RemainingDebt = Mathf.RoundToInt(currentInstallmentTotal);
+            NextDebtDueRound += dueIntervalRounds;
         }
 
         return payable;
