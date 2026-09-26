@@ -3,5 +3,6 @@ public enum EntityKind
     Chick,
     Egg,
     Chicken,
-    FriedChicken
+    FriedChicken,
+    MergedChick
 }

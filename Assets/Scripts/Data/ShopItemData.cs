@@ -9,6 +9,7 @@ public class ShopItemData : ScriptableObject
     [SerializeField] private int cost = 10;
     [SerializeField] private float priceMultiplier = 2f;
     [SerializeField] private bool oneTimeOnly;
+    [SerializeField] private bool pinWhenUnlocked;
 
     [SerializeReference] private ShopEffect effect;
 
@@ -18,6 +19,7 @@ public class ShopItemData : ScriptableObject
     public int Cost => cost;
     public float CostGrowthPerPurchase => priceMultiplier;
     public bool OneTimeOnly => oneTimeOnly;
+    public bool PinWhenUnlocked => pinWhenUnlocked;
     public ShopEffect Effect => effect;
 
 #if UNITY_INCLUDE_TESTS
@@ -26,6 +28,7 @@ public class ShopItemData : ScriptableObject
         int cost = 10,
         float costGrowthPerPurchase = 2f,
         bool oneTimeOnly = false,
+        bool pinWhenUnlocked = false,
         ShopEffect effect = null)
     {
         ShopItemData instance = CreateInstance<ShopItemData>();
@@ -33,6 +36,7 @@ public class ShopItemData : ScriptableObject
         instance.cost = cost;
         instance.priceMultiplier = costGrowthPerPurchase;
         instance.oneTimeOnly = oneTimeOnly;
+        instance.pinWhenUnlocked = pinWhenUnlocked;
         instance.effect = effect ?? new StatModifierEffect();
         return instance;
     }

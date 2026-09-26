@@ -106,7 +106,7 @@ public class MirrorReflection : MonoBehaviour
         sr.sprite = source.sprite;
         sr.flipX = source.flipX;
         sr.color = tint;
-        sr.transform.localScale = Vector3.one * scale;
+        sr.transform.localScale = chick.DefaultScale * scale;
         sr.transform.position = Reflect(chick.transform.position);
     }
 

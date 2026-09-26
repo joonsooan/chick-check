@@ -30,12 +30,26 @@ public abstract class PlaceableEntity : MonoBehaviour
 
     private float lastSlowTime;
 
-    protected Vector3 DefaultScale => defaultScale;
+    public Vector3 DefaultScale => defaultScale;
+
+    public GameObject SourcePrefab
+    {
+        get
+        {
+            if (pooledObject == null)
+            {
+                TryGetComponent(out pooledObject);
+            }
+
+            return pooledObject != null && pooledObject.Pool != null ? pooledObject.Pool.Prefab : null;
+        }
+    }
 
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool IsRegistered => activeIndex >= 0;
     public bool IsCarried { get; private set; }
-    public virtual bool CanBeCarried => true;
+    public bool IsMerging { get; private set; }
+    public virtual bool CanBeCarried => !IsMerging;
     public abstract EconomyEntityData EconomyData { get; }
 
     public float CurrentGrowthInterval { get; private set; }
@@ -90,6 +104,8 @@ public abstract class PlaceableEntity : MonoBehaviour
     {
         transform.DOKill();
 
+        IsMerging = false;
+
         RemoveFromActive();
 
         Spatial.Remove(this);
@@ -125,7 +141,7 @@ public abstract class PlaceableEntity : MonoBehaviour
     {
         flipbook.Tick(dt);
 
-        if (IsCarried)
+        if (IsCarried || IsMerging)
         {
             return;
         }
@@ -142,7 +158,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         float dt = time - lastSlowTime;
         lastSlowTime = time;
 
-        if (IsCarried)
+        if (IsCarried || IsMerging)
         {
             return;
         }
@@ -288,6 +304,64 @@ public abstract class PlaceableEntity : MonoBehaviour
         transform.localScale = defaultScale;
         transform.DOPunchScale(
             data.GrowthPopPunch, data.GrowthPopDuration, data.GrowthPopVibrato, data.GrowthPopElasticity);
+    }
+
+    public void BeginMerge(Vector3 target, float duration, Ease ease)
+    {
+        IsMerging = true;
+
+        EconomyEntityData data = EconomyData;
+        if (data != null)
+        {
+            flipbook.Stop();
+            flipbook.Play(data.WalkAnimation);
+        }
+
+        spriteRenderer.flipX = target.x > transform.position.x;
+
+        transform.DOKill();
+        transform
+            .DOMove(target, duration)
+            .SetEase(ease)
+            .OnUpdate(SyncSpatialCell)
+            .OnComplete(PlayIdleAfterMerge);
+
+        OnMergeBegin();
+    }
+
+    private void PlayIdleAfterMerge()
+    {
+        EconomyEntityData data = EconomyData;
+        if (IsMerging && data != null)
+        {
+            flipbook.Play(data.IdleAnimation);
+        }
+    }
+
+    public void CancelMerge()
+    {
+        if (!IsMerging)
+        {
+            return;
+        }
+
+        transform.DOKill();
+        IsMerging = false;
+
+        OnMergeCancel();
+    }
+
+    protected virtual void OnMergeBegin()
+    {
+    }
+
+    protected virtual void OnMergeCancel()
+    {
+    }
+
+    public void Despawn()
+    {
+        DespawnSelf();
     }
 
     public void Sell()

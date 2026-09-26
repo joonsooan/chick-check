@@ -55,42 +55,56 @@ public static class RoundSettlement
         return records;
     }
 
+    private readonly struct GroupKey : IEquatable<GroupKey>
+    {
+        public readonly Sprite Sprite;
+        public readonly int DisplayOrder;
+
+        public GroupKey(Sprite sprite, int displayOrder)
+        {
+            Sprite = sprite;
+            DisplayOrder = displayOrder;
+        }
+
+        public bool Equals(GroupKey other) => Sprite == other.Sprite && DisplayOrder == other.DisplayOrder;
+        public override bool Equals(object obj) => obj is GroupKey other && Equals(other);
+        public override int GetHashCode() => ((Sprite != null ? Sprite.GetHashCode() : 0) * 397) ^ DisplayOrder;
+    }
+
     public static List<SaleGroup> Summarize(IReadOnlyList<SaleRecord> records, out int totalGold)
     {
-        List<Sprite> order = new List<Sprite>();
-        Dictionary<Sprite, int> totalPriceBySprite = new Dictionary<Sprite, int>();
-        Dictionary<Sprite, int> countBySprite = new Dictionary<Sprite, int>();
-        Dictionary<Sprite, int> displayOrderBySprite = new Dictionary<Sprite, int>();
-        Dictionary<Sprite, bool> showCountBySprite = new Dictionary<Sprite, bool>();
+        List<GroupKey> order = new List<GroupKey>();
+        Dictionary<GroupKey, int> totalPriceByKey = new Dictionary<GroupKey, int>();
+        Dictionary<GroupKey, int> countByKey = new Dictionary<GroupKey, int>();
+        Dictionary<GroupKey, bool> showCountByKey = new Dictionary<GroupKey, bool>();
 
         totalGold = 0;
 
         for (int i = 0; i < records.Count; i++)
         {
             SaleRecord record = records[i];
-            Sprite sprite = record.Sprite;
+            GroupKey key = new GroupKey(record.Sprite, record.DisplayOrder);
 
-            if (!totalPriceBySprite.ContainsKey(sprite))
+            if (!totalPriceByKey.ContainsKey(key))
             {
-                order.Add(sprite);
-                totalPriceBySprite[sprite] = 0;
-                countBySprite[sprite] = 0;
-                displayOrderBySprite[sprite] = record.DisplayOrder;
-                showCountBySprite[sprite] = record.ShowCount;
+                order.Add(key);
+                totalPriceByKey[key] = 0;
+                countByKey[key] = 0;
+                showCountByKey[key] = record.ShowCount;
             }
 
-            totalPriceBySprite[sprite] += record.SellPrice;
-            countBySprite[sprite]++;
+            totalPriceByKey[key] += record.SellPrice;
+            countByKey[key]++;
             totalGold += record.SellPrice;
         }
 
-        StableSortByDisplayOrder(order, displayOrderBySprite);
+        StableSortByDisplayOrder(order);
 
         List<SaleGroup> groups = new List<SaleGroup>(order.Count);
         for (int i = 0; i < order.Count; i++)
         {
-            Sprite sprite = order[i];
-            groups.Add(new SaleGroup(sprite, totalPriceBySprite[sprite], countBySprite[sprite], displayOrderBySprite[sprite], showCountBySprite[sprite]));
+            GroupKey key = order[i];
+            groups.Add(new SaleGroup(key.Sprite, totalPriceByKey[key], countByKey[key], key.DisplayOrder, showCountByKey[key]));
         }
 
         return groups;
@@ -106,14 +120,13 @@ public static class RoundSettlement
         records.Add(new SaleRecord(icon, amount, displayOrder, showCount: false));
     }
 
-    private static void StableSortByDisplayOrder(List<Sprite> order, Dictionary<Sprite, int> displayOrder)
+    private static void StableSortByDisplayOrder(List<GroupKey> order)
     {
         for (int i = 1; i < order.Count; i++)
         {
-            Sprite current = order[i];
-            int currentKey = displayOrder[current];
+            GroupKey current = order[i];
             int j = i - 1;
-            while (j >= 0 && displayOrder[order[j]] > currentKey)
+            while (j >= 0 && order[j].DisplayOrder > current.DisplayOrder)
             {
                 order[j + 1] = order[j];
                 j--;

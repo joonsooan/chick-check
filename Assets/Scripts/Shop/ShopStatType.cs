@@ -12,5 +12,7 @@ public enum ShopStatType
     ChickenGrowthChance,
     GoldEggChance,
     DuckGrowthChance,
-    SellPriceFriedChicken
+    SellPriceFriedChicken,
+    SellPriceMergedChick,
+    MergedChickGrowthChance
 }

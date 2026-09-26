@@ -139,6 +139,16 @@ public class Chick : PlaceableEntity
 
     public bool IsMirrorExiting => mirrorExitMotion.IsActive;
 
+    protected override void OnMergeBegin()
+    {
+        IsGuided = false;
+    }
+
+    protected override void OnMergeCancel()
+    {
+        ResetLifeState();
+    }
+
     public void GuideTo(Vector3 destination)
     {
         if (IsCarried || IsMirrorExiting || !gameObject.activeInHierarchy)
@@ -222,9 +232,11 @@ public class Chick : PlaceableEntity
 
     public bool IsMutant => data.IsMutant;
 
+    protected virtual bool CanMutate => true;
+
     public void Mutate()
     {
-        if (data.IsMutant || !gameObject.activeInHierarchy)
+        if (!CanMutate || data.IsMutant || IsMerging || !gameObject.activeInHierarchy)
         {
             return;
         }
@@ -275,7 +287,7 @@ public class Chick : PlaceableEntity
                 continue;
             }
 
-            if (other.IsCarried || other.IsMirrorExiting)
+            if (other.IsCarried || other.IsMirrorExiting || other.IsMerging)
             {
                 continue;
             }

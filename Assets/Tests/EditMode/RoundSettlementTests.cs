@@ -99,6 +99,28 @@ public class RoundSettlementTests
     }
 
     [Test]
+    public void Summarize_SameSpriteDifferentDisplayOrder_StaysSeparate()
+    {
+        Sprite shared = CreateSprite();
+
+        List<SaleRecord> records = new List<SaleRecord>
+        {
+            new SaleRecord(shared, 10, 11),
+            new SaleRecord(shared, 2500, 13),
+            new SaleRecord(shared, 10, 11),
+        };
+
+        List<SaleGroup> groups = RoundSettlement.Summarize(records, out int totalGold);
+
+        Assert.AreEqual(2, groups.Count);
+        Assert.AreEqual(11, groups[0].DisplayOrder);
+        Assert.AreEqual(2, groups[0].Count);
+        Assert.AreEqual(13, groups[1].DisplayOrder);
+        Assert.AreEqual(2500, groups[1].TotalPrice);
+        Assert.AreEqual(2520, totalGold);
+    }
+
+    [Test]
     public void Summarize_EmptyInput_ReturnsEmptyGroupsAndZeroGold()
     {
         List<SaleRecord> records = new List<SaleRecord>();

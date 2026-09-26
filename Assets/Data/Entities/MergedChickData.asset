@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bb859b3c9c552342899beb9a97be7a5, type: 3}
+  m_Name: MergedChickData
+  m_EditorClassIdentifier: ChickCheck.Runtime::MergedChickData
+  sprite: {fileID: 3049703459977841537, guid: 6b3d00ec7ce894541aadcc03817bcb3f, type: 3}
+  idleAnimation: {fileID: 0}
+  walkAnimation: {fileID: 0}
+  sellPrice: 200
+  displayOrder: 13
+  growthInterval: 5
+  growthChance: 0.05
+  growthTimerJitterRange: {x: 0.1, y: 0.2}
+  nextStagePrefab: {fileID: 0}
+  moveSpeed: 1
+  walkIntervalRange: {x: 1.5, y: 3}
+  walkDistanceRange: {x: 0.75, y: 1.5}
+  walkTargetAttempts: 10
+  growthPopPunch: {x: 0.3, y: 0.3, z: 0}
+  growthPopDuration: 0.4
+  growthPopVibrato: 8
+  growthPopElasticity: 0.8
+  isMutant: 0
+  alternateStagePrefab: {fileID: 0}
+  alternateStageChance: 0

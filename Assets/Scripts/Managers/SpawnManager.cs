@@ -21,6 +21,20 @@ public class SpawnManager : Singleton<SpawnManager>
     public int ChickenCount { get; private set; }
     public event Action<int> OnChickenCountChanged;
 
+    private readonly Dictionary<EconomyEntityData, int> entityCounts = new Dictionary<EconomyEntityData, int>();
+    public event Action<EconomyEntityData, int> OnEntityCountChanged;
+
+    public int CountOf(EconomyEntityData data)
+    {
+        if (data == null)
+        {
+            return 0;
+        }
+
+        entityCounts.TryGetValue(data, out int count);
+        return count;
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -115,6 +129,8 @@ public class SpawnManager : Singleton<SpawnManager>
         }
     }
 
+    public Chick DefaultChickPrefab => chickPrefab;
+
     public Chick SpawnChick(Vector3 position, Transform parent = null)
     {
         return SpawnChick(chickPrefab, position, parent);
@@ -153,5 +169,10 @@ public class SpawnManager : Singleton<SpawnManager>
                 OnChickenCountChanged?.Invoke(ChickenCount);
                 break;
         }
+
+        entityCounts.TryGetValue(data, out int entityCount);
+        entityCount += active ? 1 : -1;
+        entityCounts[data] = entityCount;
+        OnEntityCountChanged?.Invoke(data, entityCount);
     }
 }

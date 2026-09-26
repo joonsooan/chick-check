@@ -112,7 +112,7 @@ public class Mirror : MonoBehaviour
         for (int i = 0; i < chicksInDuplicationZone.Count; i++)
         {
             Chick chick = chicksInDuplicationZone[i];
-            if (!chick.IsMirrorExiting && !chick.IsCarried)
+            if (!chick.IsMirrorExiting && !chick.IsCarried && !chick.IsMerging)
             {
                 duplicationCandidates.Add(chick);
             }
@@ -139,7 +139,7 @@ public class Mirror : MonoBehaviour
         for (int i = chicksInGuideZone.Count - 1; i >= 0; i--)
         {
             Chick chick = chicksInGuideZone[i];
-            if (chick.IsCarried || chick.IsMirrorExiting || chick.IsGuided || chicksInDuplicationZoneSet.Contains(chick))
+            if (chick.IsCarried || chick.IsMirrorExiting || chick.IsGuided || chick.IsMerging || chicksInDuplicationZoneSet.Contains(chick))
             {
                 chicksInGuideZone.RemoveAt(i);
             }
@@ -164,9 +164,7 @@ public class Mirror : MonoBehaviour
     private void Duplicate(Chick source)
     {
         Vector3 spawnPos = reflection.GetReflectionPosition(source);
-        Chick copy = source.IsMutant && SourceMutantPrefab != null
-            ? SpawnManager.Instance.SpawnChick(SourceMutantPrefab, spawnPos, chickSpawnParent)
-            : SpawnManager.Instance.SpawnChick(spawnPos, chickSpawnParent);
+        Chick copy = SpawnManager.Instance.SpawnChick(ResolveCopyPrefab(source), spawnPos, chickSpawnParent);
 
         Vector2 exitDir = transform.right * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
         source.ForceMirrorExit(exitDir, data, masked: false);
@@ -175,6 +173,17 @@ public class Mirror : MonoBehaviour
         AudioManager.Instance?.PlayChickDuplicated();
 
         OnDuplicated?.Invoke();
+    }
+
+    private static Chick ResolveCopyPrefab(Chick source)
+    {
+        GameObject sourcePrefab = source.SourcePrefab;
+        if (sourcePrefab != null && sourcePrefab.TryGetComponent(out Chick prefabChick))
+        {
+            return prefabChick;
+        }
+
+        return source.IsMutant && SourceMutantPrefab != null ? SourceMutantPrefab : SpawnManager.Instance.DefaultChickPrefab;
     }
 
     private static void CollectChicksInBox(Vector3 center, Vector2 halfExtents, List<Chick> result)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
@@ -147,6 +148,82 @@ public class ShopEffectTests
         Assert.AreEqual(0, state.Get<GoldMineState>().GoldAmount);
         Assert.AreEqual(0f, state.Get<MultiLayState>().Chance);
         Assert.AreEqual(0, state.Get<MultiLayState>().BonusEggCount);
+    }
+
+    [Test]
+    public void ChickMergeEffect_IsAvailable_FalseWhenPeakBelowCount()
+    {
+        UpgradeState state = new UpgradeState();
+        ChickMergeData config = ScriptableObject.CreateInstance<ChickMergeData>();
+        SetPrivateField(config, "recipes", new List<ChickMergeData.MergeRecipe>
+        {
+            ChickMergeData.MergeRecipe.CreateForTest(new List<EconomyEntityData>(), 100, 1, null)
+        });
+
+        ChickMergeEffect effect = BuildChickMergeEffect(config, 0);
+
+        state.Get<ChickMergeState>().RecordCount(0, 99);
+        Assert.IsFalse(effect.IsAvailable(state));
+
+        Object.DestroyImmediate(config);
+    }
+
+    [Test]
+    public void ChickMergeEffect_IsAvailable_TrueWhenPeakMeetsCount()
+    {
+        UpgradeState state = new UpgradeState();
+        ChickMergeData config = ScriptableObject.CreateInstance<ChickMergeData>();
+        SetPrivateField(config, "recipes", new List<ChickMergeData.MergeRecipe>
+        {
+            ChickMergeData.MergeRecipe.CreateForTest(new List<EconomyEntityData>(), 100, 1, null)
+        });
+
+        ChickMergeEffect effect = BuildChickMergeEffect(config, 0);
+
+        state.Get<ChickMergeState>().RecordCount(0, 100);
+        Assert.IsTrue(effect.IsAvailable(state));
+
+        Object.DestroyImmediate(config);
+    }
+
+    [Test]
+    public void ChickMergeEffect_Apply_MarksRecipeUnlocked()
+    {
+        UpgradeState state = new UpgradeState();
+        ChickMergeData config = ScriptableObject.CreateInstance<ChickMergeData>();
+        SetPrivateField(config, "recipes", new List<ChickMergeData.MergeRecipe>
+        {
+            ChickMergeData.MergeRecipe.CreateForTest(new List<EconomyEntityData>(), 100, 1, null)
+        });
+
+        ChickMergeEffect effect = BuildChickMergeEffect(config, 0);
+
+        Assert.IsFalse(state.Get<ChickMergeState>().IsUnlocked(0));
+        effect.Apply(state);
+        Assert.IsTrue(state.Get<ChickMergeState>().IsUnlocked(0));
+
+        Object.DestroyImmediate(config);
+    }
+
+    [Test]
+    public void ChickMergeState_Reset_ClearsPeakAndUnlocked()
+    {
+        UpgradeState state = new UpgradeState();
+        state.Get<ChickMergeState>().RecordCount(0, 100);
+        state.Get<ChickMergeState>().Unlock(0);
+
+        state.Reset();
+
+        Assert.AreEqual(0, state.Get<ChickMergeState>().GetPeak(0));
+        Assert.IsFalse(state.Get<ChickMergeState>().IsUnlocked(0));
+    }
+
+    private static ChickMergeEffect BuildChickMergeEffect(ChickMergeData config, int recipeIndex)
+    {
+        ChickMergeEffect effect = new ChickMergeEffect();
+        SetPrivateField(effect, "config", config);
+        SetPrivateField(effect, "recipeIndex", recipeIndex);
+        return effect;
     }
 
     private static StatModifierEffect BuildStatModifier(ShopStatType stat, ShopModifierOp op, float value)

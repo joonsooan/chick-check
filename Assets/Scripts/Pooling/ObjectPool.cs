@@ -7,6 +7,8 @@ public class ObjectPool
     private readonly Transform root;
     private readonly Queue<PooledObject> inactive = new Queue<PooledObject>();
 
+    public GameObject Prefab => prefab;
+
     public ObjectPool(GameObject prefab, Transform root, int prewarm)
     {
         this.prefab = prefab;

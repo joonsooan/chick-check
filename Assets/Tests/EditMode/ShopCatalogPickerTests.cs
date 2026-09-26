@@ -54,4 +54,49 @@ public class ShopCatalogPickerTests
 
         Assert.AreEqual(items.Count, result.Count);
     }
+
+    [Test]
+    public void Pick_WithPinned_IncludesPinnedItemsFirst()
+    {
+        List<ShopItemData> pinned = new List<ShopItemData> { items[2] };
+
+        List<ShopItemData> result = ShopCatalogPicker.Pick(items, 3, _ => true, new System.Random(1), pinned);
+
+        Assert.AreEqual(3, result.Count);
+        Assert.Contains(items[2], result);
+    }
+
+    [Test]
+    public void Pick_WithPinned_ExcludesUnavailablePinnedItems()
+    {
+        List<ShopItemData> pinned = new List<ShopItemData> { items[3] };
+
+        List<ShopItemData> result = ShopCatalogPicker.Pick(
+            items, 3, candidate => !(candidate.Effect is EnableContagionEffect), new System.Random(1), pinned);
+
+        Assert.AreEqual(3, result.Count);
+        Assert.IsFalse(result.Contains(items[3]));
+    }
+
+    [Test]
+    public void Pick_WithPinned_NoDuplicatesBetweenPinnedAndRandom()
+    {
+        List<ShopItemData> pinned = new List<ShopItemData> { items[0], items[1] };
+
+        List<ShopItemData> result = ShopCatalogPicker.Pick(items, 4, _ => true, new System.Random(1), pinned);
+
+        Assert.AreEqual(4, new HashSet<ShopItemData>(result).Count);
+    }
+
+    [Test]
+    public void Pick_WithPinnedExceedingCount_TruncatesToCount()
+    {
+        List<ShopItemData> pinned = new List<ShopItemData> { items[0], items[1], items[2], items[3] };
+
+        List<ShopItemData> result = ShopCatalogPicker.Pick(items, 2, _ => true, new System.Random(1), pinned);
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual(items[0], result[0]);
+        Assert.AreEqual(items[1], result[1]);
+    }
 }
