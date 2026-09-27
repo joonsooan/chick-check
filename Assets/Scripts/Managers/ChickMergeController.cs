@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class ChickMergeController : MonoBehaviour
 {
+    private class ActiveMerge
+    {
+        public readonly List<PlaceableEntity> Sources = new List<PlaceableEntity>();
+        public int RecipeIndex;
+        public int Slot;
+        public Vector3 Center;
+        public bool ResultSpawned;
+        public Sequence Sequence;
+    }
+
     [SerializeField] private ChickMergeData data;
     [SerializeField] private Transform centerAnchor;
     [SerializeField] private Transform spawnParent;
@@ -12,14 +22,26 @@ public class ChickMergeController : MonoBehaviour
     private readonly List<bool> unlockedCache = new List<bool>();
     private readonly List<PlaceableEntity> candidateBuffer = new List<PlaceableEntity>();
     private readonly List<Vector3> candidatePositions = new List<Vector3>();
-    private readonly List<PlaceableEntity> activeSources = new List<PlaceableEntity>();
+    private readonly List<ActiveMerge> activeMerges = new List<ActiveMerge>();
+    private readonly List<Vector3> slotCenters = new List<Vector3>();
+    private readonly List<int> usedSlots = new List<int>();
+    private readonly List<Vector3> groupCenterBuffer = new List<Vector3>();
 
-    private bool mergeActive;
-    private bool resultSpawned;
-    private int activeRecipeIndex;
-    private Vector3 activeCenter;
-    private PlaceableEntity spawnedResult;
-    private Sequence activeSequence;
+    private bool MergeActive => activeMerges.Count > 0;
+
+    private int MergingSourceCount
+    {
+        get
+        {
+            int sum = 0;
+            for (int i = 0; i < activeMerges.Count; i++)
+            {
+                sum += activeMerges[i].Sources.Count;
+            }
+
+            return sum;
+        }
+    }
 
     private void Start()
     {
@@ -50,7 +72,7 @@ public class ChickMergeController : MonoBehaviour
             GameManager.Instance.OnGameOver -= HandleGameOver;
         }
 
-        activeSequence?.Kill();
+        KillSequences();
     }
 
     private void HandleModifiersChanged()
@@ -72,7 +94,7 @@ public class ChickMergeController : MonoBehaviour
 
     private void Update()
     {
-        if (mergeActive || data == null)
+        if (data == null)
         {
             return;
         }
@@ -91,18 +113,21 @@ public class ChickMergeController : MonoBehaviour
             }
 
             ChickMergeData.MergeRecipe recipe = recipes[i];
-            if (!PassesCheapFilter(recipe))
+            int freeGroups = recipe.MaxConcurrentMerges - activeMerges.Count;
+            if (freeGroups <= 0 || !PassesCheapFilter(recipe))
             {
                 continue;
             }
 
             CollectCandidates(recipe);
-            if (candidateBuffer.Count < recipe.Count + recipe.MinRemaining)
+            int groups = MergeFormation.GroupCount(
+                candidateBuffer.Count, recipe.Count, recipe.MinRemaining, freeGroups);
+            if (groups <= 0)
             {
                 continue;
             }
 
-            StartMerge(i, recipe);
+            StartMerges(i, recipe, groups);
             return;
         }
     }
@@ -114,14 +139,8 @@ public class ChickMergeController : MonoBehaviour
             return true;
         }
 
-        int sum = 0;
-        IReadOnlyList<EconomyEntityData> sourceData = recipe.SourceData;
-        for (int i = 0; i < sourceData.Count; i++)
-        {
-            sum += SpawnManager.Instance.CountOf(sourceData[i]);
-        }
-
-        return sum >= recipe.Count + recipe.MinRemaining;
+        int sum = SpawnManager.Instance.CountOf(recipe.SourceData);
+        return sum - MergingSourceCount >= recipe.Count + recipe.MinRemaining;
     }
 
     private void CollectCandidates(ChickMergeData.MergeRecipe recipe)
@@ -142,7 +161,7 @@ public class ChickMergeController : MonoBehaviour
                 continue;
             }
 
-            if (!ContainsSource(recipe, entity.EconomyData))
+            if (!recipe.ContainsSource(entity.EconomyData))
             {
                 continue;
             }
@@ -151,21 +170,7 @@ public class ChickMergeController : MonoBehaviour
         }
     }
 
-    private static bool ContainsSource(ChickMergeData.MergeRecipe recipe, EconomyEntityData data)
-    {
-        IReadOnlyList<EconomyEntityData> sourceData = recipe.SourceData;
-        for (int i = 0; i < sourceData.Count; i++)
-        {
-            if (sourceData[i] == data)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void StartMerge(int recipeIndex, ChickMergeData.MergeRecipe recipe)
+    private void StartMerges(int recipeIndex, ChickMergeData.MergeRecipe recipe, int groups)
     {
         candidatePositions.Clear();
         for (int i = 0; i < candidateBuffer.Count; i++)
@@ -173,47 +178,81 @@ public class ChickMergeController : MonoBehaviour
             candidatePositions.Add(candidateBuffer[i].transform.position);
         }
 
-        Vector3 seed = recipe.CenterMode == MergeCenterMode.SourceCentroid
-            ? MergeFormation.Centroid(candidatePositions)
-            : FixedCenter;
-
-        int[] nearest = MergeFormation.NearestIndices(candidatePositions, seed, recipe.Count);
-
-        Vector3 center = SnapToWalkable(recipe.CenterMode == MergeCenterMode.SourceCentroid
-            ? ResolveCentroidCenter(MergeFormation.Centroid(candidatePositions, nearest), recipe.DistanceFromAnchor)
-            : seed);
-        List<Vector3> ringPositions = MergeFormation.RingPositions(
-            center, recipe.Count, recipe.RingBaseRadius, recipe.RingSpacing, recipe.MinArcSpacing);
-
-        activeSources.Clear();
-        for (int i = 0; i < nearest.Length; i++)
+        if (!MergeActive)
         {
-            PlaceableEntity source = candidateBuffer[nearest[i]];
-            activeSources.Add(source);
-            source.BeginMerge(ringPositions[i], recipe.GatherDuration, recipe.GatherEase);
+            slotCenters.Clear();
+            slotCenters.AddRange(MergeFormation.GroupCenters(
+                ResolveBaseCenter(recipe), recipe.MaxConcurrentMerges, recipe.GroupSpacing));
         }
 
-        mergeActive = true;
-        resultSpawned = false;
-        activeRecipeIndex = recipeIndex;
-        activeCenter = center;
-        spawnedResult = null;
+        usedSlots.Clear();
+        for (int i = 0; i < activeMerges.Count; i++)
+        {
+            usedSlots.Add(activeMerges[i].Slot);
+        }
 
-        activeSequence = DOTween.Sequence();
-        activeSequence.AppendInterval(recipe.GatherDuration + recipe.HoldAfterGather);
-        activeSequence.AppendCallback(SpawnResult);
-        activeSequence.AppendInterval(recipe.HoldAfterSpawn);
-        activeSequence.AppendCallback(FinishMerge);
+        List<int> freeSlots = MergeFormation.FreeSlots(slotCenters.Count, usedSlots, groups);
+
+        groupCenterBuffer.Clear();
+        for (int i = 0; i < freeSlots.Count; i++)
+        {
+            groupCenterBuffer.Add(slotCenters[freeSlots[i]]);
+        }
+
+        List<int[]> assignments = MergeFormation.AssignGroups(candidatePositions, groupCenterBuffer, recipe.Count);
+
+        for (int g = 0; g < assignments.Count; g++)
+        {
+            int[] indices = assignments[g];
+            if (indices.Length < recipe.Count)
+            {
+                continue;
+            }
+
+            Vector3 center = SnapToWalkable(groupCenterBuffer[g]);
+            List<Vector3> ringPositions = MergeFormation.RingPositions(
+                center, recipe.Count, recipe.RingBaseRadius, recipe.RingSpacing, recipe.MinArcSpacing);
+
+            ActiveMerge merge = new ActiveMerge
+            {
+                RecipeIndex = recipeIndex,
+                Slot = freeSlots[g],
+                Center = center
+            };
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                PlaceableEntity source = candidateBuffer[indices[i]];
+                merge.Sources.Add(source);
+                source.BeginMerge(ringPositions[i], recipe.GatherDuration, recipe.GatherEase);
+            }
+
+            merge.Sequence = DOTween.Sequence();
+            merge.Sequence.AppendInterval(recipe.GatherDuration + recipe.HoldAfterGather);
+            merge.Sequence.AppendCallback(() => SpawnResult(merge));
+            merge.Sequence.AppendInterval(recipe.HoldAfterSpawn);
+            merge.Sequence.AppendCallback(() => FinishMerge(merge));
+
+            activeMerges.Add(merge);
+        }
+    }
+
+    private Vector3 ResolveBaseCenter(ChickMergeData.MergeRecipe recipe)
+    {
+        if (recipe.CenterMode != MergeCenterMode.SourceCentroid)
+        {
+            return FixedCenter;
+        }
+
+        Vector3 seed = MergeFormation.Centroid(candidatePositions);
+        int[] nearest = MergeFormation.NearestIndices(candidatePositions, seed, recipe.Count);
+        Vector3 centroid = MergeFormation.Centroid(candidatePositions, nearest);
+        return recipe.DistanceFromAnchor > 0f
+            ? MergeFormation.OffsetFrom(FixedCenter, centroid, recipe.DistanceFromAnchor)
+            : centroid;
     }
 
     private Vector3 FixedCenter => centerAnchor != null ? centerAnchor.position : transform.position;
-
-    private Vector3 ResolveCentroidCenter(Vector3 centroid, float distanceFromAnchor)
-    {
-        return distanceFromAnchor > 0f
-            ? MergeFormation.OffsetFrom(FixedCenter, centroid, distanceFromAnchor)
-            : centroid;
-    }
 
     private Vector3 SnapToWalkable(Vector3 fallback)
     {
@@ -234,95 +273,98 @@ public class ChickMergeController : MonoBehaviour
         return fallback;
     }
 
-    private void SpawnResult()
+    private void SpawnResult(ActiveMerge merge)
     {
-        if (resultSpawned || data == null || activeRecipeIndex >= data.Recipes.Count)
+        if (merge.ResultSpawned || data == null || merge.RecipeIndex >= data.Recipes.Count)
         {
             return;
         }
 
-        ChickMergeData.MergeRecipe recipe = data.Recipes[activeRecipeIndex];
+        merge.ResultSpawned = true;
+
+        ChickMergeData.MergeRecipe recipe = data.Recipes[merge.RecipeIndex];
         if (recipe.ResultPrefab == null)
         {
-            resultSpawned = true;
             return;
         }
 
         PlaceableEntity result = PoolManager.Instance.Spawn(
-            recipe.ResultPrefab, activeCenter, Quaternion.identity, spawnParent);
+            recipe.ResultPrefab, merge.Center, Quaternion.identity, spawnParent);
 
         if (result != null)
         {
             result.PlayGrowthPop();
         }
-
-        spawnedResult = result;
-        resultSpawned = true;
     }
 
-    private void FinishMerge()
+    private void FinishMerge(ActiveMerge merge)
     {
-        DespawnSources();
-
-        mergeActive = false;
-        resultSpawned = false;
-        spawnedResult = null;
-        activeSequence = null;
+        DespawnSources(merge);
+        merge.Sequence = null;
+        activeMerges.Remove(merge);
     }
 
-    private void DespawnSources()
+    private static void DespawnSources(ActiveMerge merge)
     {
-        for (int i = 0; i < activeSources.Count; i++)
+        for (int i = 0; i < merge.Sources.Count; i++)
         {
-            PlaceableEntity source = activeSources[i];
+            PlaceableEntity source = merge.Sources[i];
             if (source != null && source.IsRegistered)
             {
                 source.Despawn();
             }
         }
 
-        activeSources.Clear();
+        merge.Sources.Clear();
+    }
+
+    private void KillSequences()
+    {
+        for (int i = 0; i < activeMerges.Count; i++)
+        {
+            activeMerges[i].Sequence?.Kill(false);
+            activeMerges[i].Sequence = null;
+        }
     }
 
     private void HandleRoundEnding(int roundNumber)
     {
-        if (!mergeActive)
+        if (!MergeActive)
         {
             return;
         }
 
-        activeSequence?.Kill(false);
-        activeSequence = null;
+        KillSequences();
 
-        SpawnResult();
-        DespawnSources();
+        for (int i = 0; i < activeMerges.Count; i++)
+        {
+            SpawnResult(activeMerges[i]);
+            DespawnSources(activeMerges[i]);
+        }
 
-        mergeActive = false;
-        resultSpawned = false;
-        spawnedResult = null;
+        activeMerges.Clear();
     }
 
     private void HandleGameOver(GameOverReason reason)
     {
-        activeSequence?.Kill(false);
-        activeSequence = null;
+        KillSequences();
 
-        if (mergeActive)
+        for (int i = 0; i < activeMerges.Count; i++)
         {
-            for (int i = 0; i < activeSources.Count; i++)
+            List<PlaceableEntity> sources = activeMerges[i].Sources;
+            for (int j = 0; j < sources.Count; j++)
             {
-                PlaceableEntity source = activeSources[i];
+                PlaceableEntity source = sources[j];
                 if (source != null && source.IsRegistered)
                 {
                     source.CancelMerge();
                 }
             }
+
+            sources.Clear();
         }
 
-        activeSources.Clear();
-        mergeActive = false;
-        resultSpawned = false;
-        spawnedResult = null;
+        activeMerges.Clear();
         unlockedCache.Clear();
     }
 }

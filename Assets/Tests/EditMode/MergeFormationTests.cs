@@ -137,4 +137,103 @@ public class MergeFormationTests
         Assert.AreEqual(0f, result.x, 0.0001f);
         Assert.AreEqual(3f, result.y, 0.0001f);
     }
+
+    [Test]
+    public void GroupCount_500CandidatesMinRemaining1_ReturnsFour()
+    {
+        Assert.AreEqual(4, MergeFormation.GroupCount(500, 100, 1, 8));
+    }
+
+    [Test]
+    public void GroupCount_501CandidatesMinRemaining1_ReturnsFive()
+    {
+        Assert.AreEqual(5, MergeFormation.GroupCount(501, 100, 1, 8));
+    }
+
+    [Test]
+    public void GroupCount_CappedByMaxGroups()
+    {
+        Assert.AreEqual(2, MergeFormation.GroupCount(1000, 100, 0, 2));
+    }
+
+    [Test]
+    public void GroupCount_BelowThreshold_ReturnsZero()
+    {
+        Assert.AreEqual(0, MergeFormation.GroupCount(100, 100, 1, 8));
+    }
+
+    [Test]
+    public void GroupCenters_FirstAtCenterRestAtSpacing()
+    {
+        Vector3 center = new Vector3(2f, 3f, 0f);
+
+        List<Vector3> centers = MergeFormation.GroupCenters(center, 5, 4f);
+
+        Assert.AreEqual(5, centers.Count);
+        Assert.AreEqual(0f, (centers[0] - center).magnitude, 0.001f);
+        for (int i = 1; i < centers.Count; i++)
+        {
+            Assert.AreEqual(4f, (centers[i] - center).magnitude, 0.001f);
+        }
+    }
+
+    [Test]
+    public void GroupCenters_ZeroSpacing_AllAtCenter()
+    {
+        List<Vector3> centers = MergeFormation.GroupCenters(Vector3.one, 3, 0f);
+
+        Assert.AreEqual(3, centers.Count);
+        foreach (Vector3 groupCenter in centers)
+        {
+            Assert.AreEqual(Vector3.one, groupCenter);
+        }
+    }
+
+    [Test]
+    public void AssignGroups_PicksNearestWithoutOverlap()
+    {
+        List<Vector3> positions = new List<Vector3>
+        {
+            new Vector3(0f, 0f, 0f),
+            new Vector3(1f, 0f, 0f),
+            new Vector3(10f, 0f, 0f),
+            new Vector3(11f, 0f, 0f),
+            new Vector3(5f, 0f, 0f),
+        };
+        List<Vector3> centers = new List<Vector3> { Vector3.zero, new Vector3(10f, 0f, 0f) };
+
+        List<int[]> groups = MergeFormation.AssignGroups(positions, centers, 2);
+
+        Assert.AreEqual(2, groups.Count);
+        CollectionAssert.AreEquivalent(new[] { 0, 1 }, groups[0]);
+        CollectionAssert.AreEquivalent(new[] { 2, 3 }, groups[1]);
+    }
+
+    [Test]
+    public void FreeSlots_SkipsUsedSlotsInOrder()
+    {
+        List<int> free = MergeFormation.FreeSlots(8, new[] { 0, 1, 2, 3 }, 2);
+
+        CollectionAssert.AreEqual(new[] { 4, 5 }, free);
+    }
+
+    [Test]
+    public void FreeSlots_ReturnsFewerWhenSlotsExhausted()
+    {
+        List<int> free = MergeFormation.FreeSlots(3, new[] { 0, 2 }, 5);
+
+        CollectionAssert.AreEqual(new[] { 1 }, free);
+    }
+
+    [Test]
+    public void AssignGroups_NotEnoughCandidates_LastGroupShort()
+    {
+        List<Vector3> positions = new List<Vector3> { Vector3.zero, Vector3.right, Vector3.up };
+        List<Vector3> centers = new List<Vector3> { Vector3.zero, Vector3.zero };
+
+        List<int[]> groups = MergeFormation.AssignGroups(positions, centers, 2);
+
+        Assert.AreEqual(2, groups[0].Length);
+        Assert.AreEqual(1, groups[1].Length);
+    }
 }

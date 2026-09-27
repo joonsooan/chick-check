@@ -35,6 +35,17 @@ public class SpawnManager : Singleton<SpawnManager>
         return count;
     }
 
+    public int CountOf(IReadOnlyList<EconomyEntityData> dataList)
+    {
+        int sum = 0;
+        for (int i = 0; i < dataList.Count; i++)
+        {
+            sum += CountOf(dataList[i]);
+        }
+
+        return sum;
+    }
+
     protected override void Awake()
     {
         base.Awake();

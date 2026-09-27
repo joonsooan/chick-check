@@ -18,6 +18,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 95fb484f682dac14494ad76e9f4d6568, type: 2}
     count: 100
     minRemaining: 1
+    maxConcurrentMerges: 8
+    groupSpacing: 3
     resultPrefab: {fileID: 6141278934693665003, guid: 766f46c720b539e41880a7c8348da3be, type: 3}
     centerMode: 1
     distanceFromAnchor: 4

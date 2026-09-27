@@ -187,6 +187,22 @@ public class ShopEffectTests
     }
 
     [Test]
+    public void MergeRecipe_ContainsSource_MatchesOnlyListedData()
+    {
+        ChickData listed = ScriptableObject.CreateInstance<ChickData>();
+        ChickData other = ScriptableObject.CreateInstance<ChickData>();
+        ChickMergeData.MergeRecipe recipe =
+            ChickMergeData.MergeRecipe.CreateForTest(new List<EconomyEntityData> { listed }, 100, 1, null);
+
+        Assert.IsTrue(recipe.ContainsSource(listed));
+        Assert.IsFalse(recipe.ContainsSource(other));
+        Assert.IsFalse(recipe.ContainsSource(null));
+
+        Object.DestroyImmediate(listed);
+        Object.DestroyImmediate(other);
+    }
+
+    [Test]
     public void ChickMergeEffect_Apply_MarksRecipeUnlocked()
     {
         UpgradeState state = new UpgradeState();

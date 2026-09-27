@@ -129,40 +129,14 @@ public class UpgradeManager : Singleton<UpgradeManager>
         for (int i = 0; i < recipes.Count; i++)
         {
             ChickMergeData.MergeRecipe recipe = recipes[i];
-            if (!ContainsSource(recipe, data))
+            if (!recipe.ContainsSource(data))
             {
                 continue;
             }
 
-            int sum = SumSourceCounts(recipe);
+            int sum = SpawnManager.Instance.CountOf(recipe.SourceData);
             state.Get<ChickMergeState>().RecordCount(i, sum);
         }
-    }
-
-    private static bool ContainsSource(ChickMergeData.MergeRecipe recipe, EconomyEntityData data)
-    {
-        IReadOnlyList<EconomyEntityData> sourceData = recipe.SourceData;
-        for (int i = 0; i < sourceData.Count; i++)
-        {
-            if (sourceData[i] == data)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static int SumSourceCounts(ChickMergeData.MergeRecipe recipe)
-    {
-        int sum = 0;
-        IReadOnlyList<EconomyEntityData> sourceData = recipe.SourceData;
-        for (int i = 0; i < sourceData.Count; i++)
-        {
-            sum += SpawnManager.Instance.CountOf(sourceData[i]);
-        }
-
-        return sum;
     }
 
     private void HandlePhaseChanged(GamePhase phase)

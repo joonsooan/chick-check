@@ -18,6 +18,8 @@ public class ChickMergeData : ScriptableObject
         [SerializeField] private List<EconomyEntityData> sourceData = new List<EconomyEntityData>();
         [SerializeField, Min(1)] private int count = 100;
         [SerializeField, Min(0)] private int minRemaining = 1;
+        [SerializeField, Min(1)] private int maxConcurrentMerges = 8;
+        [SerializeField, Min(0f)] private float groupSpacing = 5f;
         [SerializeField] private PlaceableEntity resultPrefab;
         [SerializeField] private MergeCenterMode centerMode = MergeCenterMode.FixedTransform;
         [SerializeField, Min(0f)] private float distanceFromAnchor;
@@ -32,6 +34,8 @@ public class ChickMergeData : ScriptableObject
         public IReadOnlyList<EconomyEntityData> SourceData => sourceData;
         public int Count => count;
         public int MinRemaining => minRemaining;
+        public int MaxConcurrentMerges => maxConcurrentMerges;
+        public float GroupSpacing => groupSpacing;
         public PlaceableEntity ResultPrefab => resultPrefab;
         public MergeCenterMode CenterMode => centerMode;
         public float DistanceFromAnchor => distanceFromAnchor;
@@ -43,10 +47,25 @@ public class ChickMergeData : ScriptableObject
         public float HoldAfterGather => holdAfterGather;
         public float HoldAfterSpawn => holdAfterSpawn;
 
+        public bool ContainsSource(EconomyEntityData data)
+        {
+            for (int i = 0; i < sourceData.Count; i++)
+            {
+                if (sourceData[i] == data)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         internal void Validate()
         {
             count = Mathf.Max(1, count);
             minRemaining = Mathf.Max(0, minRemaining);
+            maxConcurrentMerges = Mathf.Max(1, maxConcurrentMerges);
+            groupSpacing = Mathf.Max(0f, groupSpacing);
             distanceFromAnchor = Mathf.Max(0f, distanceFromAnchor);
             ringBaseRadius = Mathf.Max(0f, ringBaseRadius);
             ringSpacing = Mathf.Max(0f, ringSpacing);
