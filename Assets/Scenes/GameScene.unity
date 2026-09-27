@@ -220,8 +220,7 @@ MonoBehaviour:
   mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}
   shopConfig: {fileID: 11400000, guid: ee63de3b3030d244eb5d0a5dea38e299, type: 2}
   chickMergeData: {fileID: 11400000, guid: 794cc2083631b4e48823bc1fea03f8be, type: 2}
-  debugStartingItems:
-  - {fileID: 11400000, guid: 92437da6be404514e833be0120e8b5e1, type: 2}
+  debugStartingItems: []
 --- !u!4 &45256426
 Transform:
   m_ObjectHideFlags: 0

@@ -30,8 +30,12 @@ public class TitleSceneController : MonoBehaviour
 
         if (quitButton != null)
         {
+#if UNITY_WEBGL
+            quitButton.gameObject.SetActive(false);
+#else
             quitButton.onClick.AddListener(QuitGame);
             RegisterHover(quitButton.gameObject, quitHoverImage);
+#endif
         }
 
         SetHoverActive(startHoverImage, false);

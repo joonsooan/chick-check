@@ -37,7 +37,11 @@ public class SettingsPanelController : MonoBehaviour
 
         if (quitButton != null)
         {
+#if UNITY_WEBGL
+            quitButton.gameObject.SetActive(false);
+#else
             quitButton.onClick.AddListener(QuitGame);
+#endif
         }
 
         if (sfxSlider != null)
