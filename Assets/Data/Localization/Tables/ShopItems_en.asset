@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26696478720
-    m_Localized: "Chick\u2192Chicken\nchance +5%"
+    m_Localized: "Chick\u2192Chicken\r\nchance +5%"
     m_Metadata:
       m_Items: []
   - m_Id: 26700673024
@@ -51,7 +51,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673029
-    m_Localized: "Chick\u2192Duck\nchance +5%"
+    m_Localized: "Chick\u2192Duck\r\nchance +5%"
     m_Metadata:
       m_Items: []
   - m_Id: 26700673030
@@ -59,7 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673031
-    m_Localized: "Egg\u2192Chick\nchance +5%"
+    m_Localized: "Egg\u2192Chick\r\nchance +5%"
     m_Metadata:
       m_Items: []
   - m_Id: 26700673032
@@ -97,7 +97,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673039
-    m_Localized: "Chick\u2192Chicken\nchance +5%"
+    m_Localized: "Chick\u2192Chicken\r\nchance +5%"
     m_Metadata:
       m_Items: []
   - m_Id: 26700673040
@@ -105,7 +105,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673041
-    m_Localized: "Egg\u2192Chick\nchance +5%"
+    m_Localized: "Egg\u2192Chick\r\nchance +5%"
     m_Metadata:
       m_Items: []
   - m_Id: 26700673042

@@ -27,6 +27,10 @@ MonoBehaviour:
     m_Key: ui.title.quit
     m_Metadata:
       m_Items: []
+  - m_Id: 14379114033152
+    m_Key: ui.title.language
+    m_Metadata:
+      m_Items: []
   - m_Id: 30177751042
     m_Key: ui.shop.reroll
     m_Metadata:
