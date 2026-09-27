@@ -23,10 +23,24 @@ public class CheckPanelController : MonoBehaviour
     [SerializeField] private Button digitSelectButtonDown;
 
     private readonly int[] digits = new int[DigitCount];
+    private readonly object[] dueInArguments = new object[1];
+    private readonly object[] remainingDebtArguments = new object[1];
     private int selectedDigitIndex;
 
     private void Awake()
     {
+        if (dueInText != null && !dueInLabel.IsEmpty)
+        {
+            dueInLabel.Arguments = dueInArguments;
+            dueInLabel.StringChanged += HandleDueInLabelChanged;
+        }
+
+        if (remainingDebtText != null && !remainingDebtLabel.IsEmpty)
+        {
+            remainingDebtLabel.Arguments = remainingDebtArguments;
+            remainingDebtLabel.StringChanged += HandleRemainingDebtLabelChanged;
+        }
+
         if (payButton != null)
         {
             payButton.onClick.AddListener(HandlePayClicked);
@@ -61,6 +75,22 @@ public class CheckPanelController : MonoBehaviour
         }
 
         ResetInput();
+    }
+
+    private void OnDestroy()
+    {
+        dueInLabel.StringChanged -= HandleDueInLabelChanged;
+        remainingDebtLabel.StringChanged -= HandleRemainingDebtLabelChanged;
+    }
+
+    private void HandleDueInLabelChanged(string value)
+    {
+        dueInText.text = value;
+    }
+
+    private void HandleRemainingDebtLabelChanged(string value)
+    {
+        remainingDebtText.text = value;
     }
 
     private void OnDisable()
@@ -213,15 +243,10 @@ public class CheckPanelController : MonoBehaviour
 
     private void HandleDebtStatusChanged(int remainingDebt, int roundsUntilDue)
     {
-        if (dueInText != null && !dueInLabel.IsEmpty)
-        {
-            dueInText.text = dueInLabel.GetLocalizedString(roundsUntilDue);
-        }
-
-        if (remainingDebtText != null && !remainingDebtLabel.IsEmpty)
-        {
-            remainingDebtText.text = remainingDebtLabel.GetLocalizedString(remainingDebt);
-        }
+        dueInArguments[0] = roundsUntilDue;
+        dueInLabel.RefreshString();
+        remainingDebtArguments[0] = remainingDebt;
+        remainingDebtLabel.RefreshString();
 
         ClampToMaxPayable();
         RefreshDigitDisplay();

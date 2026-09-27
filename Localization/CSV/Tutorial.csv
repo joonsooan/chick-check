@@ -1,7 +1,7 @@
 ﻿Key,en,ko
 tutorial.step.move,"Press W, A, S, D to move","W, A, S, D 키를 눌러 움직이세요"
 tutorial.step.pickup,Press Space to pick up or put down a chick,스페이스 바를 눌러 병아리를 들거나 내려놓으세요
-tutorial.step.duplicate,"Put a chick in front of the mirror and it becomes two
+tutorial.step.duplicate,"Put a chick in front of the mirror to duplicate
 Chickens and eggs cannot be duplicated","병아리를 거울 앞에 내려놓으면 2마리가 됩니다
 닭이나 달걀은 복제할 수 없습니다"
 tutorial.step.goal,Duplicate as many chicks as you can before time runs out!,제한 시간 안에 병아리를 최대한 많이 복제해봅시다!
@@ -15,6 +15,6 @@ Try paying at least 10 gold","A, D 키로 단위 조절,
 W, S 키로 숫자를 조절할 수 있습니다
 10 골드 이상 지불해보세요"
 tutorial.step.end,"Fail to pay your debt on time and it's game over
-Let's start the real game!","빚을 제때 갚지 못하면 게임오버입니다
+Let's start!","빚을 제때 갚지 못하면 게임오버입니다
 본격적으로 게임을 시작합시다!"
 tutorial.next,Next,다음

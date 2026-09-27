@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 30131613696
-    m_Localized: Start Game
+    m_Localized: Start
     m_Metadata:
       m_Items: []
   - m_Id: 30177751040
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 30177751044
-    m_Localized: 'Remaining debt : {0}'
+    m_Localized: 'Debt : {0}'
     m_Metadata:
       m_Items: []
   references:

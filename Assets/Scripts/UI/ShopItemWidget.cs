@@ -54,8 +54,14 @@ public class ShopItemWidget : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        UnbindLocalizedText();
+    }
+
     public void Setup(ShopItemData item)
     {
+        UnbindLocalizedText();
         boundItem = item;
 
         if (icon != null)
@@ -64,8 +70,8 @@ public class ShopItemWidget : MonoBehaviour
             icon.SetNativeSize();
         }
 
-        nameText.text = item.ItemName.GetLocalizedString();
-        descriptionText.text = item.Description.GetLocalizedString();
+        item.ItemName.StringChanged += HandleNameChanged;
+        item.Description.StringChanged += HandleDescriptionChanged;
         RefreshCostText();
 
         buyButton.onClick.RemoveAllListeners();
@@ -86,6 +92,27 @@ public class ShopItemWidget : MonoBehaviour
     private void HandleGoldChanged(int gold)
     {
         UpdateCostColor(gold);
+    }
+
+    private void HandleNameChanged(string value)
+    {
+        nameText.text = value;
+    }
+
+    private void HandleDescriptionChanged(string value)
+    {
+        descriptionText.text = value;
+    }
+
+    private void UnbindLocalizedText()
+    {
+        if (boundItem == null)
+        {
+            return;
+        }
+
+        boundItem.ItemName.StringChanged -= HandleNameChanged;
+        boundItem.Description.StringChanged -= HandleDescriptionChanged;
     }
 
     private void RefreshCostText()

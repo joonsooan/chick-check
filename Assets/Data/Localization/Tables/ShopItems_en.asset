@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 26650341376
-    m_Localized: Growth Spurt
+    m_Localized: Juiced Up
     m_Metadata:
       m_Items: []
   - m_Id: 26696478720
@@ -31,21 +31,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673025
-    m_Localized: 'Merge when
+    m_Localized: 'Auto merge
 
-      100 chicks gather'
+      100 chicks'
     m_Metadata:
       m_Items: []
   - m_Id: 26700673026
-    m_Localized: Fried Chicken!
+    m_Localized: Fried!
     m_Metadata:
       m_Items: []
   - m_Id: 26700673027
-    m_Localized: "Chicken\u2192Fried Chicken\nchance +2%"
+    m_Localized: 'Fried Chicken
+
+      chance +2%'
     m_Metadata:
       m_Items: []
   - m_Id: 26700673028
-    m_Localized: Distant Cousin
+    m_Localized: Lost Cousin
     m_Metadata:
       m_Items: []
   - m_Id: 26700673029
@@ -53,7 +55,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673030
-    m_Localized: Growing Up
+    m_Localized: Hatch It
     m_Metadata:
       m_Items: []
   - m_Id: 26700673031
@@ -61,7 +63,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673032
-    m_Localized: Egg Machine
+    m_Localized: Eggstra One
     m_Metadata:
       m_Items: []
   - m_Id: 26700673033
@@ -71,7 +73,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673034
-    m_Localized: Midas Hen
+    m_Localized: Midas Chicken
     m_Metadata:
       m_Items: []
   - m_Id: 26700673035
@@ -121,13 +123,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673045
-    m_Localized: 'Get an
+    m_Localized: 'Get a
 
-      extra-large mirror'
+      large mirror'
     m_Metadata:
       m_Items: []
   - m_Id: 26700673046
-    m_Localized: Quick Steps
+    m_Localized: Run Chick Run
     m_Metadata:
       m_Items: []
   - m_Id: 26700673047
@@ -137,7 +139,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673048
-    m_Localized: Double Yolk
+    m_Localized: Two Yolks
     m_Metadata:
       m_Items: []
   - m_Id: 26700673049
@@ -147,7 +149,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673050
-    m_Localized: You Too? Me Too!
+    m_Localized: Contagious!
     m_Metadata:
       m_Items: []
   - m_Id: 26700673051
@@ -177,7 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673056
-    m_Localized: Grade A Chick
+    m_Localized: Prime Chick
     m_Metadata:
       m_Items: []
   - m_Id: 26700673057
@@ -187,7 +189,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673058
-    m_Localized: Grade A Chicken
+    m_Localized: Prime Chicken
     m_Metadata:
       m_Items: []
   - m_Id: 26700673059
@@ -197,7 +199,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673060
-    m_Localized: Grade A Egg
+    m_Localized: Prime Egg
     m_Metadata:
       m_Items: []
   - m_Id: 26700673061
@@ -207,7 +209,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673062
-    m_Localized: Grade S Chick
+    m_Localized: Star Chick
     m_Metadata:
       m_Items: []
   - m_Id: 26700673063
@@ -217,7 +219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673064
-    m_Localized: Grade S Chicken
+    m_Localized: Star Chicken
     m_Metadata:
       m_Items: []
   - m_Id: 26700673065
@@ -227,7 +229,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673066
-    m_Localized: Grade S Egg
+    m_Localized: Star Egg
     m_Metadata:
       m_Items: []
   - m_Id: 26700673067
@@ -241,13 +243,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26700673069
-    m_Localized: 'Starting chicks
+    m_Localized: 'Starting
 
-      +2'
+      chicks +2'
     m_Metadata:
       m_Items: []
   - m_Id: 26700673070
-    m_Localized: Lightning Dash
+    m_Localized: Dash!
     m_Metadata:
       m_Items: []
   - m_Id: 26700673071

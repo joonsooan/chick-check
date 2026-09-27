@@ -67,7 +67,7 @@ public partial class TutorialManager : MonoBehaviour
         SetFreeze(step.freezeTime);
         if (step.HasMessage)
         {
-            popup.Show(step.message.GetLocalizedString(), showConfirm);
+            popup.Show(step.message, showConfirm);
         }
         else
         {

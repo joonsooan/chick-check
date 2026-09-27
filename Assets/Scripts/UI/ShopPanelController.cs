@@ -19,9 +19,16 @@ public class ShopPanelController : MonoBehaviour
     [SerializeField] private Color insufficientCostColor = Color.red;
 
     private readonly List<ShopItemWidget> spawnedWidgets = new List<ShopItemWidget>();
+    private readonly object[] rerollArguments = new object[1];
 
     private void Awake()
     {
+        if (rerollCostText != null && !rerollLabel.IsEmpty)
+        {
+            rerollLabel.Arguments = rerollArguments;
+            rerollLabel.StringChanged += HandleRerollLabelChanged;
+        }
+
         if (nextRoundButton != null)
         {
             nextRoundButton.onClick.AddListener(HandleNextRoundClicked);
@@ -70,12 +77,23 @@ public class ShopPanelController : MonoBehaviour
 
     private void RefreshRerollLabel()
     {
-        if (rerollCostText == null || UpgradeManager.Instance == null || rerollLabel.IsEmpty)
+        if (UpgradeManager.Instance == null || !rerollLabel.HasChangeHandler)
         {
             return;
         }
 
-        rerollCostText.text = rerollLabel.GetLocalizedString(UpgradeManager.Instance.RerollCost);
+        rerollArguments[0] = UpgradeManager.Instance.RerollCost;
+        rerollLabel.RefreshString();
+    }
+
+    private void HandleRerollLabelChanged(string value)
+    {
+        rerollCostText.text = value;
+    }
+
+    private void OnDestroy()
+    {
+        rerollLabel.StringChanged -= HandleRerollLabelChanged;
     }
 
     private void OnDisable()

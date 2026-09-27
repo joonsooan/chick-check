@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 27875078145
-    m_Localized: 'Put a chick in front of the mirror and it becomes two
+    m_Localized: 'Put a chick in front of the mirror to duplicate
 
       Chickens
       and eggs cannot be duplicated'
@@ -61,7 +61,7 @@ MonoBehaviour:
     m_Localized: 'Fail to pay your debt on time and it''s game over
 
       Let''s
-      start the real game!'
+      start!'
     m_Metadata:
       m_Items: []
   - m_Id: 27875078151

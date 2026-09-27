@@ -1,7 +1,7 @@
 ﻿Key,en,ko
-ui.title.start,Start Game,게임 시작
+ui.title.start,Start,게임 시작
 ui.title.tutorial,Tutorial,튜토리얼
 ui.title.quit,Quit Game,게임 종료
 ui.shop.reroll,Reroll {0},새로고침 {0}
 ui.check.due_in,Due in D - {0},상환까지 D - {0}
-ui.check.remaining_debt,Remaining debt : {0},남은 빚 : {0}
+ui.check.remaining_debt,Debt : {0},남은 빚 : {0}
