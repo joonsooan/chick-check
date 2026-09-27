@@ -1,0 +1,101 @@
+﻿Key,en,ko
+shop.chick_growth_chance.name,Growth Spurt,폭풍 성장
+shop.chick_growth_chance.desc,"Chick→Chicken
+chance +5%","병아리→닭
+확률 +5%"
+shop.chick_merge.name,Great Leap,위대한 도약
+shop.chick_merge.desc,"Merge when
+100 chicks gather","병아리 100마리
+돌파 시 합체"
+shop.chicken_growth_chance.name,Fried Chicken!,치킨이닭!
+shop.chicken_growth_chance.desc,"Chicken→Fried Chicken
+chance +2%","닭→치킨
+확률 +2%"
+shop.duck_growth_chance.name,Distant Cousin,머나먼 사촌
+shop.duck_growth_chance.desc,"Chick→Duck
+chance +5%","병아리→오리
+확률 +5%"
+shop.egg_growth_chance.name,Growing Up,무럭무럭
+shop.egg_growth_chance.desc,"Egg→Chick
+chance +5%","알→병아리
+확률 +5%"
+shop.egg_lay_chance.name,Egg Machine,다산왕
+shop.egg_lay_chance.desc,"Egg laying
+chance +5%","알 생성
+확률 +5%"
+shop.gold_egg_chance.name,Midas Hen,미다스의 닭
+shop.gold_egg_chance.desc,"Golden egg
+chance +5%","황금알 생성
+확률 +5%"
+shop.gold_mine.name,Jackpot!,심봤다!
+shop.gold_mine.desc,"Chicken pickup
+gold +10","닭 골드
+픽업 +10"
+shop.merged_chick_growth_chance.name,Great Growth,위대한 성장
+shop.merged_chick_growth_chance.desc,"Chick→Chicken
+chance +5%","병아리→닭
+확률 +5%"
+shop.merged_egg_growth_chance.name,Great Hatch,위대한 부화
+shop.merged_egg_growth_chance.desc,"Egg→Chick
+chance +5%","알→병아리
+확률 +5%"
+shop.merged_egg_lay_chance.name,Great Birth,위대한 탄생
+shop.merged_egg_lay_chance.desc,"Egg laying
+chance +5%","알 생성
+확률 +5%"
+shop.mirror_upgrade.name,Deluxe Mirror,명품 거울
+shop.mirror_upgrade.desc,"Get an
+extra-large mirror","특대 사이즈
+거울 획득"
+shop.move_speed.name,Quick Steps,빠른 발걸음
+shop.move_speed.desc,"Move speed
++10%","이동 속도
++10%"
+shop.multi_lay.name,Double Yolk,쌍란
+shop.multi_lay.desc,"Extra egg
+chance +20%","알 추가
+확률 +20%"
+shop.mutate_contagion.name,You Too? Me Too!,너도? 나도!
+shop.mutate_contagion.desc,"Mutation
+spreads","변이 전염
+활성화"
+shop.mutate_plus.name,Odd Potion,수상한 물약
+shop.mutate_plus.desc,"Mutant chicks
++1","변이 병아리
++1"
+shop.round_duration.name,Long Day,기나긴 하루
+shop.round_duration.desc,"Round time
++10s","라운드 시간
++10초"
+shop.sell_price_chick.name,Grade A Chick,1등급 병아리
+shop.sell_price_chick.desc,"Chick payout
+gold +10%","병아리 정산
+골드 +10%"
+shop.sell_price_chicken.name,Grade A Chicken,1등급 닭
+shop.sell_price_chicken.desc,"Chicken payout
+gold +10%","닭 정산
+골드 +10%"
+shop.sell_price_egg.name,Grade A Egg,1등급 알
+shop.sell_price_egg.desc,"Egg payout
+gold +10%","알 정산
+골드 +10%"
+shop.sell_price_merged_chick.name,Grade S Chick,S등급 병아리
+shop.sell_price_merged_chick.desc,"Chick payout
+gold +10%","병아리 정산
+골드 +10%"
+shop.sell_price_merged_chicken.name,Grade S Chicken,S등급 닭
+shop.sell_price_merged_chicken.desc,"Chicken payout
+gold +10%","닭 정산
+골드 +10%"
+shop.sell_price_merged_egg.name,Grade S Egg,S등급 알
+shop.sell_price_merged_egg.desc,"Egg payout
+gold +10%","알 정산
+골드 +10%"
+shop.spawn_count.name,Chick Harvest,병아리 풍년
+shop.spawn_count.desc,"Starting chicks
++2","시작 병아리
++2"
+shop.sprint.name,Lightning Dash,질풍신뢰
+shop.sprint.desc,"Unlock sprint
+(Shift key)","달리기 해금
+(Shift 키)"

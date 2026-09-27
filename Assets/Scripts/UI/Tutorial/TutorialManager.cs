@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 
 public partial class TutorialManager : MonoBehaviour
@@ -41,6 +43,7 @@ public partial class TutorialManager : MonoBehaviour
 
     private IEnumerator RunTutorial()
     {
+        yield return LocalizationSettings.InitializationOperation;
         yield return new WaitForSecondsRealtime(startDelay);
 
         foreach (TutorialStep step in steps)
@@ -64,7 +67,7 @@ public partial class TutorialManager : MonoBehaviour
         SetFreeze(step.freezeTime);
         if (step.HasMessage)
         {
-            popup.Show(step.message, showConfirm);
+            popup.Show(step.message.GetLocalizedString(), showConfirm);
         }
         else
         {
@@ -109,15 +112,15 @@ public partial class TutorialManager
 
         steps = new List<TutorialStep>
         {
-            Step("W, A, S, D 키를 눌러 움직이세요", new MoveInputCondition(), freeze: true),
-            Step("스페이스 바를 눌러 병아리를 들거나 내려놓으세요", new PickUpCondition(), delay: 0.3f),
-            Step("병아리를 거울 앞에 내려놓으면 2마리가 됩니다\n닭이나 달걀은 복제할 수 없습니다", new DuplicateCondition(), delay: 0.5f),
-            Step("제한 시간 안에 병아리를 최대한 많이 복제해봅시다!", new ConfirmClickCondition(), freeze: true, delay: 1.2f),
+            Step("tutorial.step.move", new MoveInputCondition(), freeze: true),
+            Step("tutorial.step.pickup", new PickUpCondition(), delay: 0.3f),
+            Step("tutorial.step.duplicate", new DuplicateCondition(), delay: 0.5f),
+            Step("tutorial.step.goal", new ConfirmClickCondition(), freeze: true, delay: 1.2f),
             Step(string.Empty, new ButtonClickCondition()),
-            Step("상점에서는 다양한 아이템을 구매하실 수 있습니다", new ConfirmClickCondition(), freeze: true),
-            Step("CHECK에서는 갚을 빚을 확인하고 빚을 갚을 수 있습니다\nCHECK 버튼을 눌러보세요", new ButtonClickCondition(), freeze: true),
-            Step("A, D 키로 단위 조절,\nW, S 키로 숫자를 조절할 수 있습니다\nPay 버튼을 눌러 지불하세요", new DebtPaidCondition(), freeze: true),
-            Step("튜토리얼 종료!\n이제 본격적으로 게임을 시작합시다", new ConfirmClickCondition(), freeze: true),
+            Step("tutorial.step.shop", new ConfirmClickCondition(), freeze: true),
+            Step("tutorial.step.check", new ButtonClickCondition(), freeze: true),
+            Step("tutorial.step.pay", new DebtPaidCondition(), freeze: true),
+            Step("tutorial.step.end", new ConfirmClickCondition(), freeze: true),
         };
 
         TutorialStep debtStep = steps[3];
@@ -136,11 +139,11 @@ public partial class TutorialManager
         Debug.Log("Tutorial steps built. Assign buttons on the two ButtonClickCondition steps (results Next, CHECK).", this);
     }
 
-    private static TutorialStep Step(string message, TutorialCondition condition, bool freeze = false, float delay = 0f)
+    private static TutorialStep Step(string messageKey, TutorialCondition condition, bool freeze = false, float delay = 0f)
     {
         return new TutorialStep
         {
-            message = message,
+            message = string.IsNullOrEmpty(messageKey) ? new LocalizedString() : new LocalizedString("Tutorial", messageKey),
             condition = condition,
             freezeTime = freeze,
             delayBefore = delay,

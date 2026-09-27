@@ -12,12 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_MultiLay_Add_1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uC30D\uB780"
-  description: "\uC54C \uCD94\uAC00\n\uD655\uB960 +20%"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.multi_lay.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.multi_lay.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: -1927341381, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 150
   priceMultiplier: 2
   oneTimeOnly: 0
+  pinWhenUnlocked: 0
+  requiredSightings: []
   effect:
     rid: 4621364399429386329
   references:

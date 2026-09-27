@@ -12,12 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_MirrorUpgrade_OneTime
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uBA85\uD488 \uAC70\uC6B8"
-  description: "\uD2B9\uB300 \uC0AC\uC774\uC988\n\uAC70\uC6B8 \uD68D\uB4DD"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.mirror_upgrade.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.mirror_upgrade.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   cost: 300
   priceMultiplier: 2
   oneTimeOnly: 1
+  pinWhenUnlocked: 0
+  requiredSightings: []
   effect:
     rid: 4621364399429386327
   references:

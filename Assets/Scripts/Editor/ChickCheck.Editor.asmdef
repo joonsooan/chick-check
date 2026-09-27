@@ -2,7 +2,9 @@
     "name": "ChickCheck.Editor",
     "rootNamespace": "",
     "references": [
-        "ChickCheck.Runtime"
+        "ChickCheck.Runtime",
+        "Unity.Localization",
+        "Unity.Localization.Editor"
     ],
     "includePlatforms": [
         "Editor"

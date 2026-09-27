@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEditor.Localization;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Tables;
 
 [TestFixture]
 public class ScriptableObjectValidationTests
@@ -248,21 +251,54 @@ public class ScriptableObjectValidationTests
 
             Assert.Greater(item.Cost, 0, $"{path} has non-positive Cost");
             Assert.Greater(item.CostGrowthPerPurchase, 0f, $"{path} has non-positive CostGrowthPerPurchase");
-            Assert.IsFalse(string.IsNullOrEmpty(item.ItemName), $"{path} has empty ItemName");
             Assert.IsTrue(item.Effect != null, $"{path} has no Effect assigned");
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            Assert.IsFalse(item.ItemName.IsEmpty, $"{path} has no ItemName localization reference");
+            Assert.IsFalse(item.Description.IsEmpty, $"{path} has no Description localization reference");
         }
     }
 
     [Test]
-    public void ShopItemData_ItemNamesAreUnique()
+    public void ShopItemData_LocalizedTextExistsForEveryLocale()
     {
-        HashSet<string> names = new HashSet<string>();
+        StringTableCollection collection = LocalizationEditorSettings.GetStringTableCollection("ShopItems");
+        Assert.IsNotNull(collection, "String Table Collection 'ShopItems' not found.");
+        HashSet<long> seenNameIds = new HashSet<long>();
+
         foreach (string guid in AssetDatabase.FindAssets("t:ShopItemData"))
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
             ShopItemData item = AssetDatabase.LoadAssetAtPath<ShopItemData>(path);
-            Assert.IsTrue(names.Add(item.ItemName), $"Duplicate ItemName '{item.ItemName}' at {path}");
+            long nameId = AssertLocalizedEntryFilled(collection, item.ItemName, $"{path}.ItemName");
+            AssertLocalizedEntryFilled(collection, item.Description, $"{path}.Description");
+            Assert.IsTrue(seenNameIds.Add(nameId), $"Duplicate ItemName key at {path}");
         }
+    }
+
+    private static long AssertLocalizedEntryFilled(StringTableCollection collection, LocalizedString reference, string label)
+    {
+        Assert.AreEqual(collection.SharedData.TableCollectionName, reference.TableReference.TableCollectionName,
+            $"{label} points at a table other than {collection.SharedData.TableCollectionName}");
+        SharedTableData.SharedTableEntry shared = collection.SharedData.GetEntryFromReference(reference.TableEntryReference);
+        Assert.IsNotNull(shared, $"{label} references a key missing from the table: {reference.TableEntryReference}");
+
+        foreach (StringTable table in collection.StringTables)
+        {
+            StringTableEntry entry = table.GetEntry(shared.Id);
+            Assert.IsFalse(entry == null || string.IsNullOrEmpty(entry.Value),
+                $"{label} has no text for locale '{table.LocaleIdentifier.Code}' (key '{shared.Key}')");
+        }
+
+        return shared.Id;
     }
 
     [Test]
@@ -284,7 +320,7 @@ public class ScriptableObjectValidationTests
             foreach (ShopItemData item in catalog)
             {
                 Assert.IsTrue(item != null, $"{path} catalog contains a null entry");
-                Assert.IsTrue(seen.Add(item), $"{path} catalog contains duplicate entry '{item.ItemName}'");
+                Assert.IsTrue(seen.Add(item), $"{path} catalog contains duplicate entry '{item.name}'");
             }
 
             Assert.GreaterOrEqual(catalog.Count, config.ItemsPerRound,

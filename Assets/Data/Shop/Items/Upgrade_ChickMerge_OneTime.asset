@@ -12,8 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_ChickMerge_OneTime
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uC704\uB300\uD55C \uB3C4\uC57D"
-  description: "\uBCD1\uC544\uB9AC 100\uB9C8\uB9AC\n\uB3CC\uD30C \uC2DC \uD569\uCCB4"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.chick_merge.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.chick_merge.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: -3878289797822314810, guid: 5526f4135559ca64fb3e6f332c17dd2f, type: 3}
   cost: 10
   priceMultiplier: 2

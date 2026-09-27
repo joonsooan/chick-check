@@ -64,8 +64,8 @@ public class ShopItemWidget : MonoBehaviour
             icon.SetNativeSize();
         }
 
-        nameText.text = item.ItemName;
-        descriptionText.text = item.Description;
+        nameText.text = item.ItemName.GetLocalizedString();
+        descriptionText.text = item.Description.GetLocalizedString();
         RefreshCostText();
 
         buyButton.onClick.RemoveAllListeners();

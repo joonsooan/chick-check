@@ -12,8 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_SellPriceMergedChicken_Mult_1.1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "S\uB4F1\uAE09 \uB2ED"
-  description: "\uB2ED \uC815\uC0B0\n\uACE8\uB4DC +10%"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.sell_price_merged_chicken.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.sell_price_merged_chicken.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: -1043343495, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 200
   priceMultiplier: 2

@@ -12,12 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_MutatePlus_Add_1
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uC218\uC0C1\uD55C \uBB3C\uC57D"
-  description: "\uBCC0\uC774 \uBCD1\uC544\uB9AC\n+1"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.mutate_plus.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.mutate_plus.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 3220665290143086019, guid: f48f7a3827061d143914c3e09d5971ed, type: 3}
   cost: 260
   priceMultiplier: 2
   oneTimeOnly: 0
+  pinWhenUnlocked: 0
+  requiredSightings: []
   effect:
     rid: 4621364399429386331
   references:

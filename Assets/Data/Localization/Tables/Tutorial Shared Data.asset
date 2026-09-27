@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Tutorial Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Tutorial
+  m_TableCollectionNameGuidString: 467175a54f3f9cc4096431d8ca3c6e80
+  m_Entries:
+  - m_Id: 27841523712
+    m_Key: tutorial.step.move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078144
+    m_Key: tutorial.step.pickup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078145
+    m_Key: tutorial.step.duplicate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078146
+    m_Key: tutorial.step.goal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078147
+    m_Key: tutorial.step.shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078148
+    m_Key: tutorial.step.check
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078149
+    m_Key: tutorial.step.pay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078150
+    m_Key: tutorial.step.end
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27875078151
+    m_Key: tutorial.next
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 4621364545481867482
+  references:
+    version: 2
+    RefIds:
+    - rid: 4621364545481867482
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1790522522308

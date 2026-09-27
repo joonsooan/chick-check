@@ -55212,6 +55212,24 @@ MonoBehaviour:
   panelRoot: {fileID: 641407679}
   dueInText: {fileID: 1318324227}
   remainingDebtText: {fileID: 750674510}
+  dueInLabel:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.check.due_in
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  remainingDebtLabel:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.check.remaining_debt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   digitTexts:
   - {fileID: 1086980620}
   - {fileID: 1238470034}
@@ -55230,6 +55248,9 @@ MonoBehaviour:
   digitSelectButtonPanel: {fileID: 894489224}
   digitSelectButtonUp: {fileID: 492095617739310600}
   digitSelectButtonDown: {fileID: 763553199}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &3036608042299575692
 GameObject:
   m_ObjectHideFlags: 0
@@ -55274,8 +55295,20 @@ MonoBehaviour:
   checkTabButton: {fileID: 1771184725}
   rerollButton: {fileID: 447890567}
   rerollCostText: {fileID: 447890568}
+  rerollLabel:
+    m_TableReference:
+      m_TableCollectionName: UI
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.shop.reroll
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   normalCostColor: {r: 1, g: 1, b: 1, a: 1}
   insufficientCostColor: {r: 0.8078432, g: 0.34117648, b: 0.23137257, a: 1}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &3438242743916417323
 PrefabInstance:
   m_ObjectHideFlags: 0

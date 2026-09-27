@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class CheckPanelController : MonoBehaviour
@@ -10,6 +11,8 @@ public class CheckPanelController : MonoBehaviour
     [SerializeField] private RectTransform panelRoot;
     [SerializeField] private TMP_Text dueInText;
     [SerializeField] private TMP_Text remainingDebtText;
+    [SerializeField] private LocalizedString dueInLabel = new LocalizedString();
+    [SerializeField] private LocalizedString remainingDebtLabel = new LocalizedString();
     [SerializeField] private TMP_Text[] digitTexts = new TMP_Text[DigitCount];
     [SerializeField] private Button payButton;
     [SerializeField] private Button nextDayButton;
@@ -210,14 +213,14 @@ public class CheckPanelController : MonoBehaviour
 
     private void HandleDebtStatusChanged(int remainingDebt, int roundsUntilDue)
     {
-        if (dueInText != null)
+        if (dueInText != null && !dueInLabel.IsEmpty)
         {
-            dueInText.text = $"상환까지 D - {roundsUntilDue}";
+            dueInText.text = dueInLabel.GetLocalizedString(roundsUntilDue);
         }
 
-        if (remainingDebtText != null)
+        if (remainingDebtText != null && !remainingDebtLabel.IsEmpty)
         {
-            remainingDebtText.text = $"남은 빚 : {remainingDebt}";
+            remainingDebtText.text = remainingDebtLabel.GetLocalizedString(remainingDebt);
         }
 
         ClampToMaxPayable();

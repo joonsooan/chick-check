@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class ShopPanelController : MonoBehaviour
@@ -13,6 +14,7 @@ public class ShopPanelController : MonoBehaviour
     [SerializeField] private Button checkTabButton;
     [SerializeField] private Button rerollButton;
     [SerializeField] private TMP_Text rerollCostText;
+    [SerializeField] private LocalizedString rerollLabel = new LocalizedString();
     [SerializeField] private Color normalCostColor = Color.white;
     [SerializeField] private Color insufficientCostColor = Color.red;
 
@@ -62,7 +64,18 @@ public class ShopPanelController : MonoBehaviour
             EconomyManager.Instance.OnGoldChanged += HandleGoldChanged;
         }
 
+        RefreshRerollLabel();
         UpdateRerollCostColor();
+    }
+
+    private void RefreshRerollLabel()
+    {
+        if (rerollCostText == null || UpgradeManager.Instance == null || rerollLabel.IsEmpty)
+        {
+            return;
+        }
+
+        rerollCostText.text = rerollLabel.GetLocalizedString(UpgradeManager.Instance.RerollCost);
     }
 
     private void OnDisable()

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "ShopItemData", menuName = "Chick Check/Shop Item Data")]
 public class ShopItemData : ScriptableObject
 {
-    [SerializeField] private string itemName;
-    [SerializeField, TextArea] private string description;
+    [SerializeField] private LocalizedString itemName = new LocalizedString();
+    [SerializeField] private LocalizedString description = new LocalizedString();
     [SerializeField] private Sprite icon;
     [SerializeField] private int cost = 10;
     [SerializeField] private float priceMultiplier = 2f;
@@ -15,8 +16,8 @@ public class ShopItemData : ScriptableObject
 
     [SerializeReference] private ShopEffect effect;
 
-    public string ItemName => itemName;
-    public string Description => description;
+    public LocalizedString ItemName => itemName;
+    public LocalizedString Description => description;
     public Sprite Icon => icon;
     public int Cost => cost;
     public float CostGrowthPerPurchase => priceMultiplier;
@@ -36,7 +37,7 @@ public class ShopItemData : ScriptableObject
         List<EconomyEntityData> requiredSightings = null)
     {
         ShopItemData instance = CreateInstance<ShopItemData>();
-        instance.itemName = itemName;
+        instance.name = itemName;
         instance.cost = cost;
         instance.priceMultiplier = costGrowthPerPurchase;
         instance.oneTimeOnly = oneTimeOnly;

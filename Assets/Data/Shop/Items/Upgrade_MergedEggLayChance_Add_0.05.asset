@@ -12,8 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_MergedEggLayChance_Add_0.05
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uC704\uB300\uD55C \uD0C4\uC0DD"
-  description: "\uC54C \uC0DD\uC131\n\uD655\uB960 +5%"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.merged_egg_lay_chance.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.merged_egg_lay_chance.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: -358238760877167246, guid: 8e24a12298699eb49a6e02bb6d25d90a, type: 3}
   cost: 250
   priceMultiplier: 2

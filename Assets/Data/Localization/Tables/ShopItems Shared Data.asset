@@ -1,0 +1,228 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ShopItems Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: ShopItems
+  m_TableCollectionNameGuidString: 81dac2c30f538054c81443bd6494bdf0
+  m_Entries:
+  - m_Id: 26650341376
+    m_Key: shop.chick_growth_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26696478720
+    m_Key: shop.chick_growth_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673024
+    m_Key: shop.chick_merge.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673025
+    m_Key: shop.chick_merge.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673026
+    m_Key: shop.chicken_growth_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673027
+    m_Key: shop.chicken_growth_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673028
+    m_Key: shop.duck_growth_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673029
+    m_Key: shop.duck_growth_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673030
+    m_Key: shop.egg_growth_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673031
+    m_Key: shop.egg_growth_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673032
+    m_Key: shop.egg_lay_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673033
+    m_Key: shop.egg_lay_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673034
+    m_Key: shop.gold_egg_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673035
+    m_Key: shop.gold_egg_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673036
+    m_Key: shop.gold_mine.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673037
+    m_Key: shop.gold_mine.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673038
+    m_Key: shop.merged_chick_growth_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673039
+    m_Key: shop.merged_chick_growth_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673040
+    m_Key: shop.merged_egg_growth_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673041
+    m_Key: shop.merged_egg_growth_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673042
+    m_Key: shop.merged_egg_lay_chance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673043
+    m_Key: shop.merged_egg_lay_chance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673044
+    m_Key: shop.mirror_upgrade.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673045
+    m_Key: shop.mirror_upgrade.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673046
+    m_Key: shop.move_speed.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673047
+    m_Key: shop.move_speed.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673048
+    m_Key: shop.multi_lay.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673049
+    m_Key: shop.multi_lay.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673050
+    m_Key: shop.mutate_contagion.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673051
+    m_Key: shop.mutate_contagion.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673052
+    m_Key: shop.mutate_plus.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673053
+    m_Key: shop.mutate_plus.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673054
+    m_Key: shop.round_duration.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673055
+    m_Key: shop.round_duration.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673056
+    m_Key: shop.sell_price_chick.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673057
+    m_Key: shop.sell_price_chick.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673058
+    m_Key: shop.sell_price_chicken.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673059
+    m_Key: shop.sell_price_chicken.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673060
+    m_Key: shop.sell_price_egg.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673061
+    m_Key: shop.sell_price_egg.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673062
+    m_Key: shop.sell_price_merged_chick.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673063
+    m_Key: shop.sell_price_merged_chick.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673064
+    m_Key: shop.sell_price_merged_chicken.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673065
+    m_Key: shop.sell_price_merged_chicken.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673066
+    m_Key: shop.sell_price_merged_egg.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673067
+    m_Key: shop.sell_price_merged_egg.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673068
+    m_Key: shop.spawn_count.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673069
+    m_Key: shop.spawn_count.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673070
+    m_Key: shop.sprint.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26700673071
+    m_Key: shop.sprint.desc
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 4621364545481867483
+  references:
+    version: 2
+    RefIds:
+    - rid: 4621364545481867483
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1790522522446

@@ -12,8 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
   m_Name: Upgrade_MergedChickGrowthChance_Add_0.05
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: "\uC704\uB300\uD55C \uC131\uC7A5"
-  description: "\uBCD1\uC544\uB9AC\u2192\uB2ED\n\uD655\uB960 +5%"
+  itemName:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.merged_chick_growth_chance.name
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: ShopItems
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: shop.merged_chick_growth_chance.desc
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: -4629936843308818515, guid: 2143a254499c98b4ebcfef5130d27caa, type: 3}
   cost: 150
   priceMultiplier: 2

@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 
 [Serializable]
 public class TutorialStep
 {
-    [TextArea(2, 4)] public string message;
+    public LocalizedString message = new LocalizedString();
     public bool freezeTime;
     [Min(0)] public float delayBefore;
     [SerializeReference] public TutorialCondition condition;
     public UnityEvent onCompleted;
 
-    public bool HasMessage => !string.IsNullOrEmpty(message);
+    public bool HasMessage => message != null && !message.IsEmpty;
 }
