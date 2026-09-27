@@ -119,6 +119,8 @@ public class Chicken : PlaceableEntity
         {
             SpawnEgg();
         }
+
+        PlayPunchScale(data.LayPunch, data.LayPunchDuration, data.LayPunchVibrato, data.LayPunchElasticity);
     }
 
     private void SpawnEgg()
@@ -127,7 +129,12 @@ public class Chicken : PlaceableEntity
         Egg eggPrefab = data.GoldEggPrefab != null && CurrentGoldEggChance > 0f && Random.value <= CurrentGoldEggChance
             ? data.GoldEggPrefab
             : data.EggPrefab;
-        PoolManager.Instance.Spawn(eggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
+        GameObject spawned = PoolManager.Instance.Spawn(eggPrefab.gameObject, spawnPosition, Quaternion.identity, transform.parent);
+        if (spawned != null && spawned.TryGetComponent(out PlaceableEntity egg))
+        {
+            egg.PlayPunchScale(data.EggPopPunch, data.EggPopDuration, data.EggPopVibrato, data.EggPopElasticity);
+        }
+
         AudioManager.Instance?.PlayEggLaid();
     }
 
@@ -161,15 +168,16 @@ public class Chicken : PlaceableEntity
     private bool TryPickEggPosition(out Vector3 position)
     {
         Vector3 basePosition = transform.position + data.LayOffset;
+        Vector3 jitteredPosition = basePosition + (Vector3)(Random.insideUnitCircle * data.LayPositionJitter);
 
         if (GridManager.Instance == null)
         {
-            position = basePosition;
+            position = jitteredPosition;
             return true;
         }
 
-        return GridManager.Instance.TryFindWalkable(basePosition, data.EggPlacementAttempts,
-            attempt => attempt == 0 ? basePosition : basePosition + (Vector3)(Random.insideUnitCircle * data.EggPlacementRadius),
+        return GridManager.Instance.TryFindWalkable(jitteredPosition, data.EggPlacementAttempts,
+            attempt => attempt == 0 ? jitteredPosition : basePosition + (Vector3)(Random.insideUnitCircle * data.EggPlacementRadius),
             out position);
     }
 }

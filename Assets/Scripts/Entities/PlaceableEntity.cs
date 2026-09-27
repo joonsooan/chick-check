@@ -280,7 +280,7 @@ public abstract class PlaceableEntity : MonoBehaviour
         return spawned;
     }
 
-    public void PlayPunchScale(Vector3 punch, float duration)
+    public void PlayPunchScale(Vector3 punch, float duration, int vibrato = 10, float elasticity = 1f)
     {
         if (duration <= 0f)
         {
@@ -289,7 +289,7 @@ public abstract class PlaceableEntity : MonoBehaviour
 
         transform.DOKill();
         transform.localScale = defaultScale;
-        transform.DOPunchScale(punch, duration);
+        transform.DOPunchScale(punch, duration, vibrato, elasticity);
     }
 
     public void PlayGrowthPop()
