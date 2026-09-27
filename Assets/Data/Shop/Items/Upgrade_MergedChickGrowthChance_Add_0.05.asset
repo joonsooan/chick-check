@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99b482a09b67764ebf2f1828e674c74, type: 3}
+  m_Name: Upgrade_MergedChickGrowthChance_Add_0.05
+  m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
+  itemName: "\uC704\uB300\uD55C \uC131\uC7A5"
+  description: "\uBCD1\uC544\uB9AC\u2192\uB2ED\n\uD655\uB960 +5%"
+  icon: {fileID: -4629936843308818515, guid: 2143a254499c98b4ebcfef5130d27caa, type: 3}
+  cost: 150
+  priceMultiplier: 2
+  oneTimeOnly: 0
+  pinWhenUnlocked: 1
+  requiredSightings:
+  - {fileID: 11400000, guid: efd034a8088383540aea0f1db593aef4, type: 2}
+  - {fileID: 11400000, guid: 249100302f6e4758a4486d091b018f40, type: 2}
+  effect:
+    rid: 4621364399429386340
+  references:
+    version: 2
+    RefIds:
+    - rid: 4621364399429386340
+      type: {class: StatModifierEffect, ns: , asm: ChickCheck.Runtime}
+      data:
+        targetStat: 14
+        op: 0
+        value: 0.05

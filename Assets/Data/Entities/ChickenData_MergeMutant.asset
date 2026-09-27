@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef15b37e28804e50836d42301314ef36, type: 3}
+  m_Name: ChickenData_MergeMutant
+  m_EditorClassIdentifier: ChickCheck.Runtime::MergedChickenData
+  sprite: {fileID: 5753104943098461891, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  idleAnimation: {fileID: 11400000, guid: 5c81be4541614217a5444b80c8ecf5c6, type: 2}
+  walkAnimation: {fileID: 11400000, guid: 20209e2a0be6400394bedbfcc5036ff3, type: 2}
+  sellPrice: 800
+  displayOrder: 25
+  growthInterval: 5
+  growthChance: 0
+  growthTimerJitterRange: {x: 0.1, y: 0.2}
+  nextStagePrefab: {fileID: 0}
+  moveSpeed: 1
+  walkIntervalRange: {x: 1.5, y: 4}
+  walkDistanceRange: {x: 0.5, y: 1}
+  walkTargetAttempts: 10
+  eggPrefab: {fileID: 5182355378179198010, guid: cb3de5924e6f4ea0832694692c6bd4e1, type: 3}
+  layInterval: 5
+  layChance: 0.05
+  layOffset: {x: 0, y: -0.2, z: 0}
+  layCount: 1
+  eggPlacementAttempts: 10
+  eggPlacementRadius: 0.5
+  goldEggPrefab: {fileID: 0}
+  goldEggChance: 0

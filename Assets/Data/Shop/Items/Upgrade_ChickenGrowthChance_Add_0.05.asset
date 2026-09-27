@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Upgrade_ChickenGrowthChance_Add_0.05
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
   itemName: "\uCE58\uD0A8\uC774\uB2ED!"
-  description: "\uB2ED\u2192\uCE58\uD0A8\n\uD655\uB960 +5%"
+  description: "\uB2ED\u2192\uCE58\uD0A8\n\uD655\uB960 +2%"
   icon: {fileID: -6879157460212273855, guid: 5526f4135559ca64fb3e6f332c17dd2f, type: 3}
   cost: 200
   priceMultiplier: 2
   oneTimeOnly: 0
+  pinWhenUnlocked: 0
+  requiredSightings: []
   effect:
     rid: 4621364399429386323
   references:
@@ -28,4 +30,4 @@ MonoBehaviour:
       data:
         targetStat: 9
         op: 0
-        value: 0.05
+        value: 0.02

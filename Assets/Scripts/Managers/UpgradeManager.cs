@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class UpgradeManager : Singleton<UpgradeManager>
 {
-    [SerializeField] private MutationData mutationData;
     [SerializeField] private ShopConfigData shopConfig;
     [SerializeField] private ChickMergeData chickMergeData;
     [SerializeField] private List<ShopItemData> debugStartingItems = new List<ShopItemData>();
@@ -22,8 +21,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
     private readonly System.Random rng = new System.Random();
 
     public UpgradeState State => state;
-
-    public MutationData MutationData => mutationData;
 
     protected override void Awake()
     {

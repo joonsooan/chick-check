@@ -232,21 +232,21 @@ public class Chick : PlaceableEntity
 
     public bool IsMutant => data.IsMutant;
 
-    protected virtual bool CanMutate => true;
+    public Chick MutatedPrefab => data.MutatedPrefab;
 
     public void Mutate()
     {
-        if (!CanMutate || data.IsMutant || IsMerging || !gameObject.activeInHierarchy)
+        if (data.IsMutant || IsMerging || !gameObject.activeInHierarchy)
         {
             return;
         }
 
-        if (mutationData == null || mutationData.MutatedChickPrefab == null)
+        if (data.MutatedPrefab == null)
         {
             return;
         }
 
-        SpawnManager.Instance.SpawnChick(mutationData.MutatedChickPrefab, transform.position, transform.parent);
+        SpawnManager.Instance.SpawnChick(data.MutatedPrefab, transform.position, transform.parent);
         DespawnSelf();
     }
 

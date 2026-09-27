@@ -5,6 +5,7 @@ public class ChickData : EconomyEntityData
 {
     [Header("Mutation")]
     [SerializeField] private bool isMutant;
+    [SerializeField] private Chick mutatedPrefab;
 
     [Header("Alternate Growth")]
     [SerializeField] private GameObject alternateStagePrefab;
@@ -13,6 +14,8 @@ public class ChickData : EconomyEntityData
     public override EntityKind Kind => EntityKind.Chick;
 
     public bool IsMutant => isMutant;
+
+    public Chick MutatedPrefab => mutatedPrefab;
 
     public GameObject DuckStagePrefab => alternateStagePrefab;
     public float DuckGrowthChance => alternateStageChance;

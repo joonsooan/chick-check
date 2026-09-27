@@ -14,5 +14,9 @@ public enum ShopStatType
     DuckGrowthChance,
     SellPriceFriedChicken,
     SellPriceMergedChick,
-    MergedChickGrowthChance
+    MergedChickGrowthChance,
+    SellPriceMergedChicken,
+    MergedEggLayChance,
+    SellPriceMergedEgg,
+    MergedEggGrowthChance
 }

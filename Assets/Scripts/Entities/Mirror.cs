@@ -31,9 +31,7 @@ public class Mirror : MonoBehaviour
     public IReadOnlyList<Chick> ChicksInDuplicationZone => chicksInDuplicationZone;
 
     private static Chick SourceMutantPrefab =>
-        UpgradeManager.Instance != null && UpgradeManager.Instance.MutationData != null
-            ? UpgradeManager.Instance.MutationData.MutatedChickPrefab
-            : null;
+        SpawnManager.Instance != null ? SpawnManager.Instance.DefaultMutantChickPrefab : null;
 
     private void Awake()
     {

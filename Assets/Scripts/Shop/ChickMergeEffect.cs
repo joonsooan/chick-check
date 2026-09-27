@@ -54,4 +54,6 @@ public class ChickMergeState
     {
         return unlocked.Contains(recipeIndex);
     }
+
+    public bool HasAnyUnlocked => unlocked.Count > 0;
 }

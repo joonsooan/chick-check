@@ -81,8 +81,8 @@ public class DebugStatsPanel : MonoBehaviour
         IReadOnlyList<PlaceableEntity> entities = PlaceableEntity.ActiveEntities;
 
         int chickCount = SpawnManager.Instance != null ? SpawnManager.Instance.ChickCount : 0;
-        int eggCount = SpawnManager.Instance != null ? SpawnManager.Instance.EggCount : 0;
-        int chickenCount = SpawnManager.Instance != null ? SpawnManager.Instance.ChickenCount : 0;
+        int eggCount = SpawnManager.Instance != null ? SpawnManager.Instance.CountOf(EntityKind.Egg) : 0;
+        int chickenCount = SpawnManager.Instance != null ? SpawnManager.Instance.CountOf(EntityKind.Chicken) : 0;
         float fps = Time.unscaledDeltaTime > 0f ? 1f / Time.unscaledDeltaTime : 0f;
 
         builder.Append("Entities: ");

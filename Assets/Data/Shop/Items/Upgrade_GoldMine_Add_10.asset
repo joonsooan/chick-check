@@ -18,6 +18,8 @@ MonoBehaviour:
   cost: 300
   priceMultiplier: 2
   oneTimeOnly: 0
+  pinWhenUnlocked: 0
+  requiredSightings: []
   effect:
     rid: 4621364399429386326
   references:
@@ -26,7 +28,7 @@ MonoBehaviour:
     - rid: 4621364399429386326
       type: {class: GoldMineEffect, ns: , asm: ChickCheck.Runtime}
       data:
-        interval: 5
+        interval: 10
         chance: 0.5
         baseGold: 10
         goldPerPurchase: 10

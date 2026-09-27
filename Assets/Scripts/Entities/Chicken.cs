@@ -10,6 +10,8 @@ public class Chicken : PlaceableEntity
 
     protected override ShopStatType GrowthChanceStat => ShopStatType.ChickenGrowthChance;
 
+    protected virtual ShopStatType LayChanceStat => ShopStatType.EggLayChance;
+
     public float CurrentLayInterval { get; private set; }
     public float CurrentLayChance { get; private set; }
     public float CurrentGoldEggChance { get; private set; }
@@ -30,7 +32,7 @@ public class Chicken : PlaceableEntity
         base.RefreshStats();
 
         CurrentLayInterval = data.LayInterval;
-        CurrentLayChance = ApplyModifier(ShopStatType.EggLayChance, data.LayChance);
+        CurrentLayChance = ApplyModifier(LayChanceStat, data.LayChance);
         CurrentGoldEggChance = ApplyModifier(ShopStatType.GoldEggChance, data.GoldEggChance);
 
         UpgradeManager manager = UpgradeManager.Instance;

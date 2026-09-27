@@ -10,19 +10,24 @@ public class SpawnManager : Singleton<SpawnManager>
 
     private readonly System.Random rng = new System.Random();
 
-    public int ChickCount { get; private set; }
-    public event Action<int> OnChickCountChanged;
+    private readonly Dictionary<EntityKind, int> kindCounts = new Dictionary<EntityKind, int>();
+    public event Action<EntityKind, int> OnKindCountChanged;
 
+    public int ChickCount => CountOf(EntityKind.Chick);
     public int MutantChickCount { get; private set; }
-
-    public int EggCount { get; private set; }
-    public event Action<int> OnEggCountChanged;
-
-    public int ChickenCount { get; private set; }
-    public event Action<int> OnChickenCountChanged;
 
     private readonly Dictionary<EconomyEntityData, int> entityCounts = new Dictionary<EconomyEntityData, int>();
     public event Action<EconomyEntityData, int> OnEntityCountChanged;
+
+    public Chick DefaultChickPrefab => chickPrefab;
+
+    public Chick DefaultMutantChickPrefab => chickPrefab != null ? chickPrefab.MutatedPrefab : null;
+
+    public int CountOf(EntityKind kind)
+    {
+        kindCounts.TryGetValue(kind, out int count);
+        return count;
+    }
 
     public int CountOf(EconomyEntityData data)
     {
@@ -103,14 +108,12 @@ public class SpawnManager : Singleton<SpawnManager>
         }
 
         int mutantCount = 0;
-        Chick mutantPrefab = null;
-        if (UpgradeManager.Instance != null && UpgradeManager.Instance.MutationData != null)
+        if (UpgradeManager.Instance != null)
         {
-            mutantPrefab = UpgradeManager.Instance.MutationData.MutatedChickPrefab;
             mutantCount = Mathf.Min(UpgradeManager.Instance.State.Get<MutationState>().MutantSpawnCountPerRound, spawnCount);
         }
 
-        SpawnChicksInRing(spawnCount, mutantCount, mutantPrefab);
+        SpawnChicksInRing(spawnCount, mutantCount, DefaultMutantChickPrefab);
     }
 
     public void SpawnDebugChicks(int count)
@@ -140,8 +143,6 @@ public class SpawnManager : Singleton<SpawnManager>
         }
     }
 
-    public Chick DefaultChickPrefab => chickPrefab;
-
     public Chick SpawnChick(Vector3 position, Transform parent = null)
     {
         return SpawnChick(chickPrefab, position, parent);
@@ -160,29 +161,18 @@ public class SpawnManager : Singleton<SpawnManager>
             return;
         }
 
-        switch (data.Kind)
-        {
-            case EntityKind.Chick:
-                ChickCount += active ? 1 : -1;
-                OnChickCountChanged?.Invoke(ChickCount);
-                if (entity is Chick chick && chick.IsMutant)
-                {
-                    MutantChickCount += active ? 1 : -1;
-                }
+        int delta = active ? 1 : -1;
 
-                break;
-            case EntityKind.Egg:
-                EggCount += active ? 1 : -1;
-                OnEggCountChanged?.Invoke(EggCount);
-                break;
-            case EntityKind.Chicken:
-                ChickenCount += active ? 1 : -1;
-                OnChickenCountChanged?.Invoke(ChickenCount);
-                break;
+        if (data.Kind == EntityKind.Chick && entity is Chick chick && chick.IsMutant)
+        {
+            MutantChickCount += delta;
         }
 
-        entityCounts.TryGetValue(data, out int entityCount);
-        entityCount += active ? 1 : -1;
+        int kindCount = CountOf(data.Kind) + delta;
+        kindCounts[data.Kind] = kindCount;
+        OnKindCountChanged?.Invoke(data.Kind, kindCount);
+
+        int entityCount = CountOf(data) + delta;
         entityCounts[data] = entityCount;
         OnEntityCountChanged?.Invoke(data, entityCount);
     }

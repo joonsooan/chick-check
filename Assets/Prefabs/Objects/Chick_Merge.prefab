@@ -82,8 +82,8 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3049703459977841537, guid: 6b3d00ec7ce894541aadcc03817bcb3f, type: 3}
-  m_Color: {r: 0.11265004, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: -4629936843308818515, guid: 2143a254499c98b4ebcfef5130d27caa, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -105,3 +105,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ChickCheck.Runtime::MergedChick
   data: {fileID: 11400000, guid: efd034a8088383540aea0f1db593aef4, type: 2}
+  mutationData: {fileID: 11400000, guid: faff4b9f6336e7d4a8423c600923697d, type: 2}

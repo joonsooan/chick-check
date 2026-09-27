@@ -26,5 +26,6 @@ MonoBehaviour:
   walkDistanceRange: {x: 0.75, y: 1.5}
   walkTargetAttempts: 10
   isMutant: 1
+  mutatedPrefab: {fileID: 0}
   alternateStagePrefab: {fileID: 4856076502637182611, guid: 4d40f53e0de546b4e89bcd9f766b56e3, type: 3}
   alternateStageChance: 0

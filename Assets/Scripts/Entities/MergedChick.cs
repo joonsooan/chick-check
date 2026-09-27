@@ -4,7 +4,5 @@ public class MergedChick : Chick
 
     protected override ShopStatType GrowthChanceStat => ShopStatType.MergedChickGrowthChance;
 
-    protected override bool CanMutate => false;
-
     protected override bool CanGrowNow() => true;
 }

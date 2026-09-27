@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 951a98e76d035ce44a29a4a039d5a726, type: 3}
+  m_Name: ChickenMergeMutantWalk
+  m_EditorClassIdentifier: ChickCheck.Runtime::SpriteAnimationData
+  frames:
+  - {fileID: 7962525548407977485, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  - {fileID: -7108617051152738978, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  - {fileID: -2609030667742977738, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  - {fileID: 5862498329790574006, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  - {fileID: -1075601843090055310, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  - {fileID: 2694566376013840802, guid: 916e306f0292145429ef66a01764a58e, type: 3}
+  framesPerSecond: 12
+  loop: 1

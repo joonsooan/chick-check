@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb859b3c9c552342899beb9a97be7a5, type: 3}
   m_Name: MergedChickData
   m_EditorClassIdentifier: ChickCheck.Runtime::MergedChickData
-  sprite: {fileID: 3049703459977841537, guid: 6b3d00ec7ce894541aadcc03817bcb3f, type: 3}
-  idleAnimation: {fileID: 0}
-  walkAnimation: {fileID: 0}
+  sprite: {fileID: -4629936843308818515, guid: 2143a254499c98b4ebcfef5130d27caa, type: 3}
+  idleAnimation: {fileID: 11400000, guid: b3fcbeccf29a42beb4adf8d66a3ec6cc, type: 2}
+  walkAnimation: {fileID: 11400000, guid: dccf36d71f36422ba415ec8ae86b8a94, type: 2}
   sellPrice: 200
   displayOrder: 13
   growthInterval: 5
   growthChance: 0.05
   growthTimerJitterRange: {x: 0.1, y: 0.2}
-  nextStagePrefab: {fileID: 0}
+  nextStagePrefab: {fileID: 4856076502637182611, guid: d244d7ab970f474292af7f90dd99aa8c, type: 3}
   moveSpeed: 1
   walkIntervalRange: {x: 1.5, y: 3}
   walkDistanceRange: {x: 0.75, y: 1.5}
@@ -30,5 +30,6 @@ MonoBehaviour:
   growthPopVibrato: 8
   growthPopElasticity: 0.8
   isMutant: 0
+  mutatedPrefab: {fileID: 6141278934693665003, guid: 768619dc567047f9b2f33e98144cbe0e, type: 3}
   alternateStagePrefab: {fileID: 0}
   alternateStageChance: 0

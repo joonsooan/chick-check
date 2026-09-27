@@ -130,16 +130,79 @@ public class ScriptableObjectValidationTests
     }
 
     [Test]
-    public void MutationData_AllAssetsHaveMutatedChickPrefab()
+    public void ChickData_MutationChainIsValid()
     {
-        string[] guids = AssetDatabase.FindAssets("t:MutationData");
-        Assert.IsNotEmpty(guids, "No MutationData assets found.");
-
-        foreach (string guid in guids)
+        foreach (string guid in AssetDatabase.FindAssets("t:ChickData"))
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            MutationData data = AssetDatabase.LoadAssetAtPath<MutationData>(path);
-            Assert.IsTrue(data.MutatedChickPrefab != null, $"{path} has no MutatedChickPrefab assigned");
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            ChickData data = AssetDatabase.LoadAssetAtPath<ChickData>(path);
+
+            if (data.IsMutant)
+            {
+                Assert.IsTrue(data.MutatedPrefab == null, $"{path} is already a mutant but has a MutatedPrefab assigned");
+                continue;
+            }
+
+            if (data.MutatedPrefab == null)
+            {
+                continue;
+            }
+
+            ChickData mutatedData = data.MutatedPrefab.EconomyData as ChickData;
+            Assert.IsNotNull(mutatedData, $"{path}.MutatedPrefab has no ChickData assigned");
+            Assert.IsTrue(mutatedData.IsMutant, $"{path}.MutatedPrefab does not have IsMutant set");
+            Assert.AreEqual(data.Kind, mutatedData.Kind, $"{path}.MutatedPrefab must be the same Kind as the source");
+        }
+    }
+
+    [Test]
+    public void MergedChickenData_DoesNotGrow()
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:MergedChickenData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            MergedChickenData data = AssetDatabase.LoadAssetAtPath<MergedChickenData>(path);
+
+            Assert.IsFalse(data.HasNextStage, $"{path} must not have a NextStagePrefab");
+            Assert.IsTrue(data.GoldEggPrefab == null, $"{path} must not have a GoldEggPrefab");
+
+            if (data.EggPrefab != null)
+            {
+                Assert.IsTrue(data.EggPrefab is MergedEgg, $"{path}.EggPrefab must be a MergedEgg");
+            }
+        }
+    }
+
+    [Test]
+    public void MergedEggData_HatchesIntoMergedChick()
+    {
+        foreach (string guid in AssetDatabase.FindAssets("t:MergedEggData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsTestDataPath(path))
+            {
+                continue;
+            }
+
+            MergedEggData data = AssetDatabase.LoadAssetAtPath<MergedEggData>(path);
+            if (data.NextStagePrefab == null)
+            {
+                continue;
+            }
+
+            Assert.IsTrue(
+                data.NextStagePrefab.GetComponent<MergedChick>() != null,
+                $"{path}.NextStagePrefab must be a MergedChick");
         }
     }
 
