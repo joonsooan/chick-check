@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ShopItemData", menuName = "Chick Check/Shop Item Data")]
@@ -10,6 +11,7 @@ public class ShopItemData : ScriptableObject
     [SerializeField] private float priceMultiplier = 2f;
     [SerializeField] private bool oneTimeOnly;
     [SerializeField] private bool pinWhenUnlocked;
+    [SerializeField] private List<EconomyEntityData> requiredSightings = new List<EconomyEntityData>();
 
     [SerializeReference] private ShopEffect effect;
 
@@ -20,6 +22,7 @@ public class ShopItemData : ScriptableObject
     public float CostGrowthPerPurchase => priceMultiplier;
     public bool OneTimeOnly => oneTimeOnly;
     public bool PinWhenUnlocked => pinWhenUnlocked;
+    public IReadOnlyList<EconomyEntityData> RequiredSightings => requiredSightings;
     public ShopEffect Effect => effect;
 
 #if UNITY_INCLUDE_TESTS
@@ -29,7 +32,8 @@ public class ShopItemData : ScriptableObject
         float costGrowthPerPurchase = 2f,
         bool oneTimeOnly = false,
         bool pinWhenUnlocked = false,
-        ShopEffect effect = null)
+        ShopEffect effect = null,
+        List<EconomyEntityData> requiredSightings = null)
     {
         ShopItemData instance = CreateInstance<ShopItemData>();
         instance.itemName = itemName;
@@ -38,6 +42,7 @@ public class ShopItemData : ScriptableObject
         instance.oneTimeOnly = oneTimeOnly;
         instance.pinWhenUnlocked = pinWhenUnlocked;
         instance.effect = effect ?? new StatModifierEffect();
+        instance.requiredSightings = requiredSightings ?? new List<EconomyEntityData>();
         return instance;
     }
 #endif

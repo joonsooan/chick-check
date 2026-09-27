@@ -20,7 +20,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
     private readonly PurchaseLedger purchaseLedger = new PurchaseLedger();
     private readonly ShopUnlockTracker unlockTracker = new ShopUnlockTracker();
     private readonly System.Random rng = new System.Random();
-    private List<ShopItemData> pinnedForRound = new List<ShopItemData>();
 
     public UpgradeState State => state;
 
@@ -52,7 +51,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
         {
             GameManager.Instance.OnPhaseChanged += HandlePhaseChanged;
             GameManager.Instance.OnGameOver += HandleGameOver;
-            GameManager.Instance.OnShopPhaseEnding += HandleShopPhaseEnding;
         }
 
         if (SpawnManager.Instance != null)
@@ -96,7 +94,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
         {
             GameManager.Instance.OnPhaseChanged -= HandlePhaseChanged;
             GameManager.Instance.OnGameOver -= HandleGameOver;
-            GameManager.Instance.OnShopPhaseEnding -= HandleShopPhaseEnding;
         }
 
         if (SpawnManager.Instance != null)
@@ -110,16 +107,15 @@ public class UpgradeManager : Singleton<UpgradeManager>
         purchaseLedger.Clear();
         state.Reset();
         unlockTracker.Clear();
-        pinnedForRound.Clear();
-    }
-
-    private void HandleShopPhaseEnding(int roundNumber)
-    {
-        pinnedForRound.Clear();
     }
 
     private void HandleEntityCountChanged(EconomyEntityData data, int count)
     {
+        if (count > 0)
+        {
+            state.Get<EntitySightingState>().Record(data);
+        }
+
         if (chickMergeData == null || SpawnManager.Instance == null)
         {
             return;
@@ -143,7 +139,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
     {
         if (phase == GamePhase.Shop)
         {
-            pinnedForRound = unlockTracker.CollectNewlyUnlocked(allShopItems, IsAvailable);
+            unlockTracker.BeginShopPhase(allShopItems, IsAvailable);
             OnShopCatalogReady?.Invoke(PickRandomItems());
         }
     }
@@ -157,6 +153,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
             return false;
         }
 
+        unlockTracker.RefreshPinned(IsAvailable);
         OnShopCatalogReady?.Invoke(PickRandomItems());
         return true;
     }
@@ -164,14 +161,15 @@ public class UpgradeManager : Singleton<UpgradeManager>
     private List<ShopItemData> PickRandomItems()
     {
         int itemsPerRound = shopConfig != null ? shopConfig.ItemsPerRound : 0;
-        return ShopCatalogPicker.Pick(allShopItems, itemsPerRound, IsAvailable, rng, pinnedForRound);
+        return ShopCatalogPicker.Pick(allShopItems, itemsPerRound, IsAvailable, rng, unlockTracker.Pinned);
     }
 
     private bool IsAvailable(ShopItemData item)
     {
         return !purchaseLedger.IsSoldOut(item)
             && item.Effect != null
-            && item.Effect.IsAvailable(state);
+            && item.Effect.IsAvailable(state)
+            && state.Get<EntitySightingState>().HasSeenAny(item.RequiredSightings);
     }
 
     public bool TryPurchase(ShopItemData item)

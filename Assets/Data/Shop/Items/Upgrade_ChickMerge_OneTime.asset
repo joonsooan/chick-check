@@ -19,6 +19,7 @@ MonoBehaviour:
   priceMultiplier: 2
   oneTimeOnly: 1
   pinWhenUnlocked: 1
+  requiredSightings: []
   effect:
     rid: 4621364523419041868
   references:

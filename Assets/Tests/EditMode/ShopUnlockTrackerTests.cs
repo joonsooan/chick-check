@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ using UnityEngine;
 public class ShopUnlockTrackerTests
 {
     private ShopItemData pinnedItem;
+    private ShopItemData oneTimePinnedItem;
     private ShopItemData unpinnedItem;
     private List<ShopItemData> items;
 
@@ -13,8 +15,9 @@ public class ShopUnlockTrackerTests
     public void SetUp()
     {
         pinnedItem = ShopItemData.CreateForTest(itemName: "Pinned", pinWhenUnlocked: true);
+        oneTimePinnedItem = ShopItemData.CreateForTest(itemName: "OneTimePinned", pinWhenUnlocked: true, oneTimeOnly: true);
         unpinnedItem = ShopItemData.CreateForTest(itemName: "Unpinned", pinWhenUnlocked: false);
-        items = new List<ShopItemData> { pinnedItem, unpinnedItem };
+        items = new List<ShopItemData> { pinnedItem, oneTimePinnedItem, unpinnedItem };
     }
 
     [TearDown]
@@ -27,45 +30,81 @@ public class ShopUnlockTrackerTests
     }
 
     [Test]
-    public void CollectNewlyUnlocked_ReturnsPinnedItemOnFirstAvailability()
+    public void BeginShopPhase_PinsItemOnFirstAvailability()
     {
         ShopUnlockTracker tracker = new ShopUnlockTracker();
 
-        List<ShopItemData> result = tracker.CollectNewlyUnlocked(items, _ => true);
+        tracker.BeginShopPhase(items, _ => true);
 
-        Assert.Contains(pinnedItem, result);
+        Assert.IsTrue(tracker.Pinned.Contains(pinnedItem));
     }
 
     [Test]
-    public void CollectNewlyUnlocked_DoesNotReturnAgainOnSecondCall()
+    public void BeginShopPhase_DropsRepeatableItemOnSecondPhase()
     {
         ShopUnlockTracker tracker = new ShopUnlockTracker();
-        tracker.CollectNewlyUnlocked(items, _ => true);
+        tracker.BeginShopPhase(items, _ => true);
 
-        List<ShopItemData> result = tracker.CollectNewlyUnlocked(items, _ => true);
+        tracker.BeginShopPhase(items, _ => true);
 
-        Assert.IsFalse(result.Contains(pinnedItem));
+        Assert.IsFalse(tracker.Pinned.Contains(pinnedItem));
     }
 
     [Test]
-    public void CollectNewlyUnlocked_IgnoresItemsWithoutPinFlag()
+    public void BeginShopPhase_KeepsOneTimeItemPinnedUntilUnavailable()
     {
         ShopUnlockTracker tracker = new ShopUnlockTracker();
+        tracker.BeginShopPhase(items, _ => true);
 
-        List<ShopItemData> result = tracker.CollectNewlyUnlocked(items, _ => true);
+        tracker.BeginShopPhase(items, _ => true);
+        Assert.IsTrue(tracker.Pinned.Contains(oneTimePinnedItem));
 
-        Assert.IsFalse(result.Contains(unpinnedItem));
+        tracker.BeginShopPhase(items, item => item != oneTimePinnedItem);
+        Assert.IsFalse(tracker.Pinned.Contains(oneTimePinnedItem));
     }
 
     [Test]
-    public void Clear_AllowsPinnedItemToBeReturnedAgain()
+    public void BeginShopPhase_IgnoresItemsWithoutPinFlag()
     {
         ShopUnlockTracker tracker = new ShopUnlockTracker();
-        tracker.CollectNewlyUnlocked(items, _ => true);
+
+        tracker.BeginShopPhase(items, _ => true);
+
+        Assert.IsFalse(tracker.Pinned.Contains(unpinnedItem));
+    }
+
+    [Test]
+    public void RefreshPinned_KeepsAvailableItemsForReroll()
+    {
+        ShopUnlockTracker tracker = new ShopUnlockTracker();
+        tracker.BeginShopPhase(items, _ => true);
+
+        tracker.RefreshPinned(_ => true);
+
+        Assert.IsTrue(tracker.Pinned.Contains(pinnedItem));
+        Assert.IsTrue(tracker.Pinned.Contains(oneTimePinnedItem));
+    }
+
+    [Test]
+    public void RefreshPinned_DropsPurchasedItem()
+    {
+        ShopUnlockTracker tracker = new ShopUnlockTracker();
+        tracker.BeginShopPhase(items, _ => true);
+
+        tracker.RefreshPinned(item => item != oneTimePinnedItem);
+
+        Assert.IsFalse(tracker.Pinned.Contains(oneTimePinnedItem));
+    }
+
+    [Test]
+    public void Clear_AllowsItemToBePinnedAgain()
+    {
+        ShopUnlockTracker tracker = new ShopUnlockTracker();
+        tracker.BeginShopPhase(items, _ => true);
 
         tracker.Clear();
-        List<ShopItemData> result = tracker.CollectNewlyUnlocked(items, _ => true);
+        tracker.BeginShopPhase(items, _ => true);
 
-        Assert.Contains(pinnedItem, result);
+        Assert.IsTrue(tracker.Pinned.Contains(pinnedItem));
     }
 }
