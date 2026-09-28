@@ -103,7 +103,7 @@ public class EconomyManager : Singleton<EconomyManager>
 
         for (int i = 0; i < sellable.Count; i++)
         {
-            sellable[i].Sell();
+            sellable[i].Despawn();
         }
 
         AddGold(totalGold);

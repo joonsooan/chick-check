@@ -364,11 +364,6 @@ public abstract class PlaceableEntity : MonoBehaviour
         DespawnSelf();
     }
 
-    public void Sell()
-    {
-        DespawnSelf();
-    }
-
     protected void DespawnSelf()
     {
         if (pooledObject == null)

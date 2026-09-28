@@ -56,6 +56,11 @@ public class ChickMergeController : MonoBehaviour
             GameManager.Instance.OnGameOver += HandleGameOver;
         }
 
+        if (SpawnManager.Instance != null)
+        {
+            SpawnManager.Instance.OnEntityCountChanged += HandleEntityCountChanged;
+        }
+
         HandleModifiersChanged();
     }
 
@@ -72,7 +77,33 @@ public class ChickMergeController : MonoBehaviour
             GameManager.Instance.OnGameOver -= HandleGameOver;
         }
 
+        if (SpawnManager.Instance != null)
+        {
+            SpawnManager.Instance.OnEntityCountChanged -= HandleEntityCountChanged;
+        }
+
         KillSequences();
+    }
+
+    private void HandleEntityCountChanged(EconomyEntityData changed, int count)
+    {
+        if (data == null || UpgradeManager.Instance == null || SpawnManager.Instance == null)
+        {
+            return;
+        }
+
+        ChickMergeState state = UpgradeManager.Instance.State.Get<ChickMergeState>();
+        IReadOnlyList<ChickMergeData.MergeRecipe> recipes = data.Recipes;
+        for (int i = 0; i < recipes.Count; i++)
+        {
+            ChickMergeData.MergeRecipe recipe = recipes[i];
+            if (!recipe.ContainsSource(changed))
+            {
+                continue;
+            }
+
+            state.RecordCount(i, SpawnManager.Instance.CountOf(recipe.SourceData));
+        }
     }
 
     private void HandleModifiersChanged()
@@ -151,12 +182,7 @@ public class ChickMergeController : MonoBehaviour
         for (int i = 0; i < entities.Count; i++)
         {
             PlaceableEntity entity = entities[i];
-            if (entity.IsCarried || entity.IsMerging)
-            {
-                continue;
-            }
-
-            if (entity is Chick chick && chick.IsMirrorExiting)
+            if (entity.IsCarried || !entity.CanBeCarried)
             {
                 continue;
             }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class UpgradeManager : Singleton<UpgradeManager>
 {
     [SerializeField] private ShopConfigData shopConfig;
-    [SerializeField] private ChickMergeData chickMergeData;
     [SerializeField] private List<ShopItemData> debugStartingItems = new List<ShopItemData>();
 
     public event Action<IReadOnlyList<ShopItemData>> OnShopCatalogReady;
@@ -111,24 +110,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
         if (count > 0)
         {
             state.Get<EntitySightingState>().Record(data);
-        }
-
-        if (chickMergeData == null || SpawnManager.Instance == null)
-        {
-            return;
-        }
-
-        IReadOnlyList<ChickMergeData.MergeRecipe> recipes = chickMergeData.Recipes;
-        for (int i = 0; i < recipes.Count; i++)
-        {
-            ChickMergeData.MergeRecipe recipe = recipes[i];
-            if (!recipe.ContainsSource(data))
-            {
-                continue;
-            }
-
-            int sum = SpawnManager.Instance.CountOf(recipe.SourceData);
-            state.Get<ChickMergeState>().RecordCount(i, sum);
         }
     }
 
