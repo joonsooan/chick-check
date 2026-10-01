@@ -5,11 +5,12 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private RoundConfigData roundConfig;
     [SerializeField] private bool tutorialMode;
+    [SerializeField, Min(0.1f)] private float debugPlayingTimeScale = 1f;
 
     public int CurrentRound { get; private set; }
     public GamePhase CurrentPhase { get; private set; }
     public float PhaseTimeRemaining { get; private set; }
-    public float PhaseTimeScale => CurrentPhase == GamePhase.Playing ? 1f : 0f;
+    public float PhaseTimeScale => CurrentPhase == GamePhase.Playing ? debugPlayingTimeScale : 0f;
 
     public event Action<int> OnRoundStarted;
     public event Action<int> OnRoundSpawnRequested;
@@ -22,6 +23,12 @@ public class GameManager : Singleton<GameManager>
 
     private float phaseTotalTime;
     private bool phaseHasTimer;
+
+    public void SetDebugPlayingTimeScale(float scale)
+    {
+        debugPlayingTimeScale = Mathf.Max(0.1f, scale);
+        Time.timeScale = PhaseTimeScale;
+    }
 
     private void Start()
     {

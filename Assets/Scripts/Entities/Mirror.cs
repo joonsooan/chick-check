@@ -90,7 +90,9 @@ public class Mirror : MonoBehaviour
 
     private Vector3 GuideZoneCenter => transform.position + (Vector3)assistOffset;
 
-    private Vector3 GuideTarget => transform.position + (Vector3)assistTargetOffset;
+    public Vector3 GuideTarget => transform.position + (Vector3)assistTargetOffset;
+
+    public float GuideTargetJitter => assistTargetJitter;
 
     private void UpdateDuplicationZoneMembership()
     {

@@ -396,9 +396,9 @@ public abstract class PlaceableEntity : MonoBehaviour
         walker.Tick(data, dt);
     }
 
-    protected void WalkTo(Vector3 destination, EconomyEntityData data)
+    protected void WalkTo(Vector3 destination, EconomyEntityData data, bool ignoreObstacles = false)
     {
-        walker.WalkTo(destination, data);
+        walker.WalkTo(destination, data, ignoreObstacles);
     }
 
     protected bool IsWalkMoving => walker.IsMoving;

@@ -149,7 +149,7 @@ public class Chick : PlaceableEntity
         ResetLifeState();
     }
 
-    public void GuideTo(Vector3 destination)
+    public void GuideTo(Vector3 destination, bool ignoreObstacles = false)
     {
         if (IsCarried || IsMirrorExiting || !gameObject.activeInHierarchy)
         {
@@ -157,7 +157,7 @@ public class Chick : PlaceableEntity
         }
 
         IsGuided = true;
-        WalkTo(destination, data);
+        WalkTo(destination, data, ignoreObstacles);
     }
 
     public void ForceMirrorExit(Vector2 dir, MirrorData mirrorData, bool masked, Bounds? maskBounds = null)

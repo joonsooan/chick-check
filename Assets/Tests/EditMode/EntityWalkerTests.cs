@@ -128,6 +128,19 @@ public class EntityWalkerTests
     }
 
     [Test]
+    public void WalkTo_IgnoreObstacles_EntersBlockedCell()
+    {
+        EntityWalker walker = CreateWalker(out Transform transform, position => position.x < 0.5f);
+        walker.Reset(data);
+
+        walker.WalkTo(new Vector3(1f, 0f, 0f), data, ignoreObstacles: true);
+        walker.Tick(data, 0.1f);
+
+        Assert.AreEqual(WalkState("Moving"), GetWalkerField(walker, "state"));
+        Assert.Greater(transform.position.x, 0f);
+    }
+
+    [Test]
     public void WalkTo_TargetReached_ReturnsToWaiting()
     {
         EntityWalker walker = CreateWalker(out Transform transform);

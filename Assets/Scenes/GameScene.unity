@@ -218,7 +218,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
   shopConfig: {fileID: 11400000, guid: ee63de3b3030d244eb5d0a5dea38e299, type: 2}
-  chickMergeData: {fileID: 11400000, guid: 794cc2083631b4e48823bc1fea03f8be, type: 2}
   debugStartingItems: []
 --- !u!4 &45256426
 Transform:
@@ -13080,6 +13079,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roundConfig: {fileID: 11400000, guid: 4d1dd83705da40f469cd59464e755940, type: 2}
   tutorialMode: 0
+  debugPlayingTimeScale: 1
 --- !u!4 &619461839
 Transform:
   m_ObjectHideFlags: 0
@@ -54644,6 +54644,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2096612897}
   - component: {fileID: 2096612898}
+  - component: {fileID: 2096612899}
   m_Layer: 0
   m_Name: _DebugManager
   m_TagString: Untagged
@@ -54686,6 +54687,22 @@ MonoBehaviour:
   spawnLargeBatchKey: 96
   spawnLargeBatchCount: 1000
   show: 0
+--- !u!114 &2096612899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096612896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f7d3488b9b4b2478c05d95470c8cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ChickCheck.Runtime::DebugAutoplay
+  playingTimeScale: 50
+  autoGuideEnabled: 1
+  guideInterval: 3
+  chicksPerGuide: 1
 --- !u!1 &2105418622
 GameObject:
   m_ObjectHideFlags: 0
