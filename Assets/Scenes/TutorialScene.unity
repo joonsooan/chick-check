@@ -2988,7 +2988,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2769631586933512419, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_text
-      value: "\uB2E4\uC74C"
+      value: Next
       objectReference: {fileID: 0}
     - target: {fileID: 4689259073098354908, guid: 91729ab90ddb2894f857b2bdb953a93d, type: 3}
       propertyPath: m_Pivot.x
@@ -3161,7 +3161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_text
-      value: "\uC548\uB155\uD558\uC138\uC694 \uC5EC\uB7EC\uBD84!\n\uC5EC\uAE34 \uD29C\uD1A0\uB9AC\uC5BC\uC785\uB2C8\uB2E4."
+      value: "Press W, A, S, D to move"
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_fontSize
@@ -3827,7 +3827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 226703255276622221, guid: 35f1551aa0acf82489d8e2e29909c77f, type: 3}
       propertyPath: m_text
-      value: "\uC0C8\uB85C\uACE0\uCE68 10"
+      value: Reroll 10
       objectReference: {fileID: 0}
     - target: {fileID: 226703255276622221, guid: 35f1551aa0acf82489d8e2e29909c77f, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -8279,7 +8279,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_text
-      value: "\uB0A8\uC740 \uBE5A : 300"
+      value: 'Debt : 300'
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_fontSize
@@ -36717,7 +36717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_text
-      value: "\uC0C1\uD658\uAE4C\uC9C0 D - 1"
+      value: Due in D - 1
       objectReference: {fileID: 0}
     - target: {fileID: 7302061562535954627, guid: 4f99bed92ebba2c468bfd8314e48aad4, type: 3}
       propertyPath: m_fontSize
